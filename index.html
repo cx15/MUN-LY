@@ -2268,12 +2268,22 @@
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
             anchor.addEventListener('click', function (e) {
                 e.preventDefault();
-                const target = document.querySelector(this.getAttribute('href'));
+                const href = this.getAttribute('href');
+                const profilePage = document.getElementById('profilePage');
+                // If profile page is active, go back to site first, then scroll
+                if (profilePage && profilePage.classList.contains('active')) {
+                    document.querySelectorAll('section').forEach(s => s.style.display = '');
+                    document.querySelector('footer').style.display = '';
+                    profilePage.classList.remove('active');
+                }
+                const target = document.querySelector(href);
                 if (target) {
-                    target.scrollIntoView({
-                        behavior: 'smooth',
-                        block: 'start'
-                    });
+                    setTimeout(() => {
+                        target.scrollIntoView({
+                            behavior: 'smooth',
+                            block: 'start'
+                        });
+                    }, 10);
                 }
             });
         });
@@ -2889,9 +2899,14 @@
                 toggleLink.textContent = 'Sign in'; toggleLink.dataset.type = 'signin';
             } else {
                 title.textContent = 'Sign in to MUNLY';
+                const rememberedEmail = localStorage.getItem('munlyRememberEmail') || '';
                 form.innerHTML = `
-                    <div class="form-group"><label>Email</label><input type="email" id="authEmail" required></div>
+                    <div class="form-group"><label>Email</label><input type="email" id="authEmail" required value="${rememberedEmail}"></div>
                     <div class="form-group"><label>Password</label><input type="password" id="authPassword" required></div>
+                    <div class="form-group" style="display:flex;align-items:center;gap:0.5rem;">
+                        <input type="checkbox" id="authRemember" style="width:auto;" ${rememberedEmail ? 'checked' : ''}>
+                        <label for="authRemember" style="margin:0;font-weight:400;color:var(--text-gray);">Remember me</label>
+                    </div>
                     <button type="submit" class="cta-button" style="width:100%;">Sign In</button>
                 `;
                 toggleText.textContent = "Don't have an account? ";
@@ -2920,9 +2935,15 @@
         function handleSignIn(){
             const email = ((el('authEmail')||{}).value || '').trim().toLowerCase();
             const password = (el('authPassword')||{}).value || '';
+            const remember = (el('authRemember')||{}).checked || false;
             const users = getUsers();
             const user = users.find(u => u.email === email && u.password === password);
             if(!user){ alert('Invalid credentials'); return; }
+            if(remember){
+                localStorage.setItem('munlyRememberEmail', email);
+            } else {
+                localStorage.removeItem('munlyRememberEmail');
+            }
             setCurrentUser({ id: user.id, name: user.name, email: user.email }); hideAuth(); alert('Signed in');
         }
 
