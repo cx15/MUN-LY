@@ -1,0 +1,1233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ISMMUN'25 - Conference Results | MUNLY</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary-blue: #1e40af;
+            --secondary-blue: #3b82f6;
+            --light-blue: #dbeafe;
+            --dark-blue: #1e3a8a;
+            --accent-blue: #60a5fa;
+            --text-dark: #1f2937;
+            --text-gray: #6b7280;
+            --background-white: #ffffff;
+            --background-light: #f8fafc;
+            --background-gray: #f1f5f9;
+            --border-light: #e2e8f0;
+            --gradient-blue: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%);
+            --gradient-light: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%);
+            --gradient-gold: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+            --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+            --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+            --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+            --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Playfair Display', serif;
+            line-height: 1.6;
+            color: var(--text-dark);
+            background-color: var(--background-white);
+            overflow-x: hidden;
+            max-width: 100%;
+        }
+
+        /* Navigation */
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--border-light);
+            z-index: 1000;
+            transition: all 0.3s ease;
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 70px;
+        }
+
+        .logo {
+            font-family: 'Playfair Display', serif;
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--primary-blue);
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+            align-items: center;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: var(--text-dark);
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            color: var(--primary-blue);
+        }
+
+        .back-link {
+            background: var(--light-blue);
+            color: var(--primary-blue);
+            padding: 0.5rem 1rem;
+            border-radius: 0.5rem;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .back-link:hover {
+            background: var(--primary-blue);
+            color: white;
+        }
+
+        /* Hero Section */
+        .conference-hero {
+            background: var(--gradient-blue);
+            color: white;
+            padding: 120px 0 80px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .conference-hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="success" width="50" height="50" patternUnits="userSpaceOnUse"><circle cx="25" cy="25" r="2" fill="rgba(255,255,255,0.1)"/><path d="M15 25 L22 32 L35 19" stroke="rgba(255,255,255,0.1)" stroke-width="2" fill="none"/></pattern></defs><rect width="100" height="100" fill="url(%23success)"/></svg>');
+            opacity: 0.1;
+        }
+
+        .hero-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1.5rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .conference-logo {
+            background: white;
+            color: var(--primary-blue);
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            margin: 0 auto 2rem;
+            box-shadow: var(--shadow-xl);
+        }
+
+        .success-badge {
+            background: rgba(16, 185, 129, 0.2);
+            color: #10b981;
+            padding: 0.5rem 1.5rem;
+            border-radius: 2rem;
+            font-weight: 600;
+            display: inline-block;
+            margin-bottom: 1rem;
+            border: 2px solid rgba(16, 185, 129, 0.3);
+        }
+
+        .conference-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 3.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+
+        .conference-subtitle {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            opacity: 0.9;
+        }
+
+        .conference-date {
+            font-size: 1.25rem;
+            margin-bottom: 2rem;
+            padding: 1rem 2rem;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 2rem;
+            display: inline-block;
+        }
+
+        .hero-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 2rem;
+            margin: 3rem 0;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: #bfdbfe;
+            display: block;
+        }
+
+        .stat-label {
+            font-size: 1rem;
+            opacity: 0.9;
+            margin-top: 0.5rem;
+        }
+
+        /* Container */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1.5rem;
+        }
+
+        /* Section Styles */
+        .section {
+            padding: 80px 0;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 4rem;
+        }
+
+        .section-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.5rem;
+            font-weight: 600;
+            color: var(--text-dark);
+            margin-bottom: 1rem;
+        }
+
+        .section-subtitle {
+            font-size: 1.2rem;
+            color: var(--text-gray);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* Conference Overview */
+        .overview {
+            background: var(--background-light);
+        }
+
+        .overview-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            align-items: center;
+        }
+
+        .overview-text {
+            font-size: 1.1rem;
+            line-height: 1.8;
+            color: var(--text-gray);
+        }
+
+        .overview-text h3 {
+            font-size: 1.5rem;
+            color: var(--text-dark);
+            margin-bottom: 1rem;
+        }
+
+        .overview-achievements {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+        }
+
+        .achievement-card {
+            background: white;
+            padding: 2rem;
+            border-radius: 1rem;
+            box-shadow: var(--shadow-md);
+            text-align: center;
+        }
+
+        .achievement-icon {
+            background: var(--gradient-gold);
+            color: white;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            margin: 0 auto 1rem;
+        }
+
+        .achievement-card h4 {
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: var(--text-dark);
+        }
+
+        .achievement-card p {
+            color: var(--text-gray);
+            font-size: 0.9rem;
+        }
+
+        /* Awards Section */
+        .awards {
+            background: var(--background-white);
+        }
+
+        .awards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .award-category {
+            background: white;
+            border: 1px solid var(--border-light);
+            border-radius: 1rem;
+            overflow: hidden;
+            box-shadow: var(--shadow-md);
+        }
+
+        .award-header {
+            background: var(--gradient-blue);
+            color: white;
+            padding: 2rem;
+            text-align: center;
+        }
+
+        .award-icon {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            margin: 0 auto 1rem;
+        }
+
+        .award-category h3 {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .award-content {
+            padding: 2rem;
+        }
+
+        .award-winners {
+            list-style: none;
+        }
+
+        .award-winners li {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            background: var(--background-light);
+            border-radius: 0.75rem;
+        }
+
+        .award-position {
+            background: var(--gradient-gold);
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 0.875rem;
+        }
+
+        .award-winner-info h4 {
+            font-weight: 600;
+            color: var(--text-dark);
+            margin-bottom: 0.25rem;
+        }
+
+        .award-winner-info p {
+            color: var(--text-gray);
+            font-size: 0.9rem;
+        }
+
+        /* Committee Results */
+        .committee-results {
+            background: var(--background-light);
+        }
+
+        .committees-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            width: 100%;
+            max-width: 100%;
+        }
+
+        .committee-result-card {
+            background: white;
+            border-radius: 1rem;
+            overflow: hidden;
+            box-shadow: var(--shadow-md);
+            transition: all 0.3s ease;
+        }
+
+        .committee-result-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .committee-result-header {
+            background: var(--gradient-light);
+            padding: 2rem;
+            text-align: center;
+        }
+
+        .committee-result-icon {
+            background: var(--primary-blue);
+            color: white;
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            margin: 0 auto 1rem;
+        }
+
+        .committee-result-card h3 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: var(--text-dark);
+        }
+
+        .committee-result-content {
+            padding: 2rem;
+        }
+
+        .resolution-passed {
+            background: rgba(16, 185, 129, 0.1);
+            color: #065f46;
+            padding: 0.75rem 1rem;
+            border-radius: 0.5rem;
+            margin-bottom: 1rem;
+            border-left: 4px solid #10b981;
+        }
+
+        .resolution-passed h4 {
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .committee-highlights {
+            margin-top: 1rem;
+        }
+
+        .committee-highlights h4 {
+            font-weight: 600;
+            margin-bottom: 0.75rem;
+            color: var(--text-dark);
+        }
+
+        .committee-highlights ul {
+            list-style: none;
+            color: var(--text-gray);
+        }
+
+        .committee-highlights li {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .committee-highlights li i {
+            color: var(--primary-blue);
+            margin-top: 0.25rem;
+        }
+
+        /* Photo Gallery */
+        .gallery {
+            background: var(--background-white);
+        }
+
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .gallery-item {
+            background: var(--gradient-light);
+            border-radius: 1rem;
+            height: 250px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            color: var(--primary-blue);
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .gallery-item:hover {
+            transform: scale(1.05);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .gallery-overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(transparent, rgba(0, 0, 0, 0.8));
+            color: white;
+            padding: 2rem 1.5rem 1.5rem;
+            transform: translateY(100%);
+            transition: transform 0.3s ease;
+        }
+
+        .gallery-item:hover .gallery-overlay {
+            transform: translateY(0);
+        }
+
+        .gallery-overlay h4 {
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .gallery-overlay p {
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+
+        /* Testimonials */
+        .testimonials {
+            background: var(--background-light);
+        }
+
+        .testimonials-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+        }
+
+        .testimonial-card {
+            background: white;
+            padding: 2rem;
+            border-radius: 1rem;
+            box-shadow: var(--shadow-md);
+            position: relative;
+        }
+
+        .testimonial-card::before {
+            content: '"';
+            position: absolute;
+            top: -10px;
+            left: 20px;
+            font-size: 4rem;
+            color: var(--light-blue);
+            font-family: 'Playfair Display', serif;
+        }
+
+        .testimonial-content {
+            margin-bottom: 1.5rem;
+            font-style: italic;
+            color: var(--text-gray);
+            line-height: 1.7;
+        }
+
+        .testimonial-author {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .testimonial-avatar {
+            background: var(--gradient-blue);
+            color: white;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 1.25rem;
+        }
+
+        .testimonial-info h4 {
+            font-weight: 600;
+            color: var(--text-dark);
+            margin-bottom: 0.25rem;
+        }
+
+        .testimonial-info p {
+            color: var(--text-gray);
+            font-size: 0.9rem;
+        }
+
+        /* Documents Section */
+        .documents {
+            background: var(--background-white);
+        }
+
+        .documents-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+        }
+
+        .document-card {
+            background: white;
+            border: 1px solid var(--border-light);
+            border-radius: 1rem;
+            padding: 2rem;
+            text-align: center;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .document-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: var(--gradient-blue);
+        }
+
+        .document-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .document-icon {
+            background: var(--light-blue);
+            color: var(--primary-blue);
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            margin: 0 auto 1.5rem;
+        }
+
+        .document-card h3 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: var(--text-dark);
+        }
+
+        .document-card p {
+            color: var(--text-gray);
+            margin-bottom: 1.5rem;
+            line-height: 1.6;
+        }
+
+        .download-btn {
+            background: var(--gradient-blue);
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 0.5rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .download-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+
+        /* Footer */
+        footer {
+            background: var(--dark-blue);
+            color: white;
+            padding: 40px 0 20px;
+            text-align: center;
+        }
+
+        footer p {
+            opacity: 0.8;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+            
+            .conference-title {
+                font-size: 2.5rem;
+            }
+            
+            .overview-content {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+            
+            .committees-grid,
+            .awards-grid,
+            .gallery-grid,
+            .testimonials-grid,
+            .documents-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav>
+        <div class="nav-container">
+            <a href="index.html" class="logo">MUNLY</a>
+            <ul class="nav-links">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="#committees">Committees</a></li>
+                <li><a href="index.html#about">About</a></li>
+                <li><a href="index.html#contact">Contact</a></li>
+            </ul>
+            <a href="index.html" class="back-link">
+                <i class="fas fa-arrow-left"></i> Back to MUNLY
+            </a>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="conference-hero">
+        <div class="hero-content">
+            <div class="conference-logo">
+                <i class="fas fa-graduation-cap"></i>
+            </div>
+            <div class="success-badge">
+                <i class="fas fa-check-circle"></i> Successfully Completed
+            </div>
+            <h1 class="conference-title">ISMMUN'25</h1>
+            <p class="conference-subtitle">International School of Martyrs Model United Nations</p>
+            <div class="conference-date">
+                <i class="fas fa-calendar-check"></i>
+                May 1-3, 2025 | Tripoli, Libya
+            </div>
+            
+            <div class="hero-stats">
+                <div class="stat-item">
+                    <span class="stat-number">80</span>
+                    <span class="stat-label">Total Participants</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number">57</span>
+                    <span class="stat-label">Delegates</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number">2</span>
+                    <span class="stat-label">Committees</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number">3</span>
+                    <span class="stat-label">Days</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Conference Overview -->
+    <section class="overview section">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">Conference Overview</h2>
+                <p class="section-subtitle">ISMMUN'25 exceeded expectations with expanded participation and outstanding diplomatic achievements within the ISM community</p>
+            </div>
+            
+            <div class="overview-content">
+                <div class="overview-text">
+                    <h3>A Remarkable Success</h3>
+                    <p>ISMMUN'25 marked a significant milestone for Model United Nations at the International School of Martyrs, building upon the success of the inaugural ISMMUN'24. The conference brought together 80 participants from the ISM community, with 57 students serving as delegates across two specialized committees.</p>
+                    
+                    <p>Over three intensive days, delegates engaged in high-level diplomatic discussions in ECOSOC and UNODC, addressing critical global issues with increased complexity and academic rigor. The conference featured enhanced formats, deeper committee work, and expanded networking opportunities that strengthened the ISM MUN community.</p>
+                    
+                    <p>The success of ISMMUN'25 has solidified ISM's commitment to diplomatic education, setting higher standards for academic excellence and demonstrating the school's growing expertise in Model United Nations.</p>
+                </div>
+                
+
+            </div>
+        </div>
+    </section>
+
+    <!-- Awards Section -->
+    <section class="awards section">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">Awards & Recognition</h2>
+                <p class="section-subtitle">Celebrating outstanding delegates and their remarkable contributions to diplomatic excellence</p>
+            </div>
+            
+            <div class="awards-grid">
+                <div class="award-category">
+                    <div class="award-header">
+                        <div class="award-icon">
+                            <i class="fas fa-crown"></i>
+                        </div>
+                        <h3>Best Delegate Awards</h3>
+                    </div>
+                    <div class="award-content">
+                        <ul class="award-winners">
+                            <li>
+                                <div class="award-winner-info">
+                                    <h4>Eliyas Sherwi</h4>
+                                    <p>Best Delegate</p>
+                                </div>
+                            </li>
+                            <li>
+                                <div class="award-winner-info">
+                                    <h4>Yousef Rabab</h4>
+                                    <p>Best Delegate</p>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="award-category">
+                    <div class="award-header">
+                        <div class="award-icon">
+                            <i class="fas fa-star"></i>
+                        </div>
+                        <h3>Outstanding Delegate</h3>
+                    </div>
+                    <div class="award-content">
+                        <ul class="award-winners">
+                            <li>
+                                <div class="award-winner-info">
+                                    <h4>Narjes Alkaikh</h4>
+                                    <p>Outstanding Delegate</p>
+                                </div>
+                            </li>
+                            <li>
+                                <div class="award-winner-info">
+                                    <h4>Eebaa Salhuba</h4>
+                                    <p>Outstanding Delegate</p>
+                                </div>
+                            </li>
+                            <li>
+                                <div class="award-winner-info">
+                                    <h4>Lina Rabab</h4>
+                                    <p>Outstanding Delegate</p>
+                                </div>
+                            </li>
+                            <li>
+                                <div class="award-winner-info">
+                                    <h4>Ahmed Rgibi</h4>
+                                    <p>Outstanding Delegate</p>
+                                </div>
+                            </li>
+                            <li>
+                                <div class="award-winner-info">
+                                    <h4>Alsaduk Felfel</h4>
+                                    <p>Outstanding Delegate</p>
+                                </div>
+                            </li>
+                            <li>
+                                <div class="award-winner-info">
+                                    <h4>Mahbuba Tabouli</h4>
+                                    <p>Outstanding Delegate</p>
+                                </div>
+                            </li>
+                            <li>
+                                <div class="award-winner-info">
+                                    <h4>Ragad Atiah</h4>
+                                    <p>Outstanding Delegate</p>
+                                </div>
+                            </li>
+                            <li>
+                                <div class="award-winner-info">
+                                    <h4>Mohammad Ben Halim</h4>
+                                    <p>Outstanding Delegate</p>
+                                </div>
+                            </li>
+                            <li>
+                                <div class="award-winner-info">
+                                    <h4>Jehad Abufares</h4>
+                                    <p>Outstanding Delegate</p>
+                                </div>
+                            </li>
+                            <li>
+                                <div class="award-winner-info">
+                                    <h4>Jori Alibani</h4>
+                                    <p>Outstanding Delegate</p>
+                                </div>
+                            </li>
+                            <li>
+                                <div class="award-winner-info">
+                                    <h4>Anas Altaworghi</h4>
+                                    <p>Outstanding Delegate</p>
+                                </div>
+                            </li>
+                            <li>
+                                <div class="award-winner-info">
+                                    <h4>Ibrahim Diryag</h4>
+                                    <p>Outstanding Delegate</p>
+                                </div>
+                            </li>
+                            <li>
+                                <div class="award-winner-info">
+                                    <h4>Bashir Rabti</h4>
+                                    <p>Outstanding Delegate</p>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="award-category">
+                    <div class="award-header">
+                        <div class="award-icon">
+                            <i class="fas fa-users"></i>
+                        </div>
+                        <h3>Honorable Mentions</h3>
+                    </div>
+                    <div class="award-content">
+                        <ul class="award-winners">
+                            <li>
+                                <div class="award-winner-info">
+                                    <h4>Mohammad Alftesi</h4>
+                                    <p>Honorable Mention</p>
+                                </div>
+                            </li>
+                            <li>
+                                <div class="award-winner-info">
+                                    <h4>Nidal Benmusbah</h4>
+                                    <p>Honorable Mention</p>
+                                </div>
+                            </li>
+                            <li>
+                                <div class="award-winner-info">
+                                    <h4>Shahed Baraa</h4>
+                                    <p>Honorable Mention</p>
+                                </div>
+                            </li>
+                            <li>
+                                <div class="award-winner-info">
+                                    <h4>Motaz Ben Sufia</h4>
+                                    <p>Honorable Mention</p>
+                                </div>
+                            </li>
+                            <li>
+                                <div class="award-winner-info">
+                                    <h4>Yuser Mahfud</h4>
+                                    <p>Honorable Mention</p>
+                                </div>
+                            </li>
+                            <li>
+                                <div class="award-winner-info">
+                                    <h4>Jana Addala</h4>
+                                    <p>Honorable Mention</p>
+                                </div>
+                            </li>
+                            <li>
+                                <div class="award-winner-info">
+                                    <h4>Abdullah Alfitouri</h4>
+                                    <p>Honorable Mention</p>
+                                </div>
+                            </li>
+                            <li>
+                                <div class="award-winner-info">
+                                    <h4>Sama Soliman</h4>
+                                    <p>Honorable Mention</p>
+                                </div>
+                            </li>
+                            <li>
+                                <div class="award-winner-info">
+                                    <h4>Ali Ben Zahia</h4>
+                                    <p>Honorable Mention</p>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+
+    <!-- Committees -->
+    <section class="committees section">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">Conference Committees</h2>
+                <p class="section-subtitle">Two specialized committees that addressed critical global challenges</p>
+            </div>
+            
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(400px, 1fr)); gap: 3rem;">
+                <div style="background: white; border-radius: 1rem; overflow: hidden; box-shadow: var(--shadow-md); transition: all 0.3s ease;">
+                    <div style="background: var(--gradient-light); padding: 2rem; text-align: center;">
+                        <div style="background: var(--primary-blue); color: white; width: 80px; height: 80px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 2rem; margin: 0 auto 1rem;">
+                            <i class="fas fa-chart-line"></i>
+                        </div>
+                        <h3 style="font-size: 1.5rem; font-weight: 600; margin-bottom: 0.5rem; color: var(--text-dark);">ECOSOC</h3>
+                        <p style="color: var(--text-gray); font-size: 0.9rem;">Economic and Social Council</p>
+                    </div>
+                    <div style="padding: 2rem;">
+
+                        <div style="background: var(--background-light); padding: 1rem; border-radius: 0.5rem;">
+                            <p style="color: var(--text-gray); font-size: 0.9rem; margin: 0;"><strong>Participants:</strong> Engaged delegates in meaningful economic and social policy discussions</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div style="background: white; border-radius: 1rem; overflow: hidden; box-shadow: var(--shadow-md); transition: all 0.3s ease;">
+                    <div style="background: var(--gradient-light); padding: 2rem; text-align: center;">
+                        <div style="background: var(--primary-blue); color: white; width: 80px; height: 80px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 2rem; margin: 0 auto 1rem;">
+                            <i class="fas fa-shield-alt"></i>
+                        </div>
+                        <h3 style="font-size: 1.5rem; font-weight: 600; margin-bottom: 0.5rem; color: var(--text-dark);">UNODC</h3>
+                        <p style="color: var(--text-gray); font-size: 0.9rem;">United Nations Office on Drugs and Crime</p>
+                    </div>
+                    <div style="padding: 2rem;">
+
+                        <div style="background: var(--background-light); padding: 1rem; border-radius: 0.5rem;">
+                            <p style="color: var(--text-gray); font-size: 0.9rem; margin: 0;"><strong>Participants:</strong> Focused on justice and security policy development</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Photo Gallery -->
+    <section class="gallery section">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">Conference Gallery</h2>
+                <p class="section-subtitle">Capturing memorable moments from three days of diplomatic excellence</p>
+            </div>
+            
+            <div class="gallery-grid">
+                <div class="gallery-item">
+                    <img src="DSC00068.jpg" alt="Opening Ceremony - Flags" style="width: 100%; height: 200px; object-fit: cover;">
+                    <div class="gallery-overlay">
+                        <h4>Opening Ceremony</h4>
+                        <p>Secretary-General's welcome address and keynote presentation</p>
+                    </div>
+                </div>
+                <div class="gallery-item">
+                    <i class="fas fa-users"></i>
+                    <div class="gallery-overlay">
+                        <h4>Committee Sessions</h4>
+                        <p>Intense debate and diplomatic negotiations in progress</p>
+                    </div>
+                </div>
+                <div class="gallery-item">
+                    <i class="fas fa-trophy"></i>
+                    <div class="gallery-overlay">
+                        <h4>Awards Ceremony</h4>
+                        <p>Recognizing outstanding delegates and their achievements</p>
+                    </div>
+                </div>
+                <div class="gallery-item">
+                    <i class="fas fa-handshake"></i>
+                    <div class="gallery-overlay">
+                        <h4>Networking Events</h4>
+                        <p>Delegates building lasting friendships and partnerships</p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonials -->
+    <section class="testimonials section">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">Delegate Testimonials</h2>
+                <p class="section-subtitle">Hear from participants about their transformative ISMMUN'25 experience</p>
+            </div>
+            
+            <div class="testimonials-grid">
+                <div class="testimonial-card">
+                    <div class="testimonial-content">
+                        The first time I experienced MUN, I walked in with no expectations. I walked out surprised, fulfilled, and incredibly proud of our team for building it entirely from scratch. I was fortunate to join again the second time, and it only got better. Being part of this diplomatic experience challenges you to be confident, articulate, and at ease with public speaking. It's easily the most exciting and rewarding extracurricular I've ever joined.
+                    </div>
+                    <div class="testimonial-author">
+                        <div class="testimonial-avatar">ES</div>
+                        <div class="testimonial-info">
+                            <h4>Eebaa Salhuba</h4>
+                            <p>Outstanding delegate award in ECOSOC</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="testimonial-card">
+                    <div class="testimonial-content">
+                        ISMMUN was truly a great experience, I enjoyed the debates and speeches most, I have personally learned a lot, developed some public speaking skills and analytic skills as well.
+                    </div>
+                    <div class="testimonial-author">
+                        <div class="testimonial-avatar">MA</div>
+                        <div class="testimonial-info">
+                            <h4>Malak Abudaya</h4>
+                            <p>Delegate in UNODC</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Documents Section -->
+    <section class="documents section">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">Conference Documents</h2>
+                <p class="section-subtitle">Access resolutions, reports, and other important conference materials</p>
+            </div>
+            
+            <div class="documents-grid">
+                <div class="document-card">
+                    <div class="document-icon">
+                        <i class="fas fa-file-alt"></i>
+                    </div>
+                    <h3>Final Resolutions</h3>
+                    <p>Complete collection of all 15 resolutions passed during ISMMUN'25, organized by committee.</p>
+                    <a href="#" class="download-btn">
+                        <i class="fas fa-download"></i> Download PDF
+                    </a>
+                </div>
+
+                <div class="document-card">
+                    <div class="document-icon">
+                        <i class="fas fa-chart-bar"></i>
+                    </div>
+                    <h3>Conference Report</h3>
+                    <p>Comprehensive overview of conference proceedings, statistics, and outcomes from all committees.</p>
+                    <a href="#" class="download-btn">
+                        <i class="fas fa-download"></i> Download PDF
+                    </a>
+                </div>
+
+                <div class="document-card">
+                    <div class="document-icon">
+                        <i class="fas fa-images"></i>
+                    </div>
+                    <h3>Photo Album</h3>
+                    <p>High-resolution photos from all three days of the conference, including ceremony and committee photos.</p>
+                    <a href="#" class="download-btn">
+                        <i class="fas fa-download"></i> Download ZIP
+                    </a>
+                </div>
+
+                <div class="document-card">
+                    <div class="document-icon">
+                        <i class="fas fa-trophy"></i>
+                    </div>
+                    <h3>Awards List</h3>
+                    <p>Complete list of all award recipients, including Best Delegate, Outstanding Delegate, and special recognitions.</p>
+                    <a href="#" class="download-btn">
+                        <i class="fas fa-download"></i> Download PDF
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <p>&copy; 2025 ISMMUN'25. Organized by International School of Martyrs in partnership with MUNLY. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Add scroll animations
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
+
+        // Observe sections for animations
+        document.querySelectorAll('.section').forEach(section => {
+            section.style.opacity = '0';
+            section.style.transform = 'translateY(30px)';
+            section.style.transition = 'opacity 0.8s ease-out, transform 0.8s ease-out';
+            observer.observe(section);
+        });
+
+        // Gallery hover effects
+        document.querySelectorAll('.gallery-item').forEach(item => {
+            item.addEventListener('mouseenter', function() {
+                this.style.transform = 'scale(1.05)';
+            });
+            
+            item.addEventListener('mouseleave', function() {
+                this.style.transform = 'scale(1)';
+            });
+        });
+
+        // Download button interactions
+        document.querySelectorAll('.download-btn').forEach(btn => {
+            btn.addEventListener('click', function(e) {
+                e.preventDefault();
+                alert('Document download would start here. In a real implementation, this would trigger the actual file download.');
+            });
+        });
+    </script>
+</body>
+</html>

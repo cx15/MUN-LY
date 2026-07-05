@@ -1,0 +1,1168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ISMMUN'24 - Conference Summary | MUNLY</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary-blue: #1e40af;
+            --secondary-blue: #3b82f6;
+            --light-blue: #dbeafe;
+            --dark-blue: #1e3a8a;
+            --accent-blue: #60a5fa;
+            --text-dark: #1f2937;
+            --text-gray: #6b7280;
+            --background-white: #ffffff;
+            --background-light: #f8fafc;
+            --background-gray: #f1f5f9;
+            --border-light: #e2e8f0;
+            --gradient-blue: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%);
+            --gradient-light: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%);
+            --gradient-success: linear-gradient(135deg, #059669 0%, #10b981 100%);
+            --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+            --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+            --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+            --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Playfair Display', serif;
+            line-height: 1.6;
+            color: var(--text-dark);
+            background-color: var(--background-white);
+        }
+
+        /* Navigation */
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--border-light);
+            z-index: 1000;
+            transition: all 0.3s ease;
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 70px;
+        }
+
+        .logo {
+            font-family: 'Playfair Display', serif;
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--primary-blue);
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+            align-items: center;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: var(--text-dark);
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            color: var(--primary-blue);
+        }
+
+        .back-link {
+            background: var(--light-blue);
+            color: var(--primary-blue);
+            padding: 0.5rem 1rem;
+            border-radius: 0.5rem;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .back-link:hover {
+            background: var(--primary-blue);
+            color: white;
+        }
+
+        /* Hero Section */
+        .conference-hero {
+            background: var(--gradient-blue);
+            color: white;
+            padding: 120px 0 80px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .conference-hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="legacy" width="40" height="40" patternUnits="userSpaceOnUse"><circle cx="20" cy="20" r="1.5" fill="rgba(255,255,255,0.1)"/><path d="M10 20 L30 20 M20 10 L20 30" stroke="rgba(255,255,255,0.05)" stroke-width="1"/></pattern></defs><rect width="100" height="100" fill="url(%23legacy)"/></svg>');
+            opacity: 0.1;
+        }
+
+        .hero-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1.5rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .conference-logo {
+            background: white;
+            color: var(--primary-blue);
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            margin: 0 auto 2rem;
+            box-shadow: var(--shadow-xl);
+        }
+
+        .legacy-badge {
+            background: var(--gradient-success);
+            color: white;
+            padding: 0.5rem 1.5rem;
+            border-radius: 2rem;
+            font-weight: 600;
+            display: inline-block;
+            margin-bottom: 1rem;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .conference-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 3.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+
+        .conference-subtitle {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            opacity: 0.9;
+        }
+
+        .conference-date {
+            font-size: 1.25rem;
+            margin-bottom: 2rem;
+            padding: 1rem 2rem;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 2rem;
+            display: inline-block;
+        }
+
+        .hero-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 2rem;
+            margin: 3rem 0;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: #bfdbfe;
+            display: block;
+        }
+
+        .stat-label {
+            font-size: 1rem;
+            opacity: 0.9;
+            margin-top: 0.5rem;
+        }
+
+        /* Container */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1.5rem;
+        }
+
+        /* Section Styles */
+        .section {
+            padding: 80px 0;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 4rem;
+        }
+
+        .section-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.5rem;
+            font-weight: 600;
+            color: var(--text-dark);
+            margin-bottom: 1rem;
+        }
+
+        .section-subtitle {
+            font-size: 1.2rem;
+            color: var(--text-gray);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* Conference Overview */
+        .overview {
+            background: var(--background-light);
+        }
+
+        .overview-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            align-items: center;
+        }
+
+        .overview-text {
+            font-size: 1.1rem;
+            line-height: 1.8;
+            color: var(--text-gray);
+        }
+
+        .overview-text h3 {
+            font-size: 1.5rem;
+            color: var(--text-dark);
+            margin-bottom: 1rem;
+        }
+
+        .impact-metrics {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+        }
+
+        .metric-card {
+            background: white;
+            padding: 2rem;
+            border-radius: 1rem;
+            box-shadow: var(--shadow-md);
+            text-align: center;
+        }
+
+        .metric-icon {
+            background: var(--gradient-blue);
+            color: white;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            margin: 0 auto 1rem;
+        }
+
+        .metric-card h4 {
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: var(--text-dark);
+        }
+
+        .metric-card p {
+            color: var(--text-gray);
+            font-size: 0.9rem;
+        }
+
+        /* Legacy Impact */
+        .legacy {
+            background: var(--background-white);
+        }
+
+        .legacy-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .legacy-card {
+            background: white;
+            border: 1px solid var(--border-light);
+            border-radius: 1rem;
+            padding: 2rem;
+            text-align: center;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .legacy-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: var(--gradient-success);
+        }
+
+        .legacy-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .legacy-icon {
+            background: var(--gradient-success);
+            color: white;
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            margin: 0 auto 1.5rem;
+        }
+
+        .legacy-card h3 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: var(--text-dark);
+        }
+
+        .legacy-card p {
+            color: var(--text-gray);
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+        }
+
+        .legacy-stats {
+            background: var(--background-light);
+            padding: 1rem;
+            border-radius: 0.5rem;
+            margin-top: 1rem;
+        }
+
+        .legacy-stat-number {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary-blue);
+        }
+
+        .legacy-stat-label {
+            font-size: 0.875rem;
+            color: var(--text-gray);
+        }
+
+        /* Committees Section */
+        .committees {
+            background: var(--background-light);
+        }
+
+        .committees-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+        }
+
+        .committee-summary-card {
+            background: white;
+            border-radius: 1rem;
+            overflow: hidden;
+            box-shadow: var(--shadow-md);
+            transition: all 0.3s ease;
+        }
+
+        .committee-summary-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .committee-summary-header {
+            background: var(--gradient-light);
+            padding: 2rem;
+            text-align: center;
+        }
+
+        .committee-summary-icon {
+            background: var(--primary-blue);
+            color: white;
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            margin: 0 auto 1rem;
+        }
+
+        .committee-summary-card h3 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: var(--text-dark);
+        }
+
+        .committee-summary-content {
+            padding: 2rem;
+        }
+
+        .committee-outcome {
+            background: rgba(34, 197, 94, 0.1);
+            color: #15803d;
+            padding: 0.75rem 1rem;
+            border-radius: 0.5rem;
+            margin-bottom: 1rem;
+            border-left: 4px solid #22c55e;
+        }
+
+        .committee-outcome h4 {
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .participant-highlights {
+            margin-top: 1rem;
+        }
+
+        .participant-highlights h4 {
+            font-weight: 600;
+            margin-bottom: 0.75rem;
+            color: var(--text-dark);
+        }
+
+        .participant-highlights ul {
+            list-style: none;
+            color: var(--text-gray);
+        }
+
+        .participant-highlights li {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .participant-highlights li i {
+            color: var(--primary-blue);
+            margin-top: 0.25rem;
+        }
+
+        /* Timeline */
+        .timeline {
+            background: var(--background-white);
+        }
+
+        .timeline-container {
+            position: relative;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .timeline-line {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 4px;
+            height: 100%;
+            background: var(--gradient-blue);
+            border-radius: 2px;
+        }
+
+        .timeline-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 3rem;
+            position: relative;
+        }
+
+        .timeline-item:nth-child(odd) {
+            flex-direction: row;
+        }
+
+        .timeline-item:nth-child(even) {
+            flex-direction: row-reverse;
+        }
+
+        .timeline-content {
+            background: white;
+            padding: 2rem;
+            border-radius: 1rem;
+            box-shadow: var(--shadow-md);
+            width: 45%;
+            position: relative;
+        }
+
+        .timeline-item:nth-child(odd) .timeline-content {
+            margin-right: 10%;
+        }
+
+        .timeline-item:nth-child(even) .timeline-content {
+            margin-left: 10%;
+        }
+
+        .timeline-date {
+            background: var(--gradient-blue);
+            color: white;
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 2;
+            box-shadow: var(--shadow-lg);
+        }
+        
+        @media (max-width: 768px) {
+            .timeline-item {
+                flex-direction: column !important;
+                align-items: center;
+                text-align: center;
+            }
+            
+            .timeline-content {
+                width: 90% !important;
+                margin: 0 !important;
+                margin-top: 90px !important;
+            }
+            
+            .timeline-date {
+                position: relative;
+                margin-bottom: -70px;
+            }
+            
+            .timeline-line {
+                left: 50%;
+                height: 100%;
+            }
+        }
+
+        .timeline-content h3 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: var(--text-dark);
+        }
+
+        .timeline-content p {
+            color: var(--text-gray);
+            line-height: 1.6;
+        }
+
+        /* Memories Gallery */
+        .memories {
+            background: var(--background-light);
+        }
+
+        .memories-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .memory-item {
+            background: var(--gradient-light);
+            border-radius: 1rem;
+            height: 200px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.5rem;
+            color: var(--primary-blue);
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .memory-item:hover {
+            transform: scale(1.02);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .memory-overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(transparent, rgba(0, 0, 0, 0.7));
+            color: white;
+            padding: 1.5rem 1rem 1rem;
+            transform: translateY(100%);
+            transition: transform 0.3s ease;
+        }
+
+        .memory-item:hover .memory-overlay {
+            transform: translateY(0);
+        }
+
+        .memory-overlay h4 {
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+        }
+
+        .memory-overlay p {
+            font-size: 0.875rem;
+            opacity: 0.9;
+        }
+
+        /* Documents */
+        .documents {
+            background: var(--background-white);
+        }
+
+        .documents-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+        }
+
+        .document-card {
+            background: white;
+            border: 1px solid var(--border-light);
+            border-radius: 1rem;
+            padding: 2rem;
+            text-align: center;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .document-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: var(--gradient-blue);
+        }
+
+        .document-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .document-icon {
+            background: var(--light-blue);
+            color: var(--primary-blue);
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            margin: 0 auto 1.5rem;
+        }
+
+        .document-card h3 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: var(--text-dark);
+        }
+
+        .document-card p {
+            color: var(--text-gray);
+            margin-bottom: 1.5rem;
+            line-height: 1.6;
+        }
+
+        .download-btn {
+            background: var(--gradient-blue);
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 0.5rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .download-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+
+        /* Footer */
+        footer {
+            background: var(--dark-blue);
+            color: white;
+            padding: 40px 0 20px;
+            text-align: center;
+        }
+
+        footer p {
+            opacity: 0.8;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+            
+            .conference-title {
+                font-size: 2.5rem;
+            }
+            
+            .overview-content {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+            
+            .committees-grid,
+            .legacy-grid,
+            .memories-grid,
+            .documents-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .timeline-item {
+                flex-direction: column !important;
+            }
+            
+            .timeline-content {
+                width: 100% !important;
+                margin: 0 !important;
+                margin-top: 2rem !important;
+            }
+            
+            .timeline-line {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav>
+        <div class="nav-container">
+            <a href="index.html" class="logo">MUNLY</a>
+            <ul class="nav-links">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="#committees">Committees</a></li>
+                <li><a href="index.html#about">About</a></li>
+                <li><a href="index.html#contact">Contact</a></li>
+            </ul>
+            <a href="index.html" class="back-link">
+                <i class="fas fa-arrow-left"></i> Back to MUNLY
+            </a>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="conference-hero">
+        <div class="hero-content">
+            <div class="conference-logo">
+                <i class="fas fa-flag"></i>
+            </div>
+            <div class="legacy-badge">
+                <i class="fas fa-star"></i> Foundation Conference
+            </div>
+            <h1 class="conference-title">ISMMUN'24</h1>
+            <p class="conference-subtitle">International School of Martyrs Model United Nations</p>
+            <div class="conference-date">
+                <i class="fas fa-calendar-check"></i>
+                October 22-24, 2024 | Tripoli, Libya
+            </div>
+            
+            <div class="hero-stats">
+                <div class="stat-item">
+                    <span class="stat-number">40</span>
+                    <span class="stat-label">Total Participants</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number">30</span>
+                    <span class="stat-label">Delegates</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number">2</span>
+                    <span class="stat-label">Committees</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number">3</span>
+                    <span class="stat-label">Days</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Conference Overview -->
+    <section class="overview section">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">The Foundation Conference</h2>
+                <p class="section-subtitle">ISMMUN'24 marked the beginning of a new era for Model United Nations in Libya</p>
+            </div>
+            
+            <div class="overview-content">
+                <div class="overview-text">
+                    <h3>A Historic Beginning</h3>
+                    <p>ISMMUN'24 launched as the inaugural Model United Nations conference organized by the International School of Martyrs. This foundational event brought together 40 participants from within the ISM community, with 30 students serving as delegates for three intensive days of diplomatic engagement.</p>
+                    
+                    <p>The conference featured 2 carefully selected committees - SOCHUM (Social, Humanitarian and Cultural Committee) and UN Women - addressing critical social and humanitarian challenges. Each committee provided delegates with opportunities to engage in meaningful debate, develop diplomatic skills, and explore complex global issues affecting women and social development.</p>
+                    
+                    <p>ISMMUN'24 established the foundation and standards within the ISM community that would later inspire the expanded ISMMUN'25, proving that ISM students were ready to engage with international affairs and diplomatic processes at a high academic level.</p>
+                </div>
+                
+                <div class="impact-metrics">
+                    <div class="metric-card">
+                        <div class="metric-icon">
+                            <i class="fas fa-seedling"></i>
+                        </div>
+                        <h4>Foundation Impact</h4>
+                        <p>Established MUN tradition at International School of Martyrs</p>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-icon">
+                            <i class="fas fa-school"></i>
+                        </div>
+                        <h4>School Excellence</h4>
+                        <p>Launched ISM's first MUN initiative with outstanding student participation</p>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-icon">
+                            <i class="fas fa-lightbulb"></i>
+                        </div>
+                        <h4>Innovation</h4>
+                        <p>Introduced crisis simulation elements to Libyan MUN</p>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-icon">
+                            <i class="fas fa-rocket"></i>
+                        </div>
+                        <h4>Growth Platform</h4>
+                        <p>Set the stage for future expanded conferences</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Legacy Impact -->
+    <section class="legacy section">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">Lasting Legacy</h2>
+                <p class="section-subtitle">How ISMMUN'24 shaped the future of MUN in Libya</p>
+            </div>
+            
+            <div class="legacy-grid">
+                <div class="legacy-card">
+                    <div class="legacy-icon">
+                        <i class="fas fa-university"></i>
+                    </div>
+                    <h3>Educational Impact</h3>
+                    <p>ISMMUN'24 introduced innovative teaching methods and diplomatic education techniques that became the standard for future conferences in Libya.</p>
+                    <div class="legacy-stats">
+                        <div class="legacy-stat-number">40</div>
+                        <div class="legacy-stat-label">Students Trained</div>
+                    </div>
+                </div>
+
+                <div class="legacy-card">
+                    <div class="legacy-icon">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <h3>Community Building</h3>
+                    <p>Created the foundation for MUN culture at ISM, inspiring students to engage with global issues and develop diplomatic skills.</p>
+                    <div class="legacy-stats">
+                        <div class="legacy-stat-number">40</div>
+                        <div class="legacy-stat-label">ISM Participants</div>
+                    </div>
+                </div>
+
+                <div class="legacy-card">
+                    <div class="legacy-icon">
+                        <i class="fas fa-award"></i>
+                    </div>
+                    <h3>Standards Setting</h3>
+                    <p>Established high academic and organizational standards that influenced all subsequent MUN conferences in the region.</p>
+                    <div class="legacy-stats">
+                        <div class="legacy-stat-number">100%</div>
+                        <div class="legacy-stat-label">Delegate Satisfaction</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Committee Summary -->
+    <section class="committees section">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">Committee Highlights</h2>
+                <p class="section-subtitle">Six dynamic committees that laid the foundation for diplomatic excellence</p>
+            </div>
+            
+            <div class="committees-grid">
+                <div class="committee-summary-card">
+                    <div class="committee-summary-header">
+                        <div class="committee-summary-icon">
+                            <i class="fas fa-users"></i>
+                        </div>
+                        <h3>SOCHUM</h3>
+                        <p style="color: var(--text-gray); font-size: 0.9rem; margin-bottom: 1rem;">Social, Humanitarian and Cultural Committee</p>
+                    </div>
+                    <div class="committee-summary-content">
+                    </div>
+                </div>
+
+                <div class="committee-summary-card">
+                    <div class="committee-summary-header">
+                        <div class="committee-summary-icon">
+                            <i class="fas fa-venus"></i>
+                        </div>
+                        <h3>UN Women</h3>
+                        <p style="color: var(--text-gray); font-size: 0.9rem; margin-bottom: 1rem;">United Nations Entity for Gender Equality</p>
+                    </div>
+                    <div class="committee-summary-content">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Conference Timeline -->
+    <section class="timeline section">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">Conference Timeline</h2>
+                <p class="section-subtitle">Three days that established the foundation of MUN at ISM</p>
+            </div>
+            
+            <div class="timeline-container">
+                <div class="timeline-line"></div>
+                
+                <div class="timeline-item">
+                    <div class="timeline-date">
+                        <div>Day 1<br><small>Oct 22</small></div>
+                    </div>
+                    <div class="timeline-content">
+                        <h3>Opening & Committee Sessions</h3>
+                        <p>The conference began with an inspiring opening ceremony featuring keynote speakers and the introduction of committee agendas. Delegates engaged in their first committee sessions, setting the stage for intensive diplomatic work.</p>
+                    </div>
+                </div>
+                
+                <div class="timeline-item">
+                    <div class="timeline-date">
+                        <div>Day 2<br><small>Oct 23</small></div>
+                    </div>
+                    <div class="timeline-content">
+                        <h3>Intensive Debate & Resolutions</h3>
+                        <p>Delegates continued with deeper committee work, engaging in substantial debate and beginning the resolution drafting process across both SOCHUM and UN Women committees.</p>
+                    </div>
+                </div>
+                
+                <div class="timeline-item">
+                    <div class="timeline-date">
+                        <div>Day 3<br><small>Oct 24</small></div>
+                    </div>
+                    <div class="timeline-content">
+                        <h3>Final Resolutions & Closing</h3>
+                        <p>Delegates worked tirelessly to finalize resolutions and present their solutions. The closing ceremony celebrated achievements and recognized outstanding delegates, marking the successful conclusion of the inaugural conference.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Memories Gallery -->
+    <section class="memories section">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">Conference Memories</h2>
+                <p class="section-subtitle">Capturing the moments that made ISMMUN'24 special</p>
+            </div>
+            
+            <div class="memories-grid">
+                <div class="memory-item">
+                    <i class="fas fa-podium"></i>
+                    <div class="memory-overlay">
+                        <h4>Opening Ceremony</h4>
+                        <p>Historic first moments of ISMMUN</p>
+                    </div>
+                </div>
+                <div class="memory-item">
+                    <i class="fas fa-handshake"></i>
+                    <div class="memory-overlay">
+                        <h4>Diplomatic Negotiations</h4>
+                        <p>Delegates building consensus</p>
+                    </div>
+                </div>
+                <div class="memory-item">
+                    <i class="fas fa-users"></i>
+                    <div class="memory-overlay">
+                        <h4>Committee Sessions</h4>
+                        <p>Intense debate and collaboration</p>
+                    </div>
+                </div>
+                <div class="memory-item">
+                    <i class="fas fa-trophy"></i>
+                    <div class="memory-overlay">
+                        <h4>Awards Recognition</h4>
+                        <p>Celebrating delegate achievements</p>
+                    </div>
+                </div>
+                <div class="memory-item">
+                    <i class="fas fa-graduation-cap"></i>
+                    <div class="memory-overlay">
+                        <h4>Closing Ceremony</h4>
+                        <p>Reflecting on two days of growth</p>
+                    </div>
+                </div>
+                <div class="memory-item">
+                    <i class="fas fa-heart"></i>
+                    <div class="memory-overlay">
+                        <h4>New Friendships</h4>
+                        <p>Connections that last beyond MUN</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Documents Section -->
+    <section class="documents section">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">Conference Archives</h2>
+                <p class="section-subtitle">Historical documents from Libya's foundation MUN conference</p>
+            </div>
+            
+            <div class="documents-grid">
+                <div class="document-card">
+                    <div class="document-icon">
+                        <i class="fas fa-file-alt"></i>
+                    </div>
+                    <h3>Conference Report</h3>
+                    <p>Complete summary of ISMMUN'24 proceedings, outcomes, and participant feedback from both days.</p>
+                    <a href="#" class="download-btn">
+                        <i class="fas fa-download"></i> Download PDF
+                    </a>
+                </div>
+
+                <div class="document-card">
+                    <div class="document-icon">
+                        <i class="fas fa-scroll"></i>
+                    </div>
+                    <h3>Committee Resolutions</h3>
+                    <p>Final resolutions and working papers produced by all six committees during the conference.</p>
+                    <a href="#" class="download-btn">
+                        <i class="fas fa-download"></i> Download PDF
+                    </a>
+                </div>
+
+                <div class="document-card">
+                    <div class="document-icon">
+                        <i class="fas fa-images"></i>
+                    </div>
+                    <h3>Photo Collection</h3>
+                    <p>Memorable photos capturing the spirit and achievements of the inaugural ISMMUN conference.</p>
+                    <a href="#" class="download-btn">
+                        <i class="fas fa-download"></i> Download ZIP
+                    </a>
+                </div>
+
+                <div class="document-card">
+                    <div class="document-icon">
+                        <i class="fas fa-book"></i>
+                    </div>
+                    <h3>Delegate Handbook</h3>
+                    <p>The original handbook used by delegates, now a historical reference for MUN development in Libya.</p>
+                    <a href="#" class="download-btn">
+                        <i class="fas fa-download"></i> Download PDF
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <p>&copy; 2024 ISMMUN'24. Organized by International School of Martyrs in partnership with MUNLY. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Add scroll animations
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
+
+        // Observe sections for animations
+        document.querySelectorAll('.section').forEach(section => {
+            section.style.opacity = '0';
+            section.style.transform = 'translateY(30px)';
+            section.style.transition = 'opacity 0.8s ease-out, transform 0.8s ease-out';
+            observer.observe(section);
+        });
+
+        // Memory gallery hover effects
+        document.querySelectorAll('.memory-item').forEach(item => {
+            item.addEventListener('mouseenter', function() {
+                this.style.transform = 'scale(1.02)';
+            });
+            
+            item.addEventListener('mouseleave', function() {
+                this.style.transform = 'scale(1)';
+            });
+        });
+
+        // Download button interactions
+        document.querySelectorAll('.download-btn').forEach(btn => {
+            btn.addEventListener('click', function(e) {
+                e.preventDefault();
+                alert('Historical document download would start here. In a real implementation, this would provide access to archived conference materials.');
+            });
+        });
+    </script>
+</body>
+</html>

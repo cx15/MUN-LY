@@ -1,0 +1,42 @@
+name = "munly-backend-independent"
+main = "src/index-independent.js"
+compatibility_date = "2025-01-01"
+compatibility_flags = ["nodejs_compat"]
+
+# Environment variables for independent deployment
+[env.production]
+name = "munly-backend-production"
+
+[env.staging]
+name = "munly-backend-staging"
+
+# Database binding (D1)
+[[d1_databases]]
+binding = "DB"
+database_name = "munly-database"
+database_id = "" # Will be filled after creating D1 database
+
+# Environment variables
+[vars]
+ENVIRONMENT = "production"
+
+# Secrets (set via wrangler secret put command)
+# API_KEY = "your-api-key-here"
+# ADMIN_API_KEY = "your-admin-api-key-here" 
+# NOTIFICATION_EMAIL = "your-email@domain.com"
+
+# Optional: Add custom domain
+# routes = [
+#   { pattern = "api.yourdomain.com", custom_domain = true }
+# ]
+
+# Optional: KV storage for caching
+# [[kv_namespaces]]
+# binding = "CACHE"
+# id = ""
+# preview_id = ""
+
+# Optional: R2 storage for file uploads
+# [[r2_buckets]]
+# binding = "UPLOADS"
+# bucket_name = "munly-uploads"

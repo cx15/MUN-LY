@@ -1,0 +1,1031 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SMUN'25 - Application & Details | MUNLY</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary-blue: #1e40af;
+            --secondary-blue: #3b82f6;
+            --light-blue: #dbeafe;
+            --dark-blue: #1e3a8a;
+            --accent-blue: #60a5fa;
+            
+            --text-dark: #1f2937;
+            --text-gray: #6b7280;
+            --text-light: #9ca3af;
+            
+            --background-white: #ffffff;
+            --background-light: #f9fafb;
+            --border-light: #e5e5e5;
+            
+            --gradient-blue: linear-gradient(135deg, var(--primary-blue), var(--secondary-blue));
+            --gradient-light: linear-gradient(135deg, var(--background-light), var(--light-blue));
+            
+            --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Playfair Display', serif;
+        }
+        
+        html {
+            scroll-behavior: smooth;
+        }
+        
+        body {
+            font-family: 'Playfair Display', serif;
+            color: var(--text-dark);
+            background: var(--background-light);
+            line-height: 1.6;
+        }
+        
+        h1, h2, h3, h4, h5 {
+            font-family: 'Playfair Display', serif;
+            font-weight: 700;
+            line-height: 1.2;
+        }
+        
+        h2 {
+            font-size: 2.5rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        h3 {
+            font-size: 2rem;
+            margin-bottom: 1.25rem;
+        }
+        
+        p {
+            font-family: 'Playfair Display', serif;
+            color: var(--text-gray);
+            margin-bottom: 1rem;
+        }
+        
+        a {
+            color: var(--primary-blue);
+            text-decoration: none;
+        }
+        
+        /* Navbar */
+        nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background: white;
+            box-shadow: var(--shadow-sm);
+            z-index: 1000;
+        }
+        
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 1rem 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            font-family: 'Playfair Display', serif;
+            font-weight: 700;
+            font-size: 1.5rem;
+            color: var(--primary-blue);
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .logo:hover {
+            color: var(--secondary-blue);
+            transform: scale(1.05);
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+            align-items: center;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: var(--text-dark);
+            font-weight: 500;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .nav-links a:hover {
+            color: var(--primary-blue);
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--gradient-blue);
+            transition: width 0.3s ease;
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        .cta-button {
+            background: var(--gradient-blue);
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 0.5rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+        }
+
+        .cta-button:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .mobile-menu {
+            display: none;
+            flex-direction: column;
+            cursor: pointer;
+        }
+
+        .mobile-menu span {
+            width: 25px;
+            height: 3px;
+            background: var(--primary-blue);
+            margin: 3px 0;
+            transition: 0.3s;
+        }
+
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+            
+            .nav-links.mobile-active {
+                display: flex;
+                flex-direction: column;
+                position: absolute;
+                top: 70px;
+                left: 0;
+                width: 100%;
+                background: white;
+                padding: 1rem;
+                box-shadow: var(--shadow-md);
+                z-index: 1000;
+                gap: 1rem;
+                text-align: center;
+            }
+            
+            .mobile-menu {
+                display: flex;
+            }
+        }
+        
+        /* Hero */
+        .hero {
+            background-image: url('sgx4sc7kel.jpeg');
+            background-size: cover;
+            background-position: center;
+            color: white;
+            padding: 160px 0 80px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: var(--primary-blue);
+            opacity: 0.7; /* Blue tint overlay */
+        }
+        
+        .hero-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1.5rem;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .conference-logo {
+            width: 80px;
+            height: 80px;
+            background: var(--light-blue);
+            color: var(--primary-blue);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.5rem;
+            margin: 0 auto 2rem;
+        }
+        
+        .conference-title {
+            font-size: 3.5rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .conference-subtitle {
+            font-size: 1.5rem;
+            margin-bottom: 1.5rem;
+            opacity: 0.9;
+            color: white;
+        }
+        
+        .conference-date {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 2.5rem;
+            font-size: 1.25rem;
+            opacity: 0.9;
+        }
+        
+        .countdown {
+            margin: 2.5rem 0 3rem;
+        }
+        
+        .countdown h3 {
+            font-size: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .countdown-timer {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+        }
+        
+        .countdown-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 0.75rem;
+            padding: 1rem;
+            min-width: 80px;
+        }
+        
+        .countdown-number {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 0.25rem;
+        }
+        
+        .countdown-label {
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            opacity: 0.8;
+        }
+        
+        .btn-primary {
+            display: inline-block;
+            background: white;
+            color: var(--primary-blue);
+            padding: 1rem 2rem;
+            border-radius: 0.75rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+            text-align: center;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-md);
+        }
+        
+        .btn-secondary {
+            display: inline-block;
+            background: transparent;
+            color: white;
+            padding: 1rem 2rem;
+            border-radius: 0.75rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            border: 2px solid white;
+            cursor: pointer;
+            text-align: center;
+        }
+        
+        .btn-secondary:hover {
+            background: white;
+            color: var(--primary-blue);
+            transform: translateY(-3px);
+        }
+        
+        .hero-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+        }
+        
+        /* Sections */
+        section {
+            padding: 100px 0;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1.5rem;
+        }
+        
+        .section-header {
+            text-align: center;
+            margin-bottom: 4rem;
+        }
+        
+        .section-title {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+        
+        .section-subtitle {
+            font-size: 1.25rem;
+            color: var(--text-gray);
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .about-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 3rem;
+            margin-bottom: 3rem;
+        }
+        
+        .about-text h3 {
+            margin-bottom: 1.5rem;
+            font-size: 1.75rem;
+        }
+        
+        .location-info {
+            margin-top: 2rem;
+            padding: 1.5rem;
+            background: var(--light-blue);
+            border-radius: 1rem;
+            border-left: 4px solid var(--primary-blue);
+        }
+        
+        .location-info h4 {
+            color: var(--primary-blue);
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .location-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-top: 1rem;
+            padding: 0.75rem 1.5rem;
+            background: var(--primary-blue);
+            color: white;
+            text-decoration: none;
+            border-radius: 0.5rem;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+        
+        .location-btn:hover {
+            background: var(--dark-blue);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+        
+        .highlight-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin: 3rem 0;
+        }
+        
+        .highlight-card {
+            background: white;
+            border-radius: 1rem;
+            padding: 2rem;
+            box-shadow: var(--shadow-sm);
+        }
+        
+        .highlight-icon {
+            width: 50px;
+            height: 50px;
+            background: var(--light-blue);
+            color: var(--primary-blue);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .highlight-card h4 {
+            margin-bottom: 1rem;
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            margin: 4rem 0;
+        }
+        
+        .stat-card {
+            background: white;
+            border-radius: 1rem;
+            padding: 2rem;
+            text-align: center;
+            box-shadow: var(--shadow-sm);
+        }
+        
+        .stat-number {
+            font-size: 3rem;
+            font-weight: 800;
+            color: var(--primary-blue);
+            margin-bottom: 0.5rem;
+        }
+        
+        .stat-label {
+            color: var(--text-gray);
+        }
+        
+        .committees-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+        
+        .committee-card {
+            background: white;
+            border-radius: 1rem;
+            overflow: hidden;
+            box-shadow: var(--shadow-sm);
+        }
+        
+        .committee-image {
+            height: 200px;
+            background: var(--gradient-blue);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            color: white;
+        }
+        
+        .committee-content {
+            padding: 2rem;
+        }
+        
+        .committee-title {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+        }
+        
+        .application-form {
+            background: white;
+            padding: 2rem;
+            border-radius: 1rem;
+            box-shadow: var(--shadow-sm);
+            margin-top: 2rem;
+            text-align: center;
+        }
+        
+        .application {
+            background: var(--background-light);
+            padding-bottom: 100px;
+        }
+        
+        .application-content {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+        
+        .application-info {
+            background: white;
+            padding: 2rem;
+            border-radius: 1rem;
+            margin-bottom: 2rem;
+            box-shadow: var(--shadow-sm);
+        }
+        
+        .cta-button {
+            background: var(--primary-blue);
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 0.5rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .cta-button:hover {
+            background: var(--dark-blue);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-sm);
+        }
+        
+        /* Footer */
+        footer {
+            background: var(--primary-blue);
+            color: white;
+            padding: 2rem 0;
+            text-align: center;
+        }
+        
+        @media (max-width: 768px) {
+            .hero-buttons {
+                flex-direction: column;
+            }
+            
+            .about-content, 
+            .highlight-cards, 
+            .stats-grid, 
+            .committees-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .conference-title {
+                font-size: 2.5rem;
+            }
+            
+            .nav-links {
+                display: none;
+            }
+            
+            .nav-links.mobile-active {
+                display: flex;
+                flex-direction: column;
+                position: absolute;
+                top: 70px;
+                left: 0;
+                width: 100%;
+                background: white;
+                padding: 1rem;
+                box-shadow: var(--shadow-md);
+                z-index: 1000;
+                gap: 1rem;
+                text-align: center;
+            }
+            
+            .application-form {
+                padding: 1.5rem 0;
+                box-shadow: none;
+                background: transparent;
+            }
+            
+            .category-card {
+                flex: 1 0 100% !important;
+                max-width: 100% !important;
+                margin-bottom: 1rem;
+            }
+            
+            .application-info {
+                margin: 0 1rem;
+            }
+        }
+        
+        /* Animations */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+        
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .animate-fadeIn {
+            animation: fadeIn 1s ease-out;
+        }
+        
+        .animate-fadeInUp {
+            animation: fadeInUp 1s ease-out;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav>
+        <div class="nav-container">
+            <a href="index.html" class="logo">MUNLY</a>
+            <ul class="nav-links">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="index.html#conferences">Conferences</a></li>
+                <li><a href="index.html#about">About</a></li>
+                <li><a href="index.html#resources">Resources</a></li>
+                <li><a href="code-of-conduct/index.html">Code of Conduct</a></li>
+                <li><a href="index.html#contact">Contact</a></li>
+                <li><a href="#application" class="cta-button">Apply</a></li>
+            </ul>
+
+            <div class="mobile-menu">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+    </nav>
+    
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-content">
+            <div class="conference-logo">
+                <i class="fas fa-globe"></i>
+            </div>
+            <h1 class="conference-title">SMUN'25</h1>
+            <p class="conference-subtitle">South Mediterranean University Model United Nations</p>
+            <div class="conference-date">
+                <i class="fas fa-calendar-alt"></i>
+                October 23-25, 2025 | Libya
+            </div>
+            
+            <div class="countdown">
+                <h3>Conference Starts In</h3>
+                <div class="countdown-timer" id="countdown">
+                    <div class="countdown-item">
+                        <span class="countdown-number" id="days">0</span>
+                        <span class="countdown-label">Days</span>
+                    </div>
+                    <div class="countdown-item">
+                        <span class="countdown-number" id="hours">0</span>
+                        <span class="countdown-label">Hours</span>
+                    </div>
+                    <div class="countdown-item">
+                        <span class="countdown-number" id="minutes">0</span>
+                        <span class="countdown-label">Minutes</span>
+                    </div>
+                    <div class="countdown-item">
+                        <span class="countdown-number" id="seconds">0</span>
+                        <span class="countdown-label">Seconds</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="hero-buttons">
+                <a href="#about" class="btn-primary">Learn More</a>
+                <a href="#application" class="btn-secondary">Apply Now</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="about">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">About SMUN'25</h2>
+                <p class="section-subtitle">The first Tripoli-wide MUN conference bringing together students from across Libya</p>
+            </div>
+            
+            <div class="about-content">
+                <div class="about-text">
+                    <h3>Welcome to SMUN'25</h3>
+                    <p>South Mediterranean University Model United Nations '25 is the first Tripoli-wide MUN conference bringing together students from across Libya. This pioneering event marks a significant milestone for the Libyan MUN community as the first conference of its scale in the capital city.</p>
+                    
+                    <p>Our conference will feature diverse committees addressing critical global issues, welcoming delegates who demonstrate English proficiency and genuine passion for international affairs. With over 200 expected participants from across Libya, SMUN'25 promises to be a transformative experience that sets a new standard for Model UN in the country.</p>
+                    
+                    <p>Join us for three days of intensive debate, diplomatic negotiation, and academic excellence as we work together to address the world's most pressing challenges while building bridges across Libya's educational community.</p>
+                    
+                    <div class="location-info">
+                        <h4><i class="fas fa-map-marker-alt"></i> Conference Location</h4>
+                        <p><strong>South Mediterranean University</strong><br>
+                        Tripoli, Libya</p>
+                        <a href="https://maps.app.goo.gl/hvNpnihQ3kRRK7vL7" target="_blank" class="location-btn">
+                            <i class="fas fa-external-link-alt"></i> View on Google Maps
+                        </a>
+                    </div>
+                </div>
+
+            </div>
+            
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-number">200+</div>
+                    <div class="stat-label">Expected Participants</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">3</div>
+                    <div class="stat-label">Conference Days</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">5</div>
+                    <div class="stat-label">Committees</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">25+</div>
+                    <div class="stat-label">International Schools</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    
+    <!-- Registration Section -->
+    <section id="application" class="application section">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">Apply for SMUN'25</h2>
+                <p class="section-subtitle">Secure your spot at Libya's premier international schools MUN conference</p>
+            </div>
+            
+            <div class="application-content">
+                <div class="application-info">
+                    <h3>Application Information</h3>
+                    <p>Applications for SMUN'25 are now open! We offer competitive pricing with comprehensive packages that include all conference materials, meals, and certificates.</p>
+                    
+                    <p class="yw_text_editable" contenteditable="plaintext-only">All delegates will receive comprehensive background guides, position papers templates, and access to our resource database.</p>
+                    
+                    <div style="margin-top: 1.5rem; padding: 1rem; background: rgba(59, 130, 246, 0.1); border-radius: 0.75rem; border-left: 4px solid var(--primary-blue);">
+                        <p style="margin-bottom: 1rem; font-weight: 600; color: var(--text-dark);">
+                            <i class="fas fa-info-circle" style="margin-right: 0.5rem; color: var(--primary-blue);"></i>
+                            Important: Please review our Code of Conduct
+                        </p>
+                        <p style="margin-bottom: 1rem; color: var(--text-gray);">
+                            All participants must familiarize themselves with our conference guidelines and behavioral expectations before applying.
+                        </p>
+                        <a href="code-of-conduct/index.html" class="btn-primary" style="display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.75rem 1.5rem; font-size: 0.9rem;">
+                            <i class="fas fa-file-text"></i>
+                            Read Code of Conduct
+                        </a>
+                    </div>
+                </div>
+                
+                <div class="application-form">
+                    <h3>Choose Your Application Category</h3>
+                    <p style="margin-bottom: 2rem; color: var(--text-gray); text-align: center; line-height: 1.6;">
+                        Select the category that best fits your intended role at SMUN'25. Each package includes a welcome pack, lunch for three days, snacks and beverages, and a certificate of participation.
+                    </p>
+                    
+                    <div class="application-categories" style="display: flex; flex-wrap: wrap; gap: 1.5rem; margin-bottom: 2rem;">
+                        <!-- Individual Delegate Card -->
+                        <div class="category-card" style="background: white; border-radius: 1rem; padding: 1.5rem; box-shadow: 0 4px 12px rgba(0,0,0,0.05); position: relative; overflow: hidden; display: flex; flex-direction: column; flex: 1 0 calc(50% - 0.75rem); max-width: calc(50% - 0.75rem);">
+                            <div style="position: absolute; top: 15px; right: -30px; background: #f59e0b; color: white; transform: rotate(45deg); padding: 5px 40px; font-size: 0.8rem; font-weight: 600;">
+                                RECOMMENDED
+                            </div>
+                            <div style="background: var(--gradient-blue); color: white; width: 60px; height: 60px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.6rem; margin-bottom: 1rem; margin-left: auto; margin-right: auto;">
+                                <i class="fas fa-user"></i>
+                            </div>
+                            <h4 style="font-weight: 700; font-size: 1.3rem; margin-bottom: 0.3rem; color: var(--text-dark);">Individual Delegate</h4>
+                            <p style="color: var(--text-gray); font-size: 0.95rem; margin-bottom: 0.75rem;">Represent countries in committee sessions</p>
+                            
+                            <div style="margin: 1.5rem 0; padding-top: 1.5rem; border-top: 1px solid var(--border-light);">
+                                <div style="font-size: 1.8rem; font-weight: 700; color: var(--primary-blue); margin-bottom: 0.5rem;">
+                                    145 LYD
+                                </div>
+                                <div style="font-size: 0.9rem; color: var(--text-gray); margin-bottom: 1.5rem;">
+                                    per participant
+                                </div>
+                                
+                                <div style="background: rgba(59, 130, 246, 0.1); padding: 1rem; border-radius: 0.5rem; margin-bottom: 1.5rem;">
+                                    <h5 style="font-weight: 600; font-size: 0.9rem; margin-bottom: 0.5rem; color: var(--text-dark);">
+                                        Requirements:
+                                    </h5>
+                                    <ul style="list-style: none; padding: 0; margin: 0; font-size: 0.9rem; color: var(--text-gray);">
+                                        <li style="margin-bottom: 0.5rem;">• Age range: 13-18 years</li>
+                                        <li style="margin-bottom: 0.5rem;">• English fluency</li>
+                                        <li>• Open to all students with good English skills</li>
+                                    </ul>
+                                </div>
+                                
+                                <div style="margin-bottom: 1.5rem;">
+                                    <h5 style="font-weight: 600; font-size: 0.9rem; margin-bottom: 0.5rem; color: var(--text-dark);">
+                                        What's Included:
+                                    </h5>
+                                    <ul style="list-style: none; padding: 0; margin: 0; font-size: 0.9rem; color: var(--text-gray);">
+                                        <li style="margin-bottom: 0.5rem;">• Welcome pack</li>
+                                        <li style="margin-bottom: 0.5rem;">• Lunch for three days</li>
+                                        <li style="margin-bottom: 0.5rem;">• Snacks and beverages</li>
+                                        <li>• Certificate of participation</li>
+                                    </ul>
+                                </div>
+                            </div>
+                            
+                            <a href="https://docs.google.com/forms/d/e/1FAIpQLScuZiB1mOWsoJ47Nw-xXvKHqOUKf3XBudLAsVFxPeZuG3Uq2A/viewform?usp=header" target="_blank" class="btn-primary" style="display: block; text-align: center; padding: 1rem; width: 100%;">Apply as Individual Delegate</a>
+                        </div>
+                        
+                        <!-- School Delegation Card -->
+                        <div class="category-card" style="background: white; border-radius: 1rem; padding: 1.5rem; box-shadow: 0 4px 12px rgba(0,0,0,0.05); display: flex; flex-direction: column; flex: 1 0 calc(50% - 0.75rem); max-width: calc(50% - 0.75rem);">
+                            <div style="background: var(--gradient-blue); color: white; width: 60px; height: 60px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.6rem; margin-bottom: 1rem; margin-left: auto; margin-right: auto;">
+                                <i class="fas fa-users"></i>
+                            </div>
+                            <h4 style="font-weight: 700; font-size: 1.3rem; margin-bottom: 0.3rem; color: var(--text-dark);">Delegation</h4>
+                            <p style="color: var(--text-gray); font-size: 0.95rem; margin-bottom: 0.75rem;">Apply for multiple delegates from your school</p>
+                            
+                            <div style="margin: 1.5rem 0; padding-top: 1.5rem; border-top: 1px solid var(--border-light);">
+                                <div style="font-size: 1.8rem; font-weight: 700; color: var(--primary-blue); margin-bottom: 0.5rem;">
+                                    135 LYD
+                                </div>
+                                <div style="font-size: 0.9rem; color: var(--text-gray); margin-bottom: 1.5rem;">
+                                    per delegate (min. 5 students)
+                                </div>
+                                
+                                <div style="background: rgba(59, 130, 246, 0.1); padding: 1rem; border-radius: 0.5rem; margin-bottom: 1.5rem;">
+                                    <h5 style="font-weight: 600; font-size: 0.9rem; margin-bottom: 0.5rem; color: var(--text-dark);">
+                                        Requirements:
+                                    </h5>
+                                    <ul style="list-style: none; padding: 0; margin: 0; font-size: 0.9rem; color: var(--text-gray);">
+                                        <li style="margin-bottom: 0.5rem;">• Minimum 5 students from same school</li>
+                                        <li style="margin-bottom: 0.5rem;">• One teacher/supervisor required</li>
+                                        <li>• English fluency</li>
+                                    </ul>
+                                </div>
+                                
+                                <div style="margin-bottom: 1.5rem;">
+                                    <h5 style="font-weight: 600; font-size: 0.9rem; margin-bottom: 0.5rem; color: var(--text-dark);">
+                                        What's Included:
+                                    </h5>
+                                    <ul style="list-style: none; padding: 0; margin: 0; font-size: 0.9rem; color: var(--text-gray);">
+                                        <li style="margin-bottom: 0.5rem;">• Welcome pack for each student</li>
+                                        <li style="margin-bottom: 0.5rem;">• Lunch for three days</li>
+                                        <li style="margin-bottom: 0.5rem;">• Snacks and beverages</li>
+                                        <li style="margin-bottom: 0.5rem;">• School recognition award</li>
+                                        <li>• Certificate of participation</li>
+                                    </ul>
+                                </div>
+                            </div>
+                            
+                            <a href="https://forms.gle/AH1Nfe8FxVHSxtzF8" target="_blank" class="btn-primary" style="display: block; text-align: center; padding: 1rem; width: 100%;">Apply for Delegation</a>
+                        </div>
+                        
+                        <!-- Admin Card -->
+                        <div class="category-card" style="background: white; border-radius: 1rem; padding: 1.5rem; box-shadow: 0 4px 12px rgba(0,0,0,0.05); display: flex; flex-direction: column; flex: 1 0 calc(50% - 0.75rem); max-width: calc(50% - 0.75rem);">
+                            <div style="background: var(--gradient-blue); color: white; width: 60px; height: 60px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.6rem; margin-bottom: 1rem; margin-left: auto; margin-right: auto;">
+                                <i class="fas fa-cog"></i>
+                            </div>
+                            <h4 style="font-weight: 700; font-size: 1.3rem; margin-bottom: 0.3rem; color: var(--text-dark);">Admin</h4>
+                            <p style="color: var(--text-gray); font-size: 0.95rem; margin-bottom: 0.75rem;">Support conference operations</p>
+                            
+                            <div style="margin: 1.5rem 0; padding-top: 1.5rem; border-top: 1px solid var(--border-light);">
+                                <div style="font-size: 1.8rem; font-weight: 700; color: var(--primary-blue); margin-bottom: 0.5rem;">
+                                    105 LYD
+                                </div>
+                                <div style="font-size: 0.9rem; color: var(--text-gray); margin-bottom: 1.5rem;">
+                                    per participant
+                                </div>
+                                
+                                <div style="background: rgba(59, 130, 246, 0.1); padding: 1rem; border-radius: 0.5rem; margin-bottom: 1.5rem;">
+                                    <h5 style="font-weight: 600; font-size: 0.9rem; margin-bottom: 0.5rem; color: var(--text-dark);">
+                                        Requirements:
+                                    </h5>
+                                    <ul style="list-style: none; padding: 0; margin: 0; font-size: 0.9rem; color: var(--text-gray);">
+                                        <li style="margin-bottom: 0.5rem;">• Organizational skills</li>
+                                        <li style="margin-bottom: 0.5rem;">• Team player</li>
+                                        <li>• English fluency required</li>
+                                    </ul>
+                                </div>
+                                
+                                <div style="margin-bottom: 1.5rem;">
+                                    <h5 style="font-weight: 600; font-size: 0.9rem; margin-bottom: 0.5rem; color: var(--text-dark);">
+                                        What's Included:
+                                    </h5>
+                                    <ul style="list-style: none; padding: 0; margin: 0; font-size: 0.9rem; color: var(--text-gray);">
+                                        <li style="margin-bottom: 0.5rem;">• Welcome pack</li>
+                                        <li style="margin-bottom: 0.5rem;">• Lunch for three days</li>
+                                        <li style="margin-bottom: 0.5rem;">• Snacks and beverages</li>
+                                        <li>• Certificate of participation</li>
+                                    </ul>
+                                </div>
+                            </div>
+                            
+                            <a href="https://forms.gle/Rt3bza5wtfqkBjHN7" target="_blank" class="btn-primary" style="display: block; text-align: center; padding: 1rem; width: 100%;">Apply as Admin</a>
+                        </div>
+                        
+                        <!-- Chair Card -->
+                        <div class="category-card" style="background: white; border-radius: 1rem; padding: 1.5rem; box-shadow: 0 4px 12px rgba(0,0,0,0.05); display: flex; flex-direction: column; flex: 1 0 calc(50% - 0.75rem); max-width: calc(50% - 0.75rem);">
+                            <div style="background: var(--gradient-blue); color: white; width: 60px; height: 60px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.6rem; margin-bottom: 1rem; margin-left: auto; margin-right: auto;">
+                                <i class="fas fa-gavel"></i>
+                            </div>
+                            <h4 style="font-weight: 700; font-size: 1.3rem; margin-bottom: 0.3rem; color: var(--text-dark);">Chair</h4>
+                            <p style="color: var(--text-gray); font-size: 0.95rem; margin-bottom: 0.75rem;">Lead committee discussions</p>
+                            
+                            <div style="margin: 1.5rem 0; padding-top: 1.5rem; border-top: 1px solid var(--border-light);">
+                                <div style="font-size: 1.8rem; font-weight: 700; color: var(--primary-blue); margin-bottom: 0.5rem;">
+                                    95 LYD
+                                </div>
+                                <div style="font-size: 0.9rem; color: var(--text-gray); margin-bottom: 1.5rem;">
+                                    per participant
+                                </div>
+                                
+                                <div style="background: rgba(59, 130, 246, 0.1); padding: 1rem; border-radius: 0.5rem; margin-bottom: 1.5rem;">
+                                    <h5 style="font-weight: 600; font-size: 0.9rem; margin-bottom: 0.5rem; color: var(--text-dark);">
+                                        Requirements:
+                                    </h5>
+                                    <ul style="list-style: none; padding: 0; margin: 0; font-size: 0.9rem; color: var(--text-gray);">
+                                        <li style="margin-bottom: 0.5rem;">• Minimum 2 MUN experiences</li>
+                                        <li style="margin-bottom: 0.5rem;">• Leadership abilities</li>
+                                        <li>• Excellent English fluency</li>
+                                    </ul>
+                                </div>
+                                
+                                <div style="margin-bottom: 1.5rem;">
+                                    <h5 style="font-weight: 600; font-size: 0.9rem; margin-bottom: 0.5rem; color: var(--text-dark);">
+                                        What's Included:
+                                    </h5>
+                                    <ul style="list-style: none; padding: 0; margin: 0; font-size: 0.9rem; color: var(--text-gray);">
+                                        <li style="margin-bottom: 0.5rem;">• Welcome pack</li>
+                                        <li style="margin-bottom: 0.5rem;">• Lunch for three days</li>
+                                        <li style="margin-bottom: 0.5rem;">• Snacks and beverages</li>
+                                        <li>• Certificate of participation</li>
+                                    </ul>
+                                </div>
+                            </div>
+                            
+                            <a href="https://forms.gle/viPuspqdmTGpyzhF9" target="_blank" class="btn-primary" style="display: block; text-align: center; padding: 1rem; width: 100%;">Apply as Chair</a>
+                        </div>
+                        
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <p>&copy; 2025 SMUN. Organized by MUNLY  in partnership with South Mediterranean University. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Countdown Timer
+        function updateCountdown() {
+            const conferenceDate = new Date('October 22, 2025 09:00:00').getTime();
+            const now = new Date().getTime();
+            const timeLeft = conferenceDate - now;
+            
+            if (timeLeft > 0) {
+                const days = Math.floor(timeLeft / (1000 * 60 * 60 * 24));
+                const hours = Math.floor((timeLeft % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const minutes = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
+                const seconds = Math.floor((timeLeft % (1000 * 60)) / 1000);
+                
+                document.getElementById('days').innerText = days;
+                document.getElementById('hours').innerText = hours;
+                document.getElementById('minutes').innerText = minutes;
+                document.getElementById('seconds').innerText = seconds;
+            } else {
+                document.getElementById('countdown').innerHTML = '<h3>Conference has started!</h3>';
+            }
+        }
+        
+        // Initial call
+        updateCountdown();
+        
+        // Update every second
+        setInterval(updateCountdown, 1000);
+        
+        // Mobile menu functionality
+        document.querySelector('.mobile-menu').addEventListener('click', function() {
+            const navLinks = document.querySelector('.nav-links');
+            if (navLinks.classList.contains('mobile-active')) {
+                navLinks.classList.remove('mobile-active');
+            } else {
+                navLinks.classList.add('mobile-active');
+            }
+        });
+    </script>
+</body>
+</html>

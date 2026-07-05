@@ -1,0 +1,3033 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MUNLY - Libya's Premier MUN Platform</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <script src="frontend-config.js"></script>
+    <style>
+        :root {
+            --primary-blue: #1e40af;
+            --secondary-blue: #3b82f6;
+            --light-blue: #dbeafe;
+            --dark-blue: #1e3a8a;
+            --accent-blue: #60a5fa;
+            --text-dark: #1f2937;
+            --text-gray: #6b7280;
+            --background-white: #ffffff;
+            --background-light: #f8fafc;
+            --background-gray: #f1f5f9;
+            --border-light: #e2e8f0;
+            --gradient-blue: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%);
+            --gradient-light: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%);
+            --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+            --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+            --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+            --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Playfair Display', serif;
+            line-height: 1.6;
+            color: var(--text-dark);
+            background-color: var(--background-white);
+            overflow-x: hidden;
+        }
+
+        /* Navigation */
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--border-light);
+            z-index: 1000;
+            transition: all 0.3s ease;
+        }
+
+        nav.scrolled {
+            background: rgba(255, 255, 255, 0.98);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 70px;
+        }
+
+        .logo {
+            font-family: 'Playfair Display', serif;
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--primary-blue);
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .logo:hover {
+            color: var(--secondary-blue);
+            transform: scale(1.05);
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+            align-items: center;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: var(--text-dark);
+            font-weight: 500;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .nav-links a:hover {
+            color: var(--primary-blue);
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--gradient-blue);
+            transition: width 0.3s ease;
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        .cta-button {
+            background: var(--gradient-blue);
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 0.5rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .cta-button:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        /* Profile Section */
+        .profile-section {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .profile-avatar {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            background: var(--gradient-blue);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 700;
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: var(--shadow-md);
+        }
+
+        .profile-avatar:hover {
+            transform: scale(1.1);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .profile-name {
+            color: var(--text-dark);
+            font-weight: 600;
+            font-size: 0.95rem;
+        }
+
+        .profile-dropdown {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .profile-dropdown a {
+            text-decoration: none;
+            color: var(--text-dark);
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .profile-dropdown a:hover {
+            color: var(--primary-blue);
+        }
+
+        .mobile-menu {
+            display: none;
+            flex-direction: column;
+            cursor: pointer;
+            z-index: 1001;
+        }
+
+        .mobile-menu span {
+            width: 25px;
+            height: 3px;
+            background: var(--primary-blue);
+            margin: 3px 0;
+            transition: 0.3s;
+        }
+        
+        .nav-links.mobile-active {
+            display: flex;
+            flex-direction: column;
+            position: absolute;
+            top: 70px;
+            left: 0;
+            right: 0;
+            background: white;
+            box-shadow: var(--shadow-md);
+            padding: 1rem;
+            align-items: center;
+            z-index: 1000;
+        }
+        
+        .nav-links.mobile-active li {
+            margin: 0.8rem 0;
+        }
+        
+        /* Mobile CTA button styling */
+        .mobile-cta {
+            width: 100%;
+            text-align: center;
+            margin-top: 1rem !important;
+        }
+        
+        .mobile-cta .cta-button {
+            width: 80%;
+            margin: 0 auto;
+        }
+
+        /* Hero Section */
+        .hero {
+            background: var(--gradient-blue);
+            color: white;
+            padding: 120px 0 80px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('hssl7vtfu1.jpeg') center/cover no-repeat;
+            z-index: -2;
+        }
+
+        .hero::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, rgba(30, 64, 175, 0.85), rgba(59, 130, 246, 0.75));
+            z-index: -1;
+        }
+
+        .hero-content {
+            max-width: 1200px;
+            margin: 3rem auto 0;
+            padding: 0 1.5rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 4.5rem;
+            font-weight: 700;
+            margin: 0 auto 2.5rem;
+            background: linear-gradient(45deg, #ffffff, #bfdbfe);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: fadeInUp 1s ease-out;
+            line-height: 1.2;
+        }
+
+        .hero p {
+            font-size: 1.5rem;
+            margin-bottom: 2rem;
+            opacity: 0.9;
+            animation: fadeInUp 1s ease-out 0.2s both;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .hero-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 2rem;
+            margin: 3rem 0;
+            animation: fadeInUp 1s ease-out 0.4s both;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 3rem;
+            font-weight: 800;
+            color: #bfdbfe;
+            display: block;
+        }
+
+        .stat-label {
+            font-size: 1rem;
+            opacity: 0.9;
+            margin-top: 0.5rem;
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 1.5rem;
+            justify-content: center;
+            margin-top: 4rem;
+            animation: fadeInUp 1s ease-out 0.6s both;
+        }
+
+        .btn-primary {
+            background: white;
+            color: var(--primary-blue);
+            padding: 1.25rem 2.5rem;
+            border: none;
+            border-radius: 0.75rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 1.2rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: white;
+            padding: 1.25rem 2.5rem;
+            border: 2px solid white;
+            border-radius: 0.75rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 1.1rem;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-xl);
+            background: var(--light-blue);
+        }
+
+        .btn-secondary:hover {
+            background: white;
+            color: var(--primary-blue);
+            transform: translateY(-3px);
+        }
+
+        /* Conferences Section */
+        .conferences {
+            padding: 100px 0;
+            background: var(--background-light);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1.5rem;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 4rem;
+        }
+
+        .section-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 3rem;
+            font-weight: 600;
+            color: var(--text-dark);
+            margin-bottom: 1rem;
+        }
+
+        .section-subtitle {
+            font-size: 1.2rem;
+            color: var(--text-gray);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .conference-filters {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-bottom: 3rem;
+            flex-wrap: wrap;
+        }
+
+        .filter-btn {
+            background: white;
+            color: var(--text-gray);
+            padding: 0.75rem 1.5rem;
+            border: 2px solid var(--border-light);
+            border-radius: 2rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+
+        .filter-btn.active,
+        .filter-btn:hover {
+            background: var(--primary-blue);
+            color: white;
+            border-color: var(--primary-blue);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .conferences-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
+            gap: 2rem;
+            margin-bottom: 4rem;
+        }
+
+        .conference-card {
+            background: white;
+            border-radius: 1rem;
+            overflow: visible;
+            box-shadow: var(--shadow-md);
+            transition: all 0.3s ease;
+            position: relative;
+            margin-bottom: 20px;
+        }
+
+        .conference-card:hover {
+            transform: translateY(-10px);
+            box-shadow: var(--shadow-xl);
+        }
+
+        .conference-image {
+            width: 100%;
+            height: 200px;
+            background: var(--gradient-light);
+            position: relative;
+            overflow: hidden;
+            border-top-left-radius: 1rem;
+            border-top-right-radius: 1rem;
+        }
+        
+        .conference-status, .conference-date {
+            z-index: 2;
+            position: relative;
+        }
+        
+        .conference-logo {
+            position: absolute;
+            bottom: -30px;
+            right: 20px;
+            width: 90px;
+            height: 90px;
+            border-radius: 50%;
+            background: white;
+            border: 4px solid white;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            z-index: 3;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            color: var(--primary-blue);
+            font-weight: 700;
+        }
+
+        .conference-status {
+            position: absolute;
+            top: 1rem;
+            left: 1rem;
+            background: rgba(0, 0, 0, 0.8);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 1rem;
+            font-size: 0.875rem;
+            font-weight: 600;
+        }
+
+        .conference-date {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: white;
+            color: var(--primary-blue);
+            padding: 0.5rem 1rem;
+            border-radius: 1rem;
+            font-size: 0.875rem;
+            font-weight: 600;
+            box-shadow: var(--shadow-md);
+        }
+
+        .conference-content {
+            padding: 1.5rem;
+        }
+
+        .conference-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--text-dark);
+            margin-bottom: 0.5rem;
+        }
+
+        .conference-subtitle {
+            color: var(--text-gray);
+            margin-bottom: 1rem;
+            font-size: 0.9rem;
+        }
+
+        .conference-location {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--text-gray);
+            margin-bottom: 1rem;
+        }
+
+        .conference-stats {
+            display: flex;
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .conference-stat {
+            text-align: center;
+        }
+
+        .conference-stat-number {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--primary-blue);
+        }
+
+        .conference-stat-label {
+            font-size: 0.75rem;
+            color: var(--text-gray);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .conference-description {
+            color: var(--text-gray);
+            margin-bottom: 1.5rem;
+            line-height: 1.6;
+        }
+
+        .conference-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .conference-tag {
+            background: var(--light-blue);
+            color: var(--primary-blue);
+            padding: 0.25rem 0.75rem;
+            border-radius: 1rem;
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+
+        .conference-actions {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .btn-small {
+            padding: 0.5rem 1rem;
+            border-radius: 0.5rem;
+            font-size: 0.875rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+            text-align: center;
+            flex: 1;
+        }
+
+        .btn-outline {
+            background: transparent;
+            color: var(--primary-blue);
+            border: 2px solid var(--primary-blue);
+        }
+
+        .btn-outline:hover {
+            background: var(--primary-blue);
+            color: white;
+        }
+
+        /* Add Conference Section */
+        .add-conference {
+            background: var(--background-white);
+            padding: 80px 0;
+            text-align: center;
+        }
+
+        .add-conference-card {
+            background: var(--gradient-blue);
+            color: white;
+            padding: 3rem;
+            border-radius: 1.5rem;
+            max-width: 800px;
+            margin: 0 auto;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .add-conference-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="dots" width="20" height="20" patternUnits="userSpaceOnUse"><circle cx="10" cy="10" r="1" fill="rgba(255,255,255,0.1)"/></pattern></defs><rect width="100" height="100" fill="url(%23dots)"/></svg>');
+        }
+
+        .add-conference-content {
+            position: relative;
+            z-index: 1;
+        }
+
+        .add-conference h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .add-conference p {
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+            opacity: 0.9;
+        }
+
+        .add-conference-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 2rem;
+            margin: 2rem 0;
+        }
+
+        /* About Section */
+        .about {
+            padding: 100px 0;
+            background: var(--background-light);
+        }
+
+        .about-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            align-items: center;
+        }
+
+        .about-text h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.5rem;
+            margin-bottom: 1.5rem;
+            color: var(--text-dark);
+        }
+
+        .about-text p {
+            color: var(--text-gray);
+            margin-bottom: 1.5rem;
+            line-height: 1.8;
+        }
+
+        .about-features {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .about-feature {
+            display: flex;
+            align-items: flex-start;
+            gap: 1rem;
+        }
+
+        .about-feature-icon {
+            background: var(--gradient-blue);
+            color: white;
+            width: 50px;
+            height: 50px;
+            border-radius: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.25rem;
+            flex-shrink: 0;
+        }
+
+        .about-feature-content h4 {
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: var(--text-dark);
+        }
+
+        .about-feature-content p {
+            color: var(--text-gray);
+            margin: 0;
+        }
+
+        /* Special styling for about-features in add-conference section */
+        .add-conference .about-features .about-feature-content h4 {
+            color: white;
+            font-weight: 700;
+        }
+
+        .add-conference .about-features .about-feature-content p {
+            color: rgba(255, 255, 255, 0.9);
+            font-weight: 500;
+        }
+
+        .about-image {
+            background: var(--gradient-light);
+            border-radius: 1rem;
+            height: 500px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 4rem;
+            color: var(--primary-blue);
+        }
+
+        /* Calendar Section */
+        .calendar-section {
+            background: var(--background-light);
+            padding: 1.25rem 1rem;
+            border-radius: 0.75rem;
+            margin: 1.5rem 0;
+            box-shadow: var(--shadow-sm);
+            display: none;
+        }
+
+        .calendar-section.visible {
+            display: block;
+        }
+
+        .calendar-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+            flex-wrap: wrap;
+            gap: 0.75rem;
+        }
+
+        .calendar-header h3 {
+            font-size: 1.1rem;
+            color: var(--text-dark);
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+
+        .calendar-container {
+            background: white;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            margin-bottom: 1rem;
+            box-shadow: var(--shadow-md);
+        }
+
+        .calendar-nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.75rem;
+        }
+
+        .calendar-nav h4 {
+            font-size: 0.9rem;
+            color: var(--text-dark);
+            margin: 0;
+            min-width: 100px;
+            text-align: center;
+        }
+
+        .nav-btn {
+            background: var(--primary-blue);
+            color: white;
+            border: none;
+            width: 28px;
+            height: 28px;
+            border-radius: 0.3rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.75rem;
+        }
+
+        .nav-btn:hover {
+            background: var(--dark-blue);
+            transform: scale(1.1);
+        }
+
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 0.2rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .calendar-grid div {
+            aspect-ratio: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid var(--border-light);
+            border-radius: 0.25rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-weight: 600;
+            font-size: 1.05rem; /* larger date numbers */
+            position: relative;
+        }
+
+        .calendar-grid .day-header {
+            border: none;
+            color: var(--text-gray);
+            font-weight: 700;
+            background: var(--background-light);
+            font-size: 0.95rem; /* larger day names */
+        }
+
+        .calendar-grid .other-month {
+            color: #ccc;
+        }
+
+        .calendar-grid .today {
+            background: transparent; /* no fill for plain today */
+            color: var(--text-dark);
+            border: 2px solid var(--secondary-blue);
+            border-radius: 0.25rem;
+            box-shadow: none;
+        }
+
+        .calendar-grid .mun-date {
+            background: var(--gradient-blue);
+            color: white;
+            border-color: var(--primary-blue);
+        }
+
+        .calendar-grid div:hover:not(.day-header) {
+            transform: scale(1.05);
+            box-shadow: var(--shadow-sm);
+            border-color: var(--primary-blue);
+        }
+
+        .mun-dates-list {
+            background: white;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            box-shadow: var(--shadow-md);
+        }
+
+        .mun-dates-list h4 {
+            font-size: 0.95rem;
+            color: var(--text-dark);
+            margin-bottom: 0.75rem;
+        }
+
+        .mun-list {
+            display: grid;
+            gap: 0.5rem;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+
+        .mun-item {
+            background: var(--background-light);
+            padding: 0.5rem;
+            border-radius: 0.35rem;
+            border-left: 2px solid var(--primary-blue);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .mun-item.past {
+            border-left-color: #999;
+            opacity: 0.7;
+        }
+
+        .mun-info {
+            flex: 1;
+        }
+
+        .mun-name {
+            font-weight: 600;
+            color: var(--text-dark);
+            margin-bottom: 0.1rem;
+            font-size: 0.9rem;
+        }
+
+        .mun-details {
+            display: flex;
+            gap: 0.5rem;
+            font-size: 0.75rem;
+            color: var(--text-gray);
+            flex-wrap: wrap;
+        }
+
+        .mun-delete {
+            background: #ff6b6b;
+            color: white;
+            border: none;
+            padding: 0.3rem 0.6rem;
+            border-radius: 0.3rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.65rem;
+            white-space: nowrap;
+        }
+
+        .mun-delete:hover {
+            background: #d63031;
+            transform: scale(1.05);
+        }
+
+        .empty-message {
+            text-align: center;
+            color: var(--text-gray);
+            padding: 1rem;
+            font-style: italic;
+            font-size: 0.9rem;
+        }
+
+        /* Resources Section */
+        .resources {
+            padding: 100px 0;
+            background: var(--background-white);
+        }
+
+        .resources-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+        }
+
+        .resource-card {
+            background: white;
+            border: 1px solid var(--border-light);
+            border-radius: 1rem;
+            padding: 2rem;
+            text-align: center;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .resource-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: var(--gradient-blue);
+        }
+
+        .resource-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .resource-icon {
+            background: var(--light-blue);
+            color: var(--primary-blue);
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            margin: 0 auto 1.5rem;
+        }
+
+        .resource-card h3 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: var(--text-dark);
+        }
+
+        .resource-card p {
+            color: var(--text-gray);
+            margin-bottom: 1.5rem;
+            line-height: 1.6;
+        }
+
+        .resource-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            padding: 1rem;
+            background: var(--background-light);
+            border-radius: 0.5rem;
+        }
+
+        .resource-type {
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: var(--primary-blue);
+        }
+
+        .resource-size {
+            font-size: 0.875rem;
+            color: var(--text-gray);
+        }
+
+        /* Contact Section */
+        .contact {
+            padding: 100px 0;
+            background: var(--background-light);
+        }
+
+        .contact-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            align-items: start;
+        }
+
+        .contact-info h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.5rem;
+            margin-bottom: 1.5rem;
+            color: var(--text-dark);
+        }
+
+        .contact-info p {
+            color: var(--text-gray);
+            margin-bottom: 2rem;
+            line-height: 1.8;
+        }
+
+        .contact-methods {
+            display: grid;
+            gap: 1.5rem;
+        }
+
+        .contact-method {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem;
+            background: white;
+            border-radius: 0.75rem;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            border: 2px solid transparent;
+        }
+
+        .contact-method:hover {
+            transform: translateX(10px);
+            box-shadow: var(--shadow-md);
+            border-color: var(--primary-blue);
+        }
+
+        .contact-method:active {
+            transform: translateX(5px) scale(0.98);
+        }
+
+        .contact-method-icon {
+            background: var(--gradient-blue);
+            color: white;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.25rem;
+        }
+
+        .contact-method-content h4 {
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+            color: var(--text-dark);
+        }
+
+        .contact-method-content p {
+            color: var(--text-gray);
+            margin: 0;
+        }
+
+        .contact-form {
+            background: white;
+            padding: 2rem;
+            border-radius: 1rem;
+            box-shadow: var(--shadow-md);
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: var(--text-dark);
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 0.75rem;
+            border: 2px solid var(--border-light);
+            border-radius: 0.5rem;
+            font-family: inherit;
+            transition: all 0.3s ease;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--primary-blue);
+            box-shadow: 0 0 0 3px rgba(30, 64, 175, 0.1);
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 120px;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+
+        /* Footer */
+        footer {
+            background: var(--dark-blue);
+            color: white;
+            padding: 60px 0 30px;
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 3rem;
+            margin-bottom: 3rem;
+        }
+
+        .footer-section h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.5rem;
+            margin-bottom: 1.5rem;
+            color: #bfdbfe;
+        }
+
+        .footer-section p {
+            opacity: 0.8;
+            line-height: 1.8;
+            margin-bottom: 1rem;
+        }
+
+        .footer-links {
+            list-style: none;
+        }
+
+        .footer-links li {
+            margin-bottom: 0.75rem;
+        }
+
+        .footer-links a {
+            color: white;
+            text-decoration: none;
+            opacity: 0.8;
+            transition: all 0.3s ease;
+        }
+
+        .footer-links a:hover {
+            opacity: 1;
+            color: #bfdbfe;
+            transform: translateX(5px);
+        }
+
+        .social-links {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .social-links a {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+
+        .social-links a:hover {
+            background: var(--secondary-blue);
+            transform: translateY(-3px);
+        }
+
+        .footer-bottom {
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            padding-top: 2rem;
+            text-align: center;
+            opacity: 0.8;
+        }
+
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        .fade-in {
+            animation: fadeIn 1s ease-out;
+        }
+
+        .fade-in-up {
+            animation: fadeInUp 1s ease-out;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+            
+            .mobile-menu {
+                display: flex;
+            }
+            
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+            
+            .hero p {
+                font-size: 1.2rem;
+            }
+            
+            .hero-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .section-title {
+                font-size: 2rem;
+            }
+            
+            .conferences-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .about-content {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+            
+            .contact-content {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+            
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+            
+            .footer-content {
+                grid-template-columns: 1fr;
+                text-align: center;
+            }
+            
+            .nav-links.mobile-active li:last-child {
+                margin-top: 1rem;
+                width: 100%;
+                text-align: center;
+            }
+            
+            .nav-links.mobile-active li:last-child .cta-button {
+                display: inline-block;
+                width: 80%;
+            }
+        }
+
+        /* Conference Detail Pages */
+        .conference-detail {
+            padding: 120px 0 80px;
+            background: var(--background-light);
+        }
+
+        .conference-header {
+            background: var(--gradient-blue);
+            color: white;
+            padding: 2rem;
+            border-radius: 1rem;
+            margin-bottom: 3rem;
+            text-align: center;
+        }
+
+        .conference-detail-content {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 3rem;
+        }
+
+        .conference-sidebar {
+            background: white;
+            padding: 2rem;
+            border-radius: 1rem;
+            box-shadow: var(--shadow-md);
+            height: fit-content;
+        }
+
+        /* Profile Settings Modal */
+        .hidden {
+            display: none !important;
+        }
+
+        #profileModal {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 2001;
+        }
+
+        .profile-modal-content {
+            background: white;
+            padding: 2.5rem;
+            border-radius: 1rem;
+            max-width: 500px;
+            width: 90%;
+            box-shadow: var(--shadow-xl);
+            max-height: 85vh;
+            overflow-y: auto;
+        }
+
+        .profile-modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            border-bottom: 2px solid var(--border-light);
+            padding-bottom: 1rem;
+        }
+
+        .profile-modal-header h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.8rem;
+            color: var(--text-dark);
+            margin: 0;
+        }
+
+        .close-profile-modal {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--text-gray);
+            transition: all 0.3s ease;
+        }
+
+        .close-profile-modal:hover {
+            color: var(--text-dark);
+            transform: rotate(90deg);
+        }
+
+        .profile-info-group {
+            margin-bottom: 2rem;
+        }
+
+        .profile-info-label {
+            font-weight: 600;
+            color: var(--text-gray);
+            font-size: 0.875rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 0.5rem;
+        }
+
+        .profile-info-value {
+            color: var(--text-dark);
+            font-size: 1.1rem;
+            padding: 0.75rem;
+            background: var(--background-light);
+            border-radius: 0.5rem;
+            border: 1px solid var(--border-light);
+        }
+
+        .profile-actions {
+            display: flex;
+            gap: 1rem;
+            margin-top: 2rem;
+            padding-top: 2rem;
+            border-top: 2px solid var(--border-light);
+        }
+
+        .profile-actions button {
+            flex: 1;
+            padding: 0.875rem;
+            border: none;
+            border-radius: 0.5rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.95rem;
+        }
+
+        .btn-edit-profile {
+            background: var(--gradient-blue);
+            color: white;
+        }
+
+        .btn-edit-profile:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .btn-sign-out {
+            background: var(--background-light);
+            color: var(--primary-blue);
+            border: 2px solid var(--primary-blue);
+        }
+
+        .btn-sign-out:hover {
+            background: var(--primary-blue);
+            color: white;
+        }
+
+        #profileModal.hidden {
+            display: none !important;
+        }
+
+        /* Profile Page Section */
+        #profilePage {
+            display: none;
+            padding: 100px 0 80px;
+            background: var(--background-light);
+            min-height: 100vh;
+        }
+
+        #profilePage.active {
+            display: block;
+        }
+
+        .profile-page-container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 0 1.5rem;
+        }
+
+        .profile-page-header {
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+            margin-bottom: 3rem;
+            background: white;
+            padding: 2rem;
+            border-radius: 1rem;
+            box-shadow: var(--shadow-md);
+        }
+
+        .profile-page-avatar {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            background: var(--gradient-blue);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 700;
+            font-size: 2.5rem;
+        }
+
+        .profile-page-header-info h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 2rem;
+            color: var(--text-dark);
+            margin: 0 0 0.5rem 0;
+        }
+
+        .profile-page-header-info p {
+            color: var(--text-gray);
+            margin: 0;
+            font-size: 1rem;
+        }
+
+        .profile-page-sections {
+            display: grid;
+            gap: 2rem;
+        }
+
+        .profile-section-card {
+            background: white;
+            padding: 2rem;
+            border-radius: 1rem;
+            box-shadow: var(--shadow-md);
+        }
+
+        .profile-section-card h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.8rem;
+            color: var(--text-dark);
+            margin-bottom: 1.5rem;
+            border-bottom: 3px solid var(--gradient-blue);
+            padding-bottom: 1rem;
+        }
+
+        .profile-info-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 0;
+            border-bottom: 1px solid var(--border-light);
+        }
+
+        .profile-info-row:last-child {
+            border-bottom: none;
+        }
+
+        .profile-info-row-label {
+            font-weight: 600;
+            color: var(--text-gray);
+            font-size: 0.95rem;
+        }
+
+        .profile-info-row-value {
+            color: var(--text-dark);
+            font-size: 1.05rem;
+        }
+
+        .profile-page-actions {
+            display: flex;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        .profile-back-btn {
+            flex: 1;
+            padding: 0.875rem;
+            background: var(--background-light);
+            color: var(--primary-blue);
+            border: 2px solid var(--primary-blue);
+            border-radius: 0.5rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.95rem;
+        }
+
+        .profile-back-btn:hover {
+            background: var(--primary-blue);
+            color: white;
+        }
+
+        .profile-signout-btn {
+            flex: 1;
+            padding: 0.875rem;
+            background: #fee2e2;
+            color: #dc2626;
+            border: 2px solid #dc2626;
+            border-radius: 0.5rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.95rem;
+        }
+
+        .profile-signout-btn:hover {
+            background: #dc2626;
+            color: white;
+        }
+
+        .dashboard-placeholder {
+            padding: 3rem;
+            text-align: center;
+            color: var(--text-gray);
+        }
+
+        .dashboard-placeholder p {
+            font-size: 1.1rem;
+            margin-top: 1rem;
+        }
+
+        .schedule-item {
+            padding: 1rem;
+            border-left: 4px solid var(--primary-blue);
+            margin-bottom: 1rem;
+            background: var(--background-light);
+            border-radius: 0.5rem;
+        }
+
+        .committee-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .committee-card {
+            background: white;
+            padding: 2rem;
+            border-radius: 1rem;
+            box-shadow: var(--shadow-md);
+            transition: all 0.3s ease;
+        }
+
+        .committee-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        /* Utility Classes */
+        .text-center { text-align: center; }
+        .text-blue { color: var(--primary-blue); }
+        .bg-blue { background: var(--primary-blue); }
+        .mb-2 { margin-bottom: 1rem; }
+        .mb-4 { margin-bottom: 2rem; }
+        .mt-4 { margin-top: 2rem; }
+        .hidden { display: none; }
+        .flex { display: flex; }
+        .items-center { align-items: center; }
+        .justify-center { justify-content: center; }
+        .gap-2 { gap: 1rem; }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav id="navbar">
+        <div class="nav-container">
+            <div id="profileSection" class="profile-section hidden">
+                <div class="profile-avatar" id="profileAvatar"></div>
+                <div class="profile-name" id="profileName"></div>
+            </div>
+            <a href="#" class="logo">MUNLY</a>
+            <ul class="nav-links">
+                <li><a href="#home">Home</a></li>
+                <li><a href="#conferences">Conferences</a></li>
+                <li><a href="#about">About</a></li>
+                <li><a href="#resources">Resources</a></li>
+                <li><a href="#contact">Contact</a></li>
+                <li><a href="#add-conference" class="cta-button">Add Conference</a></li>
+                <li id="authContainer"><a href="#" id="authBtn" class="cta-button">Sign In</a></li>
+            </ul>
+            <div class="mobile-menu">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Profile Page -->
+    <section id="profilePage">
+        <div class="profile-page-container">
+            <div class="profile-page-header">
+                <div class="profile-page-avatar" id="profilePageAvatar"></div>
+                <div class="profile-page-header-info">
+                    <h1 id="profilePageName">-</h1>
+                    <p id="profilePageEmail">-</p>
+                </div>
+            </div>
+
+            <div class="profile-page-sections">
+                <!-- Dashboard Section -->
+                <div class="profile-section-card">
+                    <h2>Dashboard</h2>
+                    <div class="dashboard-placeholder">
+                        <i class="fas fa-chart-line" style="font-size: 3rem; color: var(--primary-blue);"></i>
+                        <p>Dashboard features coming soon! Check back later for your activity and statistics.</p>
+                    </div>
+                </div>
+
+                <!-- Personal Info Section -->
+                <div class="profile-section-card">
+                    <h2>Personal Information</h2>
+                    <div class="profile-info-row">
+                        <div class="profile-info-row-label">Full Name</div>
+                        <div class="profile-info-row-value" id="profileInfoName">-</div>
+                    </div>
+                    <div class="profile-info-row">
+                        <div class="profile-info-row-label">Email Address</div>
+                        <div class="profile-info-row-value" id="profileInfoEmail">-</div>
+                    </div>
+                    <div class="profile-info-row">
+                        <div class="profile-info-row-label">Member Since</div>
+                        <div class="profile-info-row-value" id="profileInfoMemberSince">-</div>
+                    </div>
+                    <div class="profile-page-actions">
+                        <button class="profile-back-btn" id="profileBackBtn">Back to Site</button>
+                        <button class="profile-signout-btn" id="profilePageSignOutBtn">Sign Out</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Hero Section -->
+    <section id="home" class="hero">
+        <div class="hero-content">
+            <h1>Libya's Premier MUN Platform</h1>
+            <p>Connect with the vibrant Model United Nations community across Libya.<br>
+            Find conferences, build networks, and shape the future of diplomacy.</p>
+            
+            <div class="hero-buttons">
+                <a href="#conferences" class="btn-primary">Explore Conferences</a>
+                <a href="#about" class="btn-secondary">Learn More</a>
+            </div>
+            
+            <img src="1q18u0m2ms.png" alt="MUNLY Logo" class="hero-logo" style="max-width: 150px; margin-top: 2rem; filter: brightness(1.5) contrast(1.1);">
+        </div>
+    </section>
+
+    <!-- Conferences Section -->
+    <section id="conferences" class="conferences">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">Find Your Perfect MUN Conference</h2>
+                <p class="section-subtitle">Discover upcoming and past Model United Nations conferences across Libya</p>
+            </div>
+
+            <div class="conference-filters">
+                <button class="filter-btn active" data-filter="all">All Conferences</button>
+                <button class="filter-btn" data-filter="upcoming">Upcoming</button>
+                <button class="filter-btn" data-filter="past">Past Events</button>
+                <button class="filter-btn" data-filter="featured">Featured</button>
+            </div>
+
+            <!-- Calendar Section -->
+            <div class="calendar-section">
+                <div class="calendar-header">
+                    <h3><i class="fas fa-calendar-alt"></i> MUN Calendar</h3>
+                </div>
+
+                <div class="calendar-container">
+                    <div class="calendar-nav">
+                        <button id="prevMonth" class="nav-btn"><i class="fas fa-chevron-left"></i></button>
+                        <h4 id="currentMonth"></h4>
+                        <button id="nextMonth" class="nav-btn"><i class="fas fa-chevron-right"></i></button>
+                    </div>
+                    <div class="calendar-grid" id="calendarGrid"></div>
+                </div>
+
+                <div class="mun-dates-list">
+                    <h4>Upcoming MUNs</h4>
+                    <div id="munDatesList" class="mun-list"></div>
+                </div>
+            </div>
+
+            <div class="conferences-grid">
+                <!-- ISMMUN'24 -->
+                <div class="conference-card" data-category="past featured">
+                    <div class="conference-image">
+                        <div class="conference-status">Past Event</div>
+                        <div class="conference-date">OCT 22-24, 2024</div>
+                        <img src="gmrrl00hya.jpeg" alt="ISMMUN'24 Conference Group Photo" style="width: 100%; height: 100%; object-fit: cover;">
+                        <div class="image-overlay" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(59, 130, 246, 0.2); z-index: 1;"></div>
+                        <div class="conference-logo">ISM</div>
+                    </div>
+                    <div class="conference-content">
+                        <h3 class="conference-title">ISMMUN'24</h3>
+                        <p class="conference-subtitle">International School of Martyrs Model United Nations</p>
+                        <div class="conference-location">
+                            <i class="fas fa-map-marker-alt"></i>
+                            <span>Tripoli, Libya</span>
+                        </div>
+                        <div class="conference-stats">
+                            <div class="conference-stat">
+                                <div class="conference-stat-number">40</div>
+                                <div class="conference-stat-label">Participants</div>
+                            </div>
+                            <div class="conference-stat">
+                                <div class="conference-stat-number">2</div>
+                                <div class="conference-stat-label">Committees</div>
+                            </div>
+                            <div class="conference-stat">
+                                <div class="conference-stat-number">3</div>
+                                <div class="conference-stat-label">Days</div>
+                            </div>
+                        </div>
+                        <p class="conference-description">The inaugural three-day ISM Model United Nations conference featuring SOCHUM and UN Women committees.</p>
+                        <div class="conference-tags">
+                            <span class="conference-tag">ISM Students</span>
+                            <span class="conference-tag">Foundation</span>
+                            <span class="conference-tag">Beginner Friendly</span>
+                        </div>
+                        <div class="conference-actions">
+                            <a href="ismmun24.html" class="btn-small btn-outline">View Details</a>
+                            <a href="ismmun24.html" class="btn-small cta-button">Gallery</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ISMMUN'25 -->
+                <div class="conference-card" data-category="past featured">
+                    <div class="conference-image">
+                        <div class="conference-status">Past Event</div>
+                        <div class="conference-date">MAY 1-3, 2025</div>
+                        <img src="7abxe18a8k.jpeg" alt="MUN Conference Group Photo" style="width: 100%; height: 100%; object-fit: cover;">
+                        <div class="image-overlay" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(59, 130, 246, 0.2); z-index: 1;"></div>
+                        <div class="conference-logo">ISM</div>
+                    </div>
+                    <div class="conference-content">
+                        <h3 class="conference-title">ISMMUN'25</h3>
+                        <p class="conference-subtitle">International School of Martyrs Model United Nations</p>
+                        <div class="conference-location">
+                            <i class="fas fa-map-marker-alt"></i>
+                            <span>Tripoli, Libya</span>
+                        </div>
+                        <div class="conference-stats">
+                            <div class="conference-stat">
+                                <div class="conference-stat-number">80</div>
+                                <div class="conference-stat-label">Participants</div>
+                            </div>
+                            <div class="conference-stat">
+                                <div class="conference-stat-number">2</div>
+                                <div class="conference-stat-label">Committees</div>
+                            </div>
+                            <div class="conference-stat">
+                                <div class="conference-stat-number">3</div>
+                                <div class="conference-stat-label">Days</div>
+                            </div>
+                        </div>
+                        <p class="conference-description">An expanded three-day ISM conference featuring ECOSOC and UNODC committees with enhanced delegate experience.</p>
+                        <div class="conference-tags">
+                            <span class="conference-tag">ISM Students</span>
+                            <span class="conference-tag">Advanced</span>
+                            <span class="conference-tag">Crisis</span>
+                        </div>
+                        <div class="conference-actions">
+                            <a href="ismmun25.html" class="btn-small btn-outline">View Results</a>
+                            <a href="ismmun25.html" class="btn-small cta-button">Resources</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- SMUN'25 -->
+                <div class="conference-card" data-category="upcoming featured">
+                    <div class="conference-image">
+                        <div class="conference-status">Upcoming</div>
+                        <div class="conference-date">OCT 23-25, 2025</div>
+                        <img src="rksodm8cte.jpeg" alt="South Mediterranean University Campus" style="width: 100%; height: 100%; object-fit: cover;">
+                        <div class="image-overlay" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(59, 130, 246, 0.2); z-index: 1;"></div>
+                        <div class="conference-logo">SMU</div>
+                    </div>
+                    <div class="conference-content">
+                        <h3 class="conference-title">SMUN'25</h3>
+                        <p class="conference-subtitle">South Mediterranean University Model United Nations</p>
+                        <div class="conference-location">
+                            <i class="fas fa-map-marker-alt"></i>
+                            <span>Tripoli, Libya</span>
+                        </div>
+                        <div class="conference-stats">
+                            <div class="conference-stat">
+                                <div class="conference-stat-number">300+</div>
+                                <div class="conference-stat-label">Expected</div>
+                            </div>
+                            <div class="conference-stat">
+                                <div class="conference-stat-number">5</div>
+                                <div class="conference-stat-label">Committees</div>
+                            </div>
+                            <div class="conference-stat">
+                                <div class="conference-stat-number">3</div>
+                                <div class="conference-stat-label">Days</div>
+                            </div>
+                        </div>
+                        <p class="conference-description">Open to English-fluent students from international schools across Libya, promoting inclusive MUN participation.</p>
+                        <div class="conference-tags">
+                            <span class="conference-tag">International Schools</span>
+                            <span class="conference-tag">English Fluency</span>
+                            <span class="conference-tag">Inclusive</span>
+                        </div>
+                        <div class="conference-actions">
+                            <a href="smumun25.html" class="btn-small btn-outline">Learn More</a>
+                            <a href="smumun25.html" class="btn-small cta-button">Apply Now</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Add Conference Section -->
+    <section id="add-conference" class="add-conference">
+        <div class="container">
+            <div class="add-conference-card">
+                <div class="add-conference-content">
+                    <h2>Host Your Conference</h2>
+                    <p>Organize a Model UN conference and reach delegates across Libya and beyond.</p>
+                    
+                    <div class="about-features">
+                        <div class="about-feature">
+                            <div class="about-feature-icon">
+                                <i class="fas fa-bullhorn"></i>
+                            </div>
+                            <div class="about-feature-content">
+                                <h4>Free Promotion</h4>
+                                <p>Get your conference featured on Libya's premier MUN platform</p>
+                            </div>
+                        </div>
+                        <div class="about-feature">
+                            <div class="about-feature-icon">
+                                <i class="fas fa-users"></i>
+                            </div>
+                            <div class="about-feature-content">
+                                <h4>Delegate Network</h4>
+                                <p>Access our growing community of passionate MUN delegates</p>
+                            </div>
+                        </div>
+                        <div class="about-feature">
+                            <div class="about-feature-icon">
+                                <i class="fas fa-tools"></i>
+                            </div>
+                            <div class="about-feature-content">
+                                <h4>Organizing Tools</h4>
+                                <p>Professional resources and support for successful conferences</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <a href="#contact" class="btn-primary" style="margin-top: 2rem;">Get Started</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="about">
+        <div class="container">
+            <div class="about-content">
+                <div class="about-text">
+                    <h2>Empowering Libya's Future Diplomats</h2>
+                    <p>MUNLY is Libya's premier platform for Model United Nations conferences, connecting students, educators, and institutions across the country.</p>
+                    <p>Since our inception, we've been dedicated to fostering diplomatic education, critical thinking, and global awareness among Libyan youth. Our platform serves as the central hub for MUN activities, providing comprehensive information about conferences, resources for participants, and tools for organizers.</p>
+                    
+                    <div class="about-features">
+                        <div class="about-feature">
+                            <div class="about-feature-icon">
+                                <i class="fas fa-globe"></i>
+                            </div>
+                            <div class="about-feature-content">
+                                <h4>Global Perspective</h4>
+                                <p>Connecting Libya to the international MUN community</p>
+                            </div>
+                        </div>
+                        <div class="about-feature">
+                            <div class="about-feature-icon">
+                                <i class="fas fa-handshake"></i>
+                            </div>
+                            <div class="about-feature-content">
+                                <h4>Diplomatic Skills</h4>
+                                <p>Developing negotiation and public speaking abilities</p>
+                            </div>
+                        </div>
+                        <div class="about-feature">
+                            <div class="about-feature-icon">
+                                <i class="fas fa-heart"></i>
+                            </div>
+                            <div class="about-feature-content">
+                                <h4>Community Building</h4>
+                                <p>Creating lasting connections among young leaders</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="about-image">
+                    <img src="i7dwtfgu3n.jpeg" alt="MUN delegate speaking at a conference" style="width: 100%; height: 100%; object-fit: cover; border-radius: 1rem;">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Resources Section -->
+    <section id="resources" class="resources">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">MUN Resources & Tools</h2>
+                <p class="section-subtitle">Everything you need for a successful Model UN experience</p>
+            </div>
+
+            <div class="resources-grid">
+                <div class="resource-card">
+                    <div class="resource-icon">
+                        <i class="fas fa-book"></i>
+                    </div>
+                    <h3>Delegate Handbook</h3>
+                    <p>Comprehensive guide covering rules of procedure, research methods, and debate strategies for delegates of all levels.</p>
+                    <div class="resource-meta">
+                        <span class="resource-type">PDF Guide</span>
+                        <span class="resource-size">2.5 MB</span>
+                    </div>
+                    <a href="#" class="btn-primary">Download</a>
+                </div>
+
+                <div class="resource-card">
+                    <div class="resource-icon">
+                        <i class="fas fa-chalkboard-teacher"></i>
+                    </div>
+                    <h3>Chair Training Kit</h3>
+                    <p>Complete training materials for committee chairs including session management and crisis development techniques.</p>
+                    <div class="resource-meta">
+                        <span class="resource-type">Training Package</span>
+                        <span class="resource-size">5.2 MB</span>
+                    </div>
+                    <a href="#" class="btn-primary">Access</a>
+                </div>
+
+                <div class="resource-card">
+                    <div class="resource-icon">
+                        <i class="fas fa-clipboard-list"></i>
+                    </div>
+                    <h3>Conference Planning Guide</h3>
+                    <p>Step-by-step guide for organizing successful MUN conferences, from planning to execution and evaluation.</p>
+                    <div class="resource-meta">
+                        <span class="resource-type">Planning Tool</span>
+                        <span class="resource-size">3.8 MB</span>
+                    </div>
+                    <a href="#" class="btn-primary">View</a>
+                </div>
+
+                <div class="resource-card">
+                    <div class="resource-icon">
+                        <i class="fas fa-database"></i>
+                    </div>
+                    <h3>Research Database</h3>
+                    <p>Curated collection of research sources, country profiles, and current global issues for committee preparation.</p>
+                    <div class="resource-meta">
+                        <span class="resource-type">Online Database</span>
+                        <span class="resource-size">Updated Daily</span>
+                    </div>
+                    <a href="#" class="btn-primary">Browse</a>
+                    </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="contact">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">Join the MUNLY Community</h2>
+                <p class="section-subtitle">Connect with us to list your conference, access resources, or get involved in Libya's MUN community.</p>
+            </div>
+
+            <div class="contact-content">
+                <div class="contact-info">
+                    <h2>Get In Touch</h2>
+                    <p>Connect with us to list your conference, access resources, or get involved in Libya's MUN community.</p>
+
+                    <div class="contact-methods">
+                        <div class="contact-method" onclick="openEmail('info@mun.ly')">
+                            <div class="contact-method-icon">
+                                <i class="fas fa-envelope"></i>
+                            </div>
+                            <div class="contact-method-content">
+                                <h4>Email Us</h4>
+                                <p>info@mun.ly</p>
+                            </div>
+                        </div>
+
+                        <div class="contact-method" onclick="openWhatsApp('+218944962446')">
+                            <div class="contact-method-icon">
+                                <i class="fab fa-whatsapp"></i>
+                            </div>
+                            <div class="contact-method-content">
+                                <h4>WhatsApp</h4>
+                                <p>+218 944962446</p>
+                            </div>
+                        </div>
+
+                        <div class="contact-method" onclick="openInstagram('modelunly')">
+                            <div class="contact-method-icon">
+                                <i class="fab fa-instagram"></i>
+                            </div>
+                            <div class="contact-method-content">
+                                <h4>Instagram</h4>
+                                <p>@modelunly</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="contact-form">
+                    <h3>Add Your Conference</h3>
+                    <p style="margin-bottom: 1.5rem; color: var(--text-gray);">Submit your MUN conference details to be featured on MUNLY</p>
+                    
+                    <form id="conferenceForm">
+                        <div class="form-group">
+                            <label for="conferenceName">Conference Name</label>
+                            <input type="text" id="conferenceName" name="conferenceName" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="organizingInstitution">Organizing Institution</label>
+                            <input type="text" id="organizingInstitution" name="organizingInstitution" required>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="city">City</label>
+                                <select id="city" name="city" required>
+                                    <option value="">Select City</option>
+                                    <option value="tripoli">Tripoli</option>
+                                    <option value="benghazi">Benghazi</option>
+                                    <option value="misrata">Misrata</option>
+                                    <option value="sirte">Sirte</option>
+                                    <option value="other">Other</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="contactEmail">Contact Email</label>
+                                <input type="email" id="contactEmail" name="contactEmail" required>
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="startDate">Start Date</label>
+                                <input type="date" id="startDate" name="startDate" required>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="endDate">End Date</label>
+                                <input type="date" id="endDate" name="endDate" required>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="description">Conference Description</label>
+                            <textarea id="description" name="description" placeholder="Brief description of your conference, including themes, committees, and special features..." required></textarea>
+                        </div>
+
+                        <button type="submit" class="cta-button" style="width: 100%;">Submit Conference</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>MUNLY</h3>
+                    <p>Libya's premier Model United Nations platform, connecting students, educators, and institutions across the country to foster diplomatic education and global awareness.</p>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-facebook"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-linkedin"></i></a>
+                        <a href="#"><i class="fab fa-facebook"></i></a>
+                    </div>
+                </div>
+
+                <div class="footer-section">
+                    <h3>Quick Links</h3>
+                    <ul class="footer-links">
+                        <li><a href="#conferences">Conferences</a></li>
+                        <li><a href="#about">About Us</a></li>
+                        <li><a href="#resources">Resources</a></li>
+                        <li><a href="#contact">Contact</a></li>
+                        <li><a href="#add-conference">Host Conference</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-section">
+                    <h3>Resources</h3>
+                    <ul class="footer-links">
+                        <li><a href="#">Delegate Handbook</a></li>
+                        <li><a href="#">Chair Training</a></li>
+                        <li><a href="#">Planning Guide</a></li>
+                        <li><a href="#">Research Database</a></li>
+                        <li><a href="#">Past Conferences</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-section">
+                    <h3>Contact Info</h3>
+                    <ul class="footer-links">
+                        <li><i class="fas fa-envelope"></i> info@mun.ly</li>
+                        <li><i class="fab fa-whatsapp"></i> +218 944962446</li>
+                        <li><i class="fab fa-instagram"></i> @modelunly</li>
+                        <li><i class="fab fa-facebook"></i> MUNLY - Premier MUN platform in Libya</li>
+                        <li><i class="fas fa-map-marker-alt"></i> Libya</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="footer-bottom">
+                <p>&copy; 2025 MUNLY. All rights reserved. | Empowering Libya's Future Diplomats</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Conference Detail Modal Content (Hidden by default) -->
+    <div id="conferenceDetailModal" class="hidden">
+        <!-- Conference detail content will be dynamically inserted here -->
+    </div>
+
+    <!-- Authentication Modal (Sign in / Sign up) -->
+    <div id="authModal" class="hidden" aria-hidden="true">
+        <div class="auth-backdrop" style="position:fixed;inset:0;background:rgba(0,0,0,0.5);display:flex;align-items:center;justify-content:center;z-index:2000;">
+            <div class="auth-card" style="background:white;padding:1.5rem;border-radius:0.75rem;max-width:420px;width:90%;">
+                <button id="authClose" style="float:right;background:none;border:none;font-size:1.25rem;cursor:pointer;">&times;</button>
+                <h3 id="authTitle">Sign In</h3>
+                <form id="authForm"></form>
+                <div style="margin-top:0.5rem;font-size:0.9rem;color:var(--text-gray);">
+                    <span id="authToggleText">Don't have an account? </span><a href="#" id="authToggleLink">Sign up</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Smooth scrolling for navigation links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Navbar scroll effect
+        window.addEventListener('scroll', () => {
+            const navbar = document.getElementById('navbar');
+            if (window.scrollY > 50) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
+        });
+
+        // Conference filtering
+        document.querySelectorAll('.filter-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                // Remove active class from all buttons
+                document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+                // Add active class to clicked button
+                btn.classList.add('active');
+                
+                const filter = btn.getAttribute('data-filter');
+                const cards = document.querySelectorAll('.conference-card');
+                const calendarSection = document.querySelector('.calendar-section');
+                
+                // Show/hide calendar based on filter
+                if (filter === 'upcoming') {
+                    calendarSection.classList.add('visible');
+                } else {
+                    calendarSection.classList.remove('visible');
+                }
+                
+                cards.forEach(card => {
+                    if (filter === 'all' || card.getAttribute('data-category').includes(filter)) {
+                        card.style.display = 'block';
+                        card.style.animation = 'fadeInUp 0.5s ease-out';
+                    } else {
+                        card.style.display = 'none';
+                    }
+                });
+            });
+        });
+
+        // Conference form submission
+        document.getElementById('conferenceForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            // Get form data
+            const formData = new FormData(this);
+            const conferenceData = Object.fromEntries(formData);
+            
+            // Check if should add to calendar
+            const addToCalendar = this.querySelector('#addToCalendar').checked;
+            
+            // Show loading state
+            const submitButton = this.querySelector('button[type="submit"]');
+            const originalText = submitButton.textContent;
+            submitButton.textContent = 'Submitting...';
+            submitButton.disabled = true;
+            
+            try {
+                // Submit to backend API
+                const response = await fetch(getApiUrl('SUBMIT_CONFERENCE'), {
+                    method: 'POST',
+                    headers: getApiHeaders(),
+                    body: JSON.stringify(conferenceData)
+                });
+                
+                const result = await response.json();
+                
+                if (response.ok && result.success) {
+                    // If calendar was requested, add it to pending
+                    if (addToCalendar && calendar) {
+                        const name = conferenceData.conferenceName;
+                        const date = conferenceData.startDate;
+                        const location = conferenceData.location;
+                        
+                        calendar.addPendingMunDate(name, date, location);
+                        
+                        alert('Thank you for submitting your conference! Your submission has been sent and will be reviewed by our team.\n\nYour calendar submission is pending approval.');
+                    } else {
+                        alert('Thank you for submitting your conference! Your submission has been sent automatically and will be reviewed by our team.');
+                    }
+                    
+                    // Reset form
+                    this.reset();
+                } else {
+                    // Show error message
+                    alert(`Submission failed: ${result.error || 'Unknown error occurred'}`);
+                    console.error('Submission error:', result);
+                }
+                
+            } catch (error) {
+                console.error('Network error:', error);
+                alert('Failed to submit conference. Please check your internet connection and try again.');
+            } finally {
+                // Reset button state
+                submitButton.textContent = originalText;
+                submitButton.disabled = false;
+            }
+            
+            // Reset form
+            this.reset();
+        });
+
+        // Conference detail view function
+        function showConferenceDetail(conferenceId) {
+            // This would typically fetch data from a backend
+            // For now, we'll show a simple alert
+            const conferences = {
+                'ismmun24': {
+                    name: 'ISMMUN\'24',
+                    fullName: 'International School of Martyrs Model United Nations 2024',
+                    location: 'Tripoli, Libya',
+                    dates: 'October 22-23, 2024',
+                    status: 'Past Event',
+                    description: 'A successful two-day conference that brought together 180+ young diplomats from across Libya to address pressing global issues through 6 diverse committees.',
+                    committees: [
+                        'UN Security Council',
+                        'UN Human Rights Council', 
+                        'Economic and Social Council',
+                        'World Health Organization',
+                        'Arab League',
+                        'Crisis Committee'
+                    ],
+                    schedule: [
+                        { time: '09:00 - 10:00', event: 'Check-in & Welcome' },
+                        { time: '10:00 - 12:00', event: 'Opening Ceremony' },
+                        { time: '13:00 - 15:00', event: 'Committee Session I' },
+                        { time: '15:30 - 17:30', event: 'Committee Session II' },
+                        { time: '09:00 - 11:00', event: 'Committee Session III' },
+                        { time: '11:30 - 13:30', event: 'Committee Session IV' },
+                        { time: '14:30 - 16:00', event: 'Closing Ceremony' }
+                    ]
+                },
+                'ismmun25': {
+                    name: 'ISMMUN\'25',
+                    fullName: 'International School of Martyrs Model United Nations 2025',
+                    location: 'Tripoli, Libya',
+                    dates: 'May 1-3, 2025',
+                    status: 'Recent Event',
+                    description: 'An expanded three-day conference featuring 250+ delegates, innovative committee formats and enhanced delegate experience with international participation across 8 specialized committees.',
+                    committees: [
+                        'UN Security Council',
+                        'UN General Assembly',
+                        'Economic and Social Council',
+                        'World Health Organization',
+                        'Arab League',
+                        'African Union',
+                        'Crisis Committee',
+                        'International Court of Justice'
+                    ],
+                    schedule: [
+                        { time: '16:00 - 17:00', event: 'Check-in' },
+                        { time: '17:00 - 18:30', event: 'Opening Ceremony' },
+                        { time: '19:00 - 21:00', event: 'Committee Session I' },
+                        { time: '09:00 - 11:00', event: 'Committee Session II' },
+                        { time: '11:30 - 13:30', event: 'Committee Session III' },
+                        { time: '14:30 - 16:30', event: 'Committee Session IV' },
+                        { time: '17:00 - 19:00', event: 'Committee Session V' },
+                        { time: '09:00 - 11:00', event: 'Committee Session VI' },
+                        { time: '11:30 - 13:00', event: 'Closing Ceremony' }
+                    ]
+                },
+                'smumun25': {
+                    name: 'SMUN\'25',
+                    fullName: 'South Mediterranean University Model United Nations \'25',
+                    location: 'Tripoli, Libya', 
+                    dates: 'October 22-24, 2025',
+                    status: 'Upcoming',
+                    description: 'The largest MUN conference in central Libya, expecting 300+ delegates and focusing on healthcare diplomacy, sustainable development, and regional cooperation through 10 specialized committees.',
+                    committees: [
+                        'World Health Organization',
+                        'UN Environment Programme',
+                        'UN Human Rights Council',
+                        'Economic and Social Council',
+                        'African Union',
+                        'Arab League',
+                        'WHO Emergency Committee',
+                        'UN Security Council',
+                        'Crisis Committee',
+                        'International Court of Justice'
+                    ],
+                    schedule: [
+                        { time: '15:00 - 16:00', event: 'Check-in' },
+                        { time: '16:00 - 17:30', event: 'Opening Ceremony' },
+                        { time: '18:00 - 20:00', event: 'Committee Session I' },
+                        { time: '09:00 - 11:00', event: 'Committee Session II' },
+                        { time: '11:30 - 13:30', event: 'Committee Session III' },
+                        { time: '14:30 - 16:30', event: 'Committee Session IV' },
+                        { time: '17:00 - 19:00', event: 'Committee Session V' },
+                        { time: '09:00 - 11:00', event: 'Committee Session VI' },
+                        { time: '11:30 - 13:00', event: 'Closing Ceremony & Awards' }
+                    ]
+                }
+            };
+            
+            const conference = conferences[conferenceId];
+            if (conference) {
+                alert(`${conference.name}\n\n${conference.description}\n\nCommittees: ${conference.committees.length}\nLocation: ${conference.location}\nDates: ${conference.dates}\n\nClick OK to continue browsing. In a full implementation, this would open a detailed page with complete information, documents, and application links.`);
+            }
+        }
+
+        // Add some scroll animations
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
+
+        // Observe sections for animations
+        document.querySelectorAll('section').forEach(section => {
+            section.style.opacity = '0';
+            section.style.transform = 'translateY(30px)';
+            section.style.transition = 'opacity 0.8s ease-out, transform 0.8s ease-out';
+            observer.observe(section);
+        });
+
+        // Contact method functions
+        function openEmail(email) {
+            // Open Gmail compose window with the email address
+            window.open(`https://mail.google.com/mail/?view=cm&fs=1&to=${email}`, '_blank');
+        }
+
+        function openWhatsApp(phone) {
+            // Remove any spaces and formatting from phone number
+            const cleanPhone = phone.replace(/\s/g, '');
+            window.open(`https://wa.me/${cleanPhone}`, '_blank');
+        }
+
+        function openInstagram(username) {
+            window.open(`https://instagram.com/${username}`, '_blank');
+        }
+
+        // Mobile menu functionality
+        document.querySelector('.mobile-menu').addEventListener('click', function() {
+            const navLinks = document.querySelector('.nav-links');
+            if (navLinks.classList.contains('mobile-active')) {
+                navLinks.classList.remove('mobile-active');
+            } else {
+                navLinks.classList.add('mobile-active');
+                
+                // Add click handler to close menu when links are clicked
+                navLinks.querySelectorAll('a').forEach(link => {
+                    link.addEventListener('click', function() {
+                        navLinks.classList.remove('mobile-active');
+                    });
+                });
+            }
+        });
+
+        // Initialize page
+        // Function to check if conference is more than 3 months old
+        function isPastConference(dateString) {
+            // Parse date from format like "October 22-23, 2024" or "OCT 22-23, 2024"
+            const months = {
+                'JAN': 0, 'FEB': 1, 'MAR': 2, 'APR': 3, 'MAY': 4, 'JUN': 5,
+                'JUL': 6, 'AUG': 7, 'SEP': 8, 'OCT': 9, 'NOV': 10, 'DEC': 11,
+                'JANUARY': 0, 'FEBRUARY': 1, 'MARCH': 2, 'APRIL': 3, 'JUNE': 5,
+                'JULY': 6, 'AUGUST': 7, 'SEPTEMBER': 8, 'OCTOBER': 9, 'NOVEMBER': 10, 'DECEMBER': 11
+            };
+            
+            let month, year;
+            
+            // Extract month and year from string
+            const parts = dateString.toUpperCase().split(' ');
+            if (parts.length >= 2) {
+                month = months[parts[0].replace(',', '')];
+                // Find the year in parts (it should be 4 digits)
+                for (const part of parts) {
+                    if (/^\d{4}$/.test(part)) {
+                        year = parseInt(part);
+                        break;
+                    }
+                }
+            }
+            
+            if (month === undefined || year === undefined) {
+                return false; // Default to not past if we can't parse
+            }
+            
+            const conferenceDate = new Date(year, month, 1); // Use the 1st of the month
+            const threeMonthsAgo = new Date();
+            threeMonthsAgo.setMonth(threeMonthsAgo.getMonth() - 3);
+            
+            return conferenceDate < threeMonthsAgo;
+        }
+        
+        // Function to update conference categories based on dates
+        function updateConferenceCategories() {
+            const conferenceCards = document.querySelectorAll('.conference-card');
+            
+            conferenceCards.forEach(card => {
+                const dateElement = card.querySelector('.conference-date');
+                if (dateElement) {
+                    const dateText = dateElement.textContent;
+                    if (isPastConference(dateText)) {
+                        // Add 'past' to data-category if not already there
+                        const currentCategories = card.getAttribute('data-category');
+                        if (!currentCategories.includes('past')) {
+                            card.setAttribute('data-category', currentCategories + ' past');
+                            
+                            // Update status label if needed
+                            const statusElement = card.querySelector('.conference-status');
+                            if (statusElement && !statusElement.textContent.includes('Past')) {
+                                statusElement.textContent = 'Past Event';
+                            }
+                        }
+                    }
+                }
+            });
+        }
+        
+        document.addEventListener('DOMContentLoaded', function() {
+            // Set initial active filter
+            document.querySelector('.filter-btn[data-filter="all"]').classList.add('active');
+            
+            // Update conference categories based on dates
+            updateConferenceCategories();
+            
+            // Add loading animation
+            document.body.style.opacity = '0';
+            document.body.style.transition = 'opacity 0.5s ease-out';
+            
+            setTimeout(() => {
+                document.body.style.opacity = '1';
+            }, 100);
+
+            // Initialize Calendar
+            initializeCalendar();
+        });
+
+        // ==================== CALENDAR FUNCTIONALITY ====================
+
+        class MUNCalendar {
+            constructor() {
+                this.currentDate = new Date();
+                this.approvedDates = this.loadApprovedDates();
+                this.pendingDates = this.loadPendingDates();
+                this.init();
+            }
+
+            init() {
+                this.setupEventListeners();
+                this.renderCalendar();
+                this.renderMunList();
+            }
+
+            setupEventListeners() {
+                // Navigation buttons
+                document.getElementById('prevMonth').addEventListener('click', () => {
+                    this.currentDate.setMonth(this.currentDate.getMonth() - 1);
+                    this.renderCalendar();
+                });
+
+                document.getElementById('nextMonth').addEventListener('click', () => {
+                    this.currentDate.setMonth(this.currentDate.getMonth() + 1);
+                    this.renderCalendar();
+                });
+            }
+
+            addPendingMunDate(name, date, location) {
+                const munDate = {
+                    id: Date.now(),
+                    name,
+                    date,
+                    location,
+                    submittedAt: new Date().toISOString()
+                };
+
+                this.pendingDates.push(munDate);
+                this.savePendingDates();
+                return munDate.id;
+            }
+
+            approveMunDate(id) {
+                const pending = this.pendingDates.find(d => d.id === id);
+                if (pending) {
+                    const approved = {
+                        ...pending,
+                        approvedAt: new Date().toISOString()
+                    };
+                    delete approved.submittedAt;
+                    
+                    this.approvedDates.push(approved);
+                    this.pendingDates = this.pendingDates.filter(d => d.id !== id);
+                    
+                    this.saveApprovedDates();
+                    this.savePendingDates();
+                    this.renderCalendar();
+                    this.renderMunList();
+                    
+                    return true;
+                }
+                return false;
+            }
+
+            rejectMunDate(id) {
+                this.pendingDates = this.pendingDates.filter(d => d.id !== id);
+                this.savePendingDates();
+            }
+
+            loadApprovedDates() {
+                const saved = localStorage.getItem('munCalendarApproved');
+                return saved ? JSON.parse(saved) : [];
+            }
+
+            loadPendingDates() {
+                const saved = localStorage.getItem('munCalendarPending');
+                return saved ? JSON.parse(saved) : [];
+            }
+
+            saveApprovedDates() {
+                localStorage.setItem('munCalendarApproved', JSON.stringify(this.approvedDates));
+            }
+
+            savePendingDates() {
+                localStorage.setItem('munCalendarPending', JSON.stringify(this.pendingDates));
+            }
+
+            renderCalendar() {
+                const year = this.currentDate.getFullYear();
+                const month = this.currentDate.getMonth();
+
+                // Update header
+                const monthNames = ['January', 'February', 'March', 'April', 'May', 'June',
+                    'July', 'August', 'September', 'October', 'November', 'December'];
+                document.getElementById('currentMonth').textContent = 
+                    `${monthNames[month]} ${year}`;
+
+                // Create calendar grid
+                const firstDay = new Date(year, month, 1).getDay();
+                const daysInMonth = new Date(year, month + 1, 0).getDate();
+                const daysInPrevMonth = new Date(year, month, 0).getDate();
+
+                const calendarGrid = document.getElementById('calendarGrid');
+                calendarGrid.innerHTML = '';
+
+                // Day headers
+                const dayHeaders = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+                dayHeaders.forEach(day => {
+                    const dayHeader = document.createElement('div');
+                    dayHeader.className = 'day-header';
+                    dayHeader.textContent = day;
+                    calendarGrid.appendChild(dayHeader);
+                });
+
+                // Previous month days
+                for (let i = firstDay - 1; i >= 0; i--) {
+                    const dayDiv = document.createElement('div');
+                    dayDiv.className = 'other-month';
+                    dayDiv.textContent = daysInPrevMonth - i;
+                    calendarGrid.appendChild(dayDiv);
+                }
+
+                // Current month days
+                const today = new Date();
+                for (let day = 1; day <= daysInMonth; day++) {
+                    const dayDiv = document.createElement('div');
+                    const currentDate = new Date(year, month, day);
+
+                    // Check if this day has an APPROVED MUN event
+                    const hasMun = this.approvedDates.some(d => {
+                        const munDate = new Date(d.date);
+                        return munDate.toDateString() === currentDate.toDateString();
+                    });
+
+                    // If there's a conference on this date, prioritize conference styling
+                    if (hasMun) {
+                        dayDiv.classList.add('mun-date');
+                    } else if (currentDate.toDateString() === today.toDateString()) {
+                        dayDiv.classList.add('today');
+                    }
+
+                    dayDiv.textContent = day;
+                    dayDiv.style.cursor = hasMun ? 'pointer' : 'default';
+                    
+                    if (hasMun) {
+                        dayDiv.addEventListener('click', () => {
+                            this.showMunOnDate(currentDate);
+                        });
+                    }
+
+                    calendarGrid.appendChild(dayDiv);
+                }
+
+                // Next month days
+                const totalCells = calendarGrid.children.length - 7;
+                // Use 35 cells (5 rows x 7 columns) instead of 42 (6 rows)
+                const remainingCells = 35 - totalCells;
+                for (let i = 1; i <= remainingCells; i++) {
+                    const dayDiv = document.createElement('div');
+                    dayDiv.className = 'other-month';
+                    dayDiv.textContent = i;
+                    calendarGrid.appendChild(dayDiv);
+                }
+            }
+
+            showMunOnDate(date) {
+                const munsOnDate = this.approvedDates.filter(d => {
+                    const munDate = new Date(d.date);
+                    return munDate.toDateString() === date.toDateString();
+                });
+
+                if (munsOnDate.length > 0) {
+                    const munInfo = munsOnDate.map(m => 
+                        `${m.name} at ${m.location}`
+                    ).join('\n');
+                    alert(`MUNs on ${date.toDateString()}:\n\n${munInfo}`);
+                }
+            }
+
+            renderMunList() {
+                const munDatesList = document.getElementById('munDatesList');
+                
+                if (this.approvedDates.length === 0) {
+                    munDatesList.innerHTML = '<p class="empty-message">No approved MUN dates yet.</p>';
+                    return;
+                }
+
+                // Sort dates
+                const sortedDates = [...this.approvedDates].sort((a, b) => 
+                    new Date(a.date) - new Date(b.date)
+                );
+
+                const today = new Date();
+                today.setHours(0, 0, 0, 0);
+
+                munDatesList.innerHTML = sortedDates.map(mun => {
+                    const munDate = new Date(mun.date);
+                    const isPast = munDate < today;
+                    const dateStr = munDate.toLocaleDateString('en-US', { 
+                        weekday: 'short', 
+                        year: 'numeric', 
+                        month: 'short', 
+                        day: 'numeric' 
+                    });
+
+                    return `
+                        <div class="mun-item ${isPast ? 'past' : ''}">
+                            <div class="mun-info">
+                                <div class="mun-name">${mun.name}</div>
+                                <div class="mun-details">
+                                    <span><i class="fas fa-calendar"></i> ${dateStr}</span>
+                                    <span><i class="fas fa-map-marker-alt"></i> ${mun.location || 'Not specified'}</span>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+            }
+
+            getPendingForApproval() {
+                return this.pendingDates;
+            }
+
+            showApprovalPanel() {
+                const pending = this.pendingDates;
+                if (pending.length === 0) {
+                    alert('No pending MUN submissions to approve.');
+                    return;
+                }
+
+                let message = `Pending MUN Submissions (${pending.length}):\n\n`;
+                pending.forEach((mun, index) => {
+                    message += `${index + 1}. ${mun.name}\n   Date: ${mun.date}\n   Location: ${mun.location}\n\n`;
+                });
+                message += '\nUse in console:\ncalendar.approveMunDate(id)  - to approve\ncalendar.rejectMunDate(id)  - to reject';
+                alert(message);
+            }
+        }
+
+        let calendar;
+
+        function initializeCalendar() {
+            calendar = new MUNCalendar();
+        }
+
+        // Admin approval helper (access via console or add your own UI)
+        function approvePendingMun(index) {
+            if (calendar && calendar.pendingDates[index]) {
+                const munId = calendar.pendingDates[index].id;
+                if (calendar.approveMunDate(munId)) {
+                    alert(`✓ Approved: ${calendar.approvedDates[calendar.approvedDates.length - 1].name}`);
+                }
+            }
+        }
+    // --- Authentication (signup / signin) ---
+    (function(){
+        function el(id){return document.getElementById(id);} 
+        function showAuth(type){
+            const modal = el('authModal');
+            modal.classList.remove('hidden'); modal.setAttribute('aria-hidden','false');
+            const title = el('authTitle'); const form = el('authForm'); const toggleText = el('authToggleText'); const toggleLink = el('authToggleLink');
+            if(type === 'signup'){
+                title.textContent = 'Create an account';
+                form.innerHTML = `
+                    <div class="form-group"><label>Name</label><input id="authName" required></div>
+                    <div class="form-group"><label>Email</label><input type="email" id="authEmail" required></div>
+                    <div class="form-group"><label>Password</label><input type="password" id="authPassword" required></div>
+                    <button type="submit" class="cta-button" style="width:100%;">Sign Up</button>
+                `;
+                toggleText.textContent = 'Already have an account? ';
+                toggleLink.textContent = 'Sign in'; toggleLink.dataset.type = 'signin';
+            } else {
+                title.textContent = 'Sign in to MUNLY';
+                form.innerHTML = `
+                    <div class="form-group"><label>Email</label><input type="email" id="authEmail" required></div>
+                    <div class="form-group"><label>Password</label><input type="password" id="authPassword" required></div>
+                    <button type="submit" class="cta-button" style="width:100%;">Sign In</button>
+                `;
+                toggleText.textContent = "Don't have an account? ";
+                toggleLink.textContent = 'Sign up'; toggleLink.dataset.type = 'signup';
+            }
+            form.onsubmit = function(e){ e.preventDefault(); if(type === 'signup') return handleSignUp(); return handleSignIn(); };
+        }
+
+        function hideAuth(){ const modal = el('authModal'); modal.classList.add('hidden'); modal.setAttribute('aria-hidden','true'); }
+
+        function getUsers(){ return JSON.parse(localStorage.getItem('munlyUsers') || '[]'); }
+        function saveUsers(u){ localStorage.setItem('munlyUsers', JSON.stringify(u)); }
+        function setCurrentUser(user){ localStorage.setItem('munlyCurrent', JSON.stringify(user)); updateNavForUser(); }
+
+        function handleSignUp(){
+            const name = (el('authName')||{}).value?.trim() || '';
+            const email = ((el('authEmail')||{}).value || '').trim().toLowerCase();
+            const password = (el('authPassword')||{}).value || '';
+            if(!name || !email || !password){ alert('Please complete all fields'); return; }
+            const users = getUsers();
+            if(users.find(u => u.email === email)){ alert('User already exists'); return; }
+            const user = { id: Date.now(), name, email, password };
+            users.push(user); saveUsers(users); setCurrentUser({ id: user.id, name: user.name, email: user.email }); hideAuth(); alert('Account created and signed in');
+        }
+
+        function handleSignIn(){
+            const email = ((el('authEmail')||{}).value || '').trim().toLowerCase();
+            const password = (el('authPassword')||{}).value || '';
+            const users = getUsers();
+            const user = users.find(u => u.email === email && u.password === password);
+            if(!user){ alert('Invalid credentials'); return; }
+            setCurrentUser({ id: user.id, name: user.name, email: user.email }); hideAuth(); alert('Signed in');
+        }
+
+        function updateNavForUser(){
+            const current = JSON.parse(localStorage.getItem('munlyCurrent') || 'null');
+            const authContainer = document.getElementById('authContainer');
+            const profileSection = document.getElementById('profileSection');
+            
+            if(!authContainer) return;
+            
+            if(current){
+                // Hide the auth button, show profile section
+                authContainer.style.display = 'none';
+                profileSection.classList.remove('hidden');
+                
+                // Update profile section
+                const firstName = current.name.split(' ')[0];
+                const initials = firstName.charAt(0).toUpperCase();
+                el('profileAvatar').textContent = initials;
+                el('profileName').textContent = `Hi, ${firstName}`;
+            } else {
+                // Show auth button, hide profile section
+                authContainer.style.display = 'block';
+                profileSection.classList.add('hidden');
+                authContainer.innerHTML = `<a href="#" id="authBtn" class="cta-button">Sign In</a>`;
+            }
+        }
+
+        function showProfilePage(){
+            const current = JSON.parse(localStorage.getItem('munlyCurrent') || 'null');
+            if(!current) return;
+            
+            // Hide other sections
+            document.querySelectorAll('section:not(#profilePage)').forEach(s => s.style.display = 'none');
+            document.querySelector('footer').style.display = 'none';
+            
+            // Show profile page
+            const profilePage = el('profilePage');
+            profilePage.classList.add('active');
+            
+            // Update profile info
+            const firstName = current.name.split(' ')[0];
+            const initials = firstName.charAt(0).toUpperCase();
+            el('profilePageAvatar').textContent = initials;
+            el('profilePageName').textContent = current.name;
+            el('profilePageEmail').textContent = current.email;
+            el('profileInfoName').textContent = current.name;
+            el('profileInfoEmail').textContent = current.email;
+            
+            // Format member since date
+            const joinDate = new Date(current.id);
+            const formattedDate = joinDate.toLocaleDateString('en-US', { 
+                year: 'numeric', 
+                month: 'long', 
+                day: 'numeric' 
+            });
+            el('profileInfoMemberSince').textContent = formattedDate;
+            
+            // Scroll to top
+            window.scrollTo(0, 0);
+        }
+
+        function goBackToSite(){
+            // Show all sections
+            document.querySelectorAll('section').forEach(s => s.style.display = '');
+            document.querySelector('footer').style.display = '';
+            
+            // Hide profile page
+            const profilePage = el('profilePage');
+            profilePage.classList.remove('active');
+            
+            // Scroll to top
+            window.scrollTo(0, 0);
+        }
+
+        document.addEventListener('click', function(e){
+            const target = e.target;
+            if(!target) return;
+            if(target.id === 'authBtn'){
+                e.preventDefault(); showAuth('signin');
+            }
+            if(target.id === 'signOutBtn'){
+                e.preventDefault(); localStorage.removeItem('munlyCurrent'); updateNavForUser(); alert('Signed out');
+            }
+            if(target.id === 'authClose'){ e.preventDefault(); hideAuth(); }
+            if(target.id === 'authToggleLink'){ e.preventDefault(); const t = target.dataset.type || 'signin'; showAuth(t); }
+            if(target.id === 'profileAvatar' || target.id === 'profileName'){ 
+                e.preventDefault(); showProfilePage(); 
+            }
+            if(target.id === 'profileBackBtn'){
+                e.preventDefault(); goBackToSite();
+            }
+            if(target.id === 'profilePageSignOutBtn'){
+                e.preventDefault(); goBackToSite(); localStorage.removeItem('munlyCurrent'); updateNavForUser(); alert('Signed out');
+            }
+        });
+
+        // Initialize auth on page load
+        if(document.readyState === 'loading'){
+            document.addEventListener('DOMContentLoaded', updateNavForUser);
+        } else {
+            updateNavForUser();
+        }
+    })();
+
+    </script>
+</body>
+</html>

@@ -1,0 +1,754 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SMUMUN'25 - Code of Conduct | MUNLY</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary-blue: #1e40af;
+            --secondary-blue: #3b82f6;
+            --light-blue: #dbeafe;
+            --dark-blue: #1e3a8a;
+            --accent-blue: #60a5fa;
+            
+            --text-dark: #1f2937;
+            --text-gray: #6b7280;
+            --text-light: #9ca3af;
+            
+            --background-white: #ffffff;
+            --background-light: #f9fafb;
+            --border-light: #e5e5e5;
+            
+            --gradient-blue: linear-gradient(135deg, var(--primary-blue), var(--secondary-blue));
+            --gradient-light: linear-gradient(135deg, var(--background-light), var(--light-blue));
+            
+            --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Playfair Display', serif;
+        }
+        
+        html {
+            scroll-behavior: smooth;
+        }
+        
+        body {
+            color: var(--text-dark);
+            background: var(--background-light);
+            line-height: 1.6;
+        }
+        
+        h1, h2, h3, h4, h5 {
+            font-family: 'Playfair Display', serif;
+            font-weight: 700;
+            line-height: 1.2;
+        }
+        
+        h2 {
+            font-size: 2.5rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        h3 {
+            font-size: 2rem;
+            margin-bottom: 1.25rem;
+        }
+        
+        p {
+            font-family: 'Playfair Display', serif;
+            color: var(--text-dark);
+            margin-bottom: 1rem;
+        }
+        
+        a {
+            color: var(--primary-blue);
+            text-decoration: none;
+        }
+        
+        /* Navbar */
+        nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background: white;
+            box-shadow: var(--shadow-sm);
+            z-index: 1000;
+        }
+        
+        .nav-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            font-family: 'Playfair Display', serif;
+            font-weight: 700;
+            font-size: 1.5rem;
+            color: var(--primary-blue);
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .logo:hover {
+            color: var(--secondary-blue);
+            transform: scale(1.05);
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+            align-items: center;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: var(--text-dark);
+            font-weight: 500;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .nav-links a:hover {
+            color: var(--primary-blue);
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--gradient-blue);
+            transition: width 0.3s ease;
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        .cta-button {
+            background: var(--gradient-blue);
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 0.5rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+        }
+
+        .cta-button:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .mobile-menu {
+            display: none;
+            flex-direction: column;
+            cursor: pointer;
+        }
+
+        .mobile-menu span {
+            width: 25px;
+            height: 3px;
+            background: var(--primary-blue);
+            margin: 3px 0;
+            transition: 0.3s;
+        }
+
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+            
+            .nav-links.mobile-active {
+                display: flex;
+                flex-direction: column;
+                position: absolute;
+                top: 70px;
+                left: 0;
+                width: 100%;
+                background: white;
+                padding: 1rem;
+                box-shadow: var(--shadow-md);
+                z-index: 1000;
+                gap: 1rem;
+                text-align: center;
+            }
+            
+            .mobile-menu {
+                display: flex;
+            }
+            
+            .mobile-register {
+                display: block;
+                position: absolute;
+                right: 4rem;
+                top: 50%;
+                transform: translateY(-50%);
+            }
+            
+            .mobile-register .cta-button {
+                padding: 0.5rem 1rem;
+                font-size: 0.9rem;
+                color: white;
+                background: var(--primary-blue);
+            }
+            
+            .conduct-grid, 
+            .violation-levels {
+                grid-template-columns: 1fr;
+            }
+            
+            .conduct-details {
+                margin: 0 1rem 1rem;
+                padding: 2rem;
+            }
+            
+            .conduct-card {
+                margin: 0;
+                padding: 0;
+            }
+            
+            .page-title {
+                font-size: 2rem;
+            }
+        }
+        
+        /* Hero */
+        .hero {
+            background-color: var(--primary-blue);
+            color: white;
+            padding: 160px 0 80px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .hero-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1.5rem;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .page-title {
+            font-size: 3.5rem;
+            margin-bottom: 1rem;
+        }
+        
+        .page-subtitle {
+            font-size: 1.5rem;
+            margin-bottom: 1.5rem;
+            opacity: 0.9;
+        }
+        
+        /* Sections */
+        section {
+            padding: 100px 0;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+        
+        .section-header {
+            text-align: center;
+            margin-bottom: 4rem;
+        }
+        
+        .section-title {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+        
+        .section-subtitle {
+            font-size: 1.25rem;
+            color: var(--text-dark);
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        /* Code of Conduct */
+        .conduct-intro {
+            background: white;
+            border-radius: 1rem;
+            padding: 3rem;
+            box-shadow: var(--shadow-md);
+            margin-bottom: 3rem;
+            text-align: center;
+        }
+        
+        .conduct-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+        
+        .conduct-card {
+            background: transparent;
+            padding: 0;
+            overflow-wrap: break-word;
+            word-wrap: break-word;
+            word-break: break-word;
+            hyphens: auto;
+            max-width: 100%;
+        }
+        
+        .conduct-icon {
+            width: 70px;
+            height: 70px;
+            background: var(--light-blue);
+            color: var(--primary-blue);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .conduct-section {
+            margin-bottom: 5rem;
+        }
+        
+        .conduct-section h3 {
+            color: var(--primary-blue);
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        
+        .conduct-section h3 i {
+            width: 50px;
+            height: 50px;
+            background: var(--light-blue);
+            color: var(--primary-blue);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .conduct-list {
+            list-style: none;
+            margin: 1rem 0 0 0;
+            padding: 0;
+        }
+        
+        .conduct-list li {
+            font-family: 'Playfair Display', serif;
+            margin-bottom: 1.5rem;
+            padding-left: 2.5rem;
+            position: relative;
+            overflow-wrap: break-word;
+            word-wrap: break-word;
+            word-break: break-word;
+            hyphens: auto;
+            max-width: 100%;
+            line-height: 1.6;
+        }
+        
+        .conduct-list li::before {
+            content: '\f00c';
+            font-family: 'Font Awesome 5 Free';
+            font-weight: 900;
+            color: var(--primary-blue);
+            position: absolute;
+            left: 0;
+        }
+        
+        .conduct-details {
+            background: white;
+            border-radius: 1rem;
+            padding: 3rem;
+            box-shadow: var(--shadow-sm);
+            margin-bottom: 2rem;
+            max-width: none;
+            width: 100%;
+            overflow-wrap: break-word;
+            word-wrap: break-word;
+            word-break: break-word;
+            hyphens: auto;
+        }
+        
+        .conduct-details h4 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            color: var(--primary-blue);
+        }
+        
+        .highlighted-box {
+            background: var(--light-blue);
+            border-radius: 1rem;
+            padding: 2rem;
+            margin: 2rem 0;
+        }
+        
+        .violation-levels {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        
+        .violation-level {
+            background: white;
+            border-radius: 0.75rem;
+            padding: 1.5rem;
+            border-left: 5px solid var(--primary-blue);
+        }
+        
+        .violation-level.warning {
+            border-color: #FCD34D;
+        }
+        
+        .violation-level.serious {
+            border-color: #F97316;
+        }
+        
+        .violation-level.severe {
+            border-color: #EF4444;
+        }
+        
+        .contact-box {
+            background: var(--primary-blue);
+            color: white;
+            border-radius: 1rem;
+            padding: 2rem;
+            text-align: center;
+        }
+        
+        .contact-box h4 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+        }
+        
+        .contact-box p {
+            color: rgba(255, 255, 255, 0.8);
+        }
+        
+        .contact-methods {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+        }
+        
+        .contact-method {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 1rem 1.5rem;
+            border-radius: 0.5rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .contact-method i {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        /* CTA */
+        .cta-section {
+            background: var(--gradient-blue);
+            color: white;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .cta-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('data:image/svg+xml;utf8,<svg width="20" height="20" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><rect width="1" height="1" fill="rgba(255,255,255,0.05)"/></svg>') repeat;
+            opacity: 0.1;
+        }
+        
+        .cta-content {
+            position: relative;
+            z-index: 1;
+        }
+        
+        /* Footer */
+        footer {
+            background: var(--primary-blue);
+            color: white;
+            padding: 2rem 0;
+            text-align: center;
+        }
+        
+        @media (max-width: 768px) {
+            .conduct-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .violation-levels {
+                grid-template-columns: 1fr;
+            }
+            
+            .page-title {
+                font-size: 2.5rem;
+            }
+            
+            .conduct-intro,
+            .conduct-details {
+                padding: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav>
+        <div class="nav-container">
+            <a href="../index.html" class="logo">MUNLY</a>
+            <ul class="nav-links">
+                <li><a href="../index.html">Home</a></li>
+                <li><a href="../index.html#conferences">Conferences</a></li>
+                <li><a href="../index.html#about">About</a></li>
+                <li><a href="../index.html#resources">Resources</a></li>
+                <li><a href="../smumun25.html">SMUMUN'25</a></li>
+                <li><a href="../index.html#contact">Contact</a></li>
+                
+            </ul>
+            <div class="mobile-register">
+                <a href="../smumun25.html#application" class="cta-button">Apply</a>
+            </div>
+            <div class="mobile-menu">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+    </nav>
+    
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-content">
+            <h1 class="page-title">SMUMUN'25 Code of Conduct</h1>
+            <p class="page-subtitle">Guidelines for professional and respectful participation</p>
+        </div>
+    </section>
+
+    <!-- Introduction -->
+    <section class="conduct-overview">
+        <div class="container">
+            <div class="conduct-intro">
+                <h2>Our Commitment to Excellence</h2>
+                <p>The South Mediterranean University Model United Nations (SMUMUN) '25 is committed to providing a safe, inclusive, and professional environment where all participants can engage in meaningful diplomatic dialogue. This comprehensive Code of Conduct outlines our expectations for all delegates, chairs, staff, and advisors participating in SMUMUN'25.</p>
+                <p>These guidelines have been established to ensure the highest standards of diplomacy and professionalism while fostering an atmosphere of respect, collaboration, and intellectual growth.</p>
+                <p><strong>IMPORTANT:</strong> All participants must adhere strictly to these rules. The Secretariat's decisions regarding violations are final and binding. Failure to comply may result in warnings, suspension, or expulsion from the conference without refund.</p>
+            </div>
+            
+            <div class="conduct-grid">
+                <div class="conduct-card">
+                    <div class="conduct-icon">
+                        <i class="fas fa-handshake"></i>
+                    </div>
+                    <h4>Purpose</h4>
+                    <p>This Code of Conduct exists to create a respectful environment where all participants can engage in meaningful dialogue without fear of discrimination, harassment, or unprofessional behavior.</p>
+                </div>
+                
+                <div class="conduct-card">
+                    <div class="conduct-icon">
+                        <i class="fas fa-globe"></i>
+                    </div>
+                    <h4>Scope</h4>
+                    <p>These guidelines apply to all conference activities, including formal sessions, informal caucuses, social events, online interactions, and any other event associated with SMUMUN'25.</p>
+                </div>
+                
+                <div class="conduct-card">
+                    <div class="conduct-icon">
+                        <i class="fas fa-balance-scale"></i>
+                    </div>
+                    <h4>Enforcement</h4>
+                    <p>The SMUMUN'25 Secretariat has final authority in interpreting and enforcing this Code of Conduct, with consequences ranging from warnings to expulsion from the conference.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- General Standards -->
+    <section class="conduct-section" id="general-standards">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">General Standards of Conduct</h2>
+                <p class="section-subtitle">Core principles that guide all SMUMUN'25 participants</p>
+            </div>
+            
+            <div class="conduct-details">
+                <h3><i class="fas fa-star"></i> Professionalism and Integrity</h3>
+                <ul class="conduct-list">
+                    <li><strong>Professional Behavior Requirement:</strong> All participants must maintain diplomatic conduct at all times. This includes using appropriate language, maintaining composure during heated debates, and following formal diplomatic protocols. Professional behavior extends to all conference activities including formal sessions, informal caucuses, and social events.</li>
+                    <li><strong>Academic Integrity Standards:</strong> All participants must demonstrate complete honesty in research, position papers, and statements. Plagiarism or academic dishonesty of any kind is strictly prohibited. All sources must be properly cited and work must represent the participant's own research and analysis.</li>
+                    <li><strong>Preparation Requirements:</strong> Delegates must arrive with completed position papers, thorough knowledge of their country's positions, and understanding of committee topics. Unprepared delegates disrupt committee flow and waste valuable session time. Delegates should be able to answer detailed questions about their country's stance immediately.</li>
+                    <li><strong>Parliamentary Procedure Compliance:</strong> All participants must follow proper UN parliamentary procedures including raising placards correctly, addressing remarks through the chair, and following speaking time limits. This ensures efficient and orderly committee proceedings and a realistic simulation experience.</li>
+                </ul>
+                
+                <h3><i class="fas fa-users"></i> Respect and Inclusion</h3>
+                <ul class="conduct-list">
+                    <li><strong>Universal Respect Mandate:</strong> All participants must treat every individual with complete dignity and respect. Any discriminatory behavior, comments, or actions are absolutely forbidden and constitute one of the most serious violations of this Code.</li>
+                    <li><strong>Active Listening Requirement:</strong> Delegates must demonstrate respectful attention when others are speaking by maintaining eye contact, avoiding side conversations, and not interrupting speakers. Disruptive listening behaviors include talking during speeches, making dismissive gestures, or displaying disinterest, all of which undermine the diplomatic environment.</li>
+                    <li><strong>Inclusive Environment Creation:</strong> Every participant has the responsibility to actively contribute to an environment where all delegates feel welcome, valued, and safe to express their views. This includes welcoming new participants, avoiding exclusionary cliques, and ensuring equitable participation opportunities for all delegates regardless of experience level.</li>
+                    <li><strong>Zero Tolerance for Personal Attacks:</strong> Personal attacks, derogatory comments, insults, or any form of offensive language directed at individuals are strictly prohibited. This includes but is not limited to comments about appearance, intelligence, background, or personal characteristics. All criticism must focus on policies, not people.</li>
+
+                </ul>
+                
+                <h3><i class="fas fa-comments"></i> Communication Ethics</h3>
+                <ul class="conduct-list">
+                    <li><strong>Clear and Constructive Communication Standard:</strong> All communication must be clear, respectful, and aimed at advancing diplomatic solutions. Unclear, aggressive, or destructive communication undermines the conference's educational purpose. Participants must speak audibly, organize thoughts coherently, and contribute meaningfully to discussions that advance committee work.</li>
+                    <li><strong>Formal Address Protocol:</strong> During formal proceedings, delegates must address others by their official titles ("Honorable Chair", "Fellow Delegates", "Esteemed Delegates", "Dear Delegates" or simply "Delegates"). Personal names may only be used during informal caucuses. This protocol maintains the formal diplomatic atmosphere essential to Model UN education and simulates real UN diplomatic interactions.</li>
+                    <li><strong>Diplomatic Language Requirement:</strong> All language must reflect the formal, diplomatic standards appropriate to United Nations proceedings. Casual language, slang, colloquialisms, or inappropriate expressions are forbidden during formal sessions. Participants must demonstrate mastery of diplomatic vocabulary and formal speech patterns that reflect international diplomatic standards.</li>
+                    <li><strong>Speaking Floor Respect:</strong> When any participant has been recognized by the chair and holds the speaking floor, all interruptions are strictly forbidden. This includes questions, comments, clarifications, or any verbal interjections. The only exception is the chair calling for order or time. Interruptions disrupt the speaker's flow and undermine committee efficiency.</li>
+                    <li><strong>Constructive Disagreement Principle:</strong> Disagreements must focus exclusively on policies, ideas, and positions - never on the individuals presenting them. Personal characteristics, competence, or motives of other delegates may never be questioned or attacked. All criticism must be substantive and policy-focused, reflecting the diplomatic nature of negotiations.</li>
+                </ul>
+                
+                <h3><i class="fas fa-shield-alt"></i> Respectful Environment</h3>
+                <ul class="conduct-list">
+                    <li><strong>Professional Conduct:</strong> Maintain professional behavior at all times, treating all participants with dignity and courtesy.</li>
+                    <li><strong>Respect for Speakers:</strong> Give full attention to delegates who have the floor, avoiding side conversations or distracting behaviors.</li>
+                    <li><strong>Personal Space:</strong> Respect the physical boundaries and personal space of other participants.</li>
+                    <li><strong>Inclusive Participation:</strong> Encourage and support the participation of all delegates, regardless of experience level.</li>
+                    <li><strong>Cultural Sensitivity:</strong> Demonstrate awareness and respect for cultural differences among participants.</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Specific Guidelines -->
+    <section class="conduct-section" id="specific-guidelines">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">Specific Guidelines</h2>
+                <p class="section-subtitle">Detailed expectations for key aspects of conference participation</p>
+            </div>
+            
+            <div class="conduct-details">
+                <h3><i class="fas fa-shirt"></i> Dress Code</h3>
+                <p>All participants are required to adhere to Western Business Attire (WBA) throughout the conference, reflecting the professional standards of diplomatic settings.</p>
+                
+                <div class="conduct-grid">
+                    <div class="conduct-card">
+                        <h4>For Male Delegates:</h4>
+                        <ul class="conduct-list">
+                            <li>Formal suit or blazer with matching dress pants</li>
+                            <li>Dress shirt and tie</li>
+                            <li>Formal dress shoes</li>
+                            <li>Conservative and professional appearance</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="conduct-card">
+                        <h4>For Female Delegates:</h4>
+                        <ul class="conduct-list">
+                            <li>Professional suit, dress, or blazer with formal skirt/pants</li>
+                            <li>Modest blouses or tops</li>
+                            <li>Formal closed-toe shoes</li>
+                            <li>Conservative and professional appearance</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <p class="highlighted-box">
+                    <strong>Important Note:</strong> The Secretariat has final discretion on appropriate attire. Participants not adhering to the dress code may be asked to change before participating in conference activities.
+                </p>
+                
+                <h3><i class="fas fa-clock"></i> Attendance and Punctuality</h3>
+                <ul class="conduct-list">
+                    <li><strong>Mandatory Attendance:</strong> All delegates are expected to attend all sessions of their assigned committee.</li>
+                    <li><strong>Punctuality:</strong> Arrive at least 10 minutes before the scheduled start time for each session.</li>
+                    <li><strong>Absence Policy:</strong> Any necessary absences must be communicated to committee chairs in advance.</li>
+                    <li><strong>Session Presence:</strong> Delegates must remain in committee throughout the session unless given explicit permission to leave.</li>
+                    <li><strong>Roll Call:</strong> Respond promptly when your delegation is called during attendance checks.</li>
+                </ul>
+                
+                <h3><i class="fas fa-mobile-alt"></i> Technology and Device Usage</h3>
+                <p class="highlighted-box">
+                    <strong>ELECTRONIC DEVICE POLICY:</strong> All electronic devices (including phones, laptops, tablets, smartwatches, cameras, recording devices, and any internet-connected devices) are strictly prohibited during all committee sessions. Devices spotted during sessions will be immediately confiscated and a formal warning will be issued. Repeated violations may result in suspension from committee activities. Only traditional analog watches and writing instruments are permitted.
+                </p>
+                <p>
+                    This prohibition is strictly enforced without exception. Medical devices (insulin pumps, hearing aids, etc.) require pre-conference approval with documentation. For genuine emergencies, delegates must request permission from the chair to leave the room to use communication devices outside the committee session.
+                </p>
+                
+
+                
+                <h3><i class="fas fa-gavel"></i> Committee Decorum</h3>
+                <ul class="conduct-list">
+                    <li><strong>Absolute Country Position Adherence:</strong> Delegates must strictly and exclusively represent their assigned country's official positions, policies, and stances on all issues without any deviation. Personal opinions, beliefs, or interpretations are completely forbidden and constitute a serious violation of Model UN principles. Every statement, vote, and action must be demonstrably consistent with the represented country's documented positions.</li>
+                    <li><strong>Absolute Secretariat Authority:</strong> The decisions, interpretations, and instructions of the Secretariat are final, binding, and may never be questioned, challenged, or contested by any participant under any circumstances. This includes all rulings on parliamentary procedure, disciplinary matters, schedule changes, and conference policies. Any attempt to argue with or undermine the Secretariat's authority is considered insubordination.</li>
+                    <li><strong>Mandatory Chair Respect:</strong> Committee chairs possess absolute authority within their committees and their decisions are non-negotiable and non-debatable. This includes rulings on speaking order, time limits, procedural matters, and all aspects of committee management. Arguing with, interrupting, or disrespecting chairs in any manner is strictly forbidden. Delegates must respond to chair instructions immediately and without question.</li>
+                    <li><strong>Mandatory Active Participation:</strong> All delegates must engage actively and constructively in every aspect of committee proceedings including formal debate, informal caucuses, and working group sessions. Silent participation, passive observation, or minimal engagement undermines the educational experience for all participants. Delegates must speak at least once per session and contribute meaningfully to committee work.</li>
+                    <li><strong>Strict Placard Protocol:</strong> Placards may only be raised when explicitly requested by the chair for specific purposes including speakers' list additions, voting, and yielding responses. Raising placards at inappropriate times, waving placards excessively, or using placards for non-procedural purposes disrupts committee flow. Delegates must wait for clear instructions before raising placards.</li>
+                    <li><strong>Recognition Requirement for Speaking:</strong> Delegates may only address the committee, other delegates, or chairs when formally recognized by the chair. All unauthorized speaking including side conversations, comments, questions, or outbursts during others' speeches is strictly prohibited. This applies to both formal sessions and moderated caucuses.</li>
+                    <li><strong>Document Submission Protocol:</strong> All working papers, draft resolutions, amendments, and other committee documents must be submitted exclusively through the designated channels and procedures established by committee chairs. Bypassing proper submission procedures, submitting documents late, or failing to follow formatting requirements disrupts committee workflow.</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+    
+
+    
+    <!-- CTA Section -->
+    <section class="cta-section">
+        <div class="container">
+            <div class="cta-content">
+                <h2>Commit to Excellence</h2>
+                <p>By adhering to this Code of Conduct, you contribute to making SMUMUN'25 an enriching, professional, and memorable experience for all participants.</p>
+                <div style="margin-top: 2rem;">
+                    <a href="../smumun25.html#application" class="cta-button">Apply for SMUMUN'25</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <p>&copy; 2025 SMUMUN. Organized by South Mediterranean University in partnership with MUNLY. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Mobile menu toggle
+        document.querySelector('.mobile-menu').addEventListener('click', function() {
+            const navLinks = document.querySelector('.nav-links');
+            if (navLinks.classList.contains('mobile-active')) {
+                navLinks.classList.remove('mobile-active');
+            } else {
+                navLinks.classList.add('mobile-active');
+            }
+        });
+        
+
+    </script>
+</body>
+</html>
