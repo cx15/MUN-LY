@@ -2917,55 +2917,118 @@
 
         function hideAuth(){ const modal = el('authModal'); modal.classList.add('hidden'); modal.setAttribute('aria-hidden','true'); }
 
-        function getUsers(){ return JSON.parse(localStorage.getItem('munlyUsers') || '[]'); }
-        function saveUsers(u){ localStorage.setItem('munlyUsers', JSON.stringify(u)); }
-        function setCurrentUser(user){ localStorage.setItem('munlyCurrent', JSON.stringify(user)); updateNavForUser(); }
+function setSession(token, user){
+    localStorage.setItem('munlyToken', token);
+    localStorage.setItem('munlyCurrent', JSON.stringify(user));
+    updateNavForUser();
+}
 
-        function handleSignUp(){
-            const name = (el('authName')||{}).value?.trim() || '';
-            const email = ((el('authEmail')||{}).value || '').trim().toLowerCase();
-            const password = (el('authPassword')||{}).value || '';
-            if(!name || !email || !password){ alert('Please complete all fields'); return; }
-            const users = getUsers();
-            if(users.find(u => u.email === email)){ alert('User already exists'); return; }
-            const user = { id: Date.now(), name, email, password };
-            users.push(user); saveUsers(users); setCurrentUser({ id: user.id, name: user.name, email: user.email }); hideAuth(); alert('Account created and signed in');
+function clearSession(){
+    localStorage.removeItem('munlyToken');
+    localStorage.removeItem('munlyCurrent');
+}
+
+function setFormLoading(form, loading){
+    const btn = form.querySelector('button[type="submit"]');
+    if(!btn) return;
+    if(loading){ btn.dataset.originalText = btn.textContent; btn.textContent = 'Please wait…'; btn.disabled = true; }
+    else { btn.textContent = btn.dataset.originalText || btn.textContent; btn.disabled = false; }
+}
+
+async function handleSignUp(){
+    const form = el('authForm');
+    const name = (el('authName')||{}).value?.trim() || '';
+    const email = ((el('authEmail')||{}).value || '').trim().toLowerCase();
+    const password = (el('authPassword')||{}).value || '';
+    if(!name || !email || !password){ alert('Please complete all fields'); return; }
+    if(password.length < 8){ alert('Password must be at least 8 characters'); return; }
+
+    setFormLoading(form, true);
+    try {
+        const res = await fetch(getApiUrl('SIGNUP'), {
+            method: 'POST',
+            headers: getApiHeaders(),
+            body: JSON.stringify({ name, email, password })
+        });
+        const data = await res.json();
+        if(!res.ok){ alert(data.error || 'Could not create account'); return; }
+        setSession(data.token, data.user);
+        hideAuth();
+        alert('Account created and signed in');
+    } catch (err) {
+        console.error('Signup error:', err);
+        alert('Network error — please try again');
+    } finally {
+        setFormLoading(form, false);
+    }
+}
+
+async function handleSignIn(){
+    const form = el('authForm');
+    const email = ((el('authEmail')||{}).value || '').trim().toLowerCase();
+    const password = (el('authPassword')||{}).value || '';
+    const remember = (el('authRemember')||{}).checked || false;
+    if(!email || !password){ alert('Please complete all fields'); return; }
+
+    setFormLoading(form, true);
+    try {
+        const res = await fetch(getApiUrl('SIGNIN'), {
+            method: 'POST',
+            headers: getApiHeaders(),
+            body: JSON.stringify({ email, password })
+        });
+        const data = await res.json();
+        if(!res.ok){ alert(data.error || 'Invalid credentials'); return; }
+
+        if(remember){
+            localStorage.setItem('munlyRememberEmail', email);
+        } else {
+            localStorage.removeItem('munlyRememberEmail');
         }
 
-        function handleSignIn(){
-            const email = ((el('authEmail')||{}).value || '').trim().toLowerCase();
-            const password = (el('authPassword')||{}).value || '';
-            const remember = (el('authRemember')||{}).checked || false;
-            const users = getUsers();
-            const user = users.find(u => u.email === email && u.password === password);
-            if(!user){ alert('Invalid credentials'); return; }
-            if(remember){
-                localStorage.setItem('munlyRememberEmail', email);
-            } else {
-                localStorage.removeItem('munlyRememberEmail');
-            }
-            setCurrentUser({ id: user.id, name: user.name, email: user.email }); hideAuth(); alert('Signed in');
-        }
+        setSession(data.token, data.user);
+        hideAuth();
+        alert('Signed in');
+    } catch (err) {
+        console.error('Signin error:', err);
+        alert('Network error — please try again');
+    } finally {
+        setFormLoading(form, false);
+    }
+}
 
-        function updateNavForUser(){
-            const current = JSON.parse(localStorage.getItem('munlyCurrent') || 'null');
+async function verifySession(){
+    const token = localStorage.getItem('munlyToken');
+    if(!token) return;
+    try {
+        const res = await fetch(getApiUrl('ME'), {
+            headers: { ...getApiHeaders(), 'Authorization': `Bearer ${token}` }
+        });
+        if(!res.ok){ clearSession(); updateNavForUser(); return; }
+        const data = await res.json();
+        localStorage.setItem('munlyCurrent', JSON.stringify(data.user));
+        updateNavForUser();
+    } catch (err) {
+        console.error('Session check failed:', err);
+    }
+}
+
+function updateNavForUser(){
+    const current = JSON.parse(localStorage.getItem('munlyCurrent') || 'null');
             const authContainer = document.getElementById('authContainer');
             const profileSection = document.getElementById('profileSection');
             
             if(!authContainer) return;
             
             if(current){
-                // Hide the auth button, show profile section
                 authContainer.style.display = 'none';
                 profileSection.classList.remove('hidden');
                 
-                // Update profile section
                 const firstName = current.name.split(' ')[0];
                 const initials = firstName.charAt(0).toUpperCase();
                 el('profileAvatar').textContent = initials;
                 el('profileName').textContent = `Hi, ${firstName}`;
             } else {
-                // Show auth button, hide profile section
                 authContainer.style.display = 'block';
                 profileSection.classList.add('hidden');
                 authContainer.innerHTML = `<a href="#" id="authBtn" class="cta-button">Sign In</a>`;
@@ -2976,15 +3039,12 @@
             const current = JSON.parse(localStorage.getItem('munlyCurrent') || 'null');
             if(!current) return;
             
-            // Hide other sections
             document.querySelectorAll('section:not(#profilePage)').forEach(s => s.style.display = 'none');
             document.querySelector('footer').style.display = 'none';
             
-            // Show profile page
             const profilePage = el('profilePage');
             profilePage.classList.add('active');
             
-            // Update profile info
             const firstName = current.name.split(' ')[0];
             const initials = firstName.charAt(0).toUpperCase();
             el('profilePageAvatar').textContent = initials;
@@ -2993,7 +3053,6 @@
             el('profileInfoName').textContent = current.name;
             el('profileInfoEmail').textContent = current.email;
             
-            // Format member since date
             const joinDate = new Date(current.id);
             const formattedDate = joinDate.toLocaleDateString('en-US', { 
                 year: 'numeric', 
@@ -3002,20 +3061,16 @@
             });
             el('profileInfoMemberSince').textContent = formattedDate;
             
-            // Scroll to top
             window.scrollTo(0, 0);
         }
 
         function goBackToSite(){
-            // Show all sections
             document.querySelectorAll('section').forEach(s => s.style.display = '');
             document.querySelector('footer').style.display = '';
             
-            // Hide profile page
             const profilePage = el('profilePage');
             profilePage.classList.remove('active');
             
-            // Scroll to top
             window.scrollTo(0, 0);
         }
 
@@ -3026,8 +3081,9 @@
                 e.preventDefault(); showAuth('signin');
             }
             if(target.id === 'signOutBtn'){
-                e.preventDefault(); localStorage.removeItem('munlyCurrent'); updateNavForUser(); alert('Signed out');
+                e.preventDefault(); clearSession(); updateNavForUser(); alert('Signed out');
             }
+            
             if(target.id === 'authClose'){ e.preventDefault(); hideAuth(); }
             if(target.id === 'authToggleLink'){ e.preventDefault(); const t = target.dataset.type || 'signin'; showAuth(t); }
             if(target.id === 'profileAvatar' || target.id === 'profileName'){ 
@@ -3037,15 +3093,19 @@
                 e.preventDefault(); goBackToSite();
             }
             if(target.id === 'profilePageSignOutBtn'){
-                e.preventDefault(); goBackToSite(); localStorage.removeItem('munlyCurrent'); updateNavForUser(); alert('Signed out');
+                e.preventDefault(); goBackToSite(); clearSession(); updateNavForUser(); alert('Signed out');
             }
         });
 
-        // Initialize auth on page load
-        if(document.readyState === 'loading'){
-            document.addEventListener('DOMContentLoaded', updateNavForUser);
-        } else {
+        function initAuth(){
             updateNavForUser();
+            verifySession();
+        }
+
+        if(document.readyState === 'loading'){
+            document.addEventListener('DOMContentLoaded', initAuth);
+        } else {
+            initAuth();
         }
     })();
 
