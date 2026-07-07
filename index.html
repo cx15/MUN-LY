@@ -607,7 +607,6 @@
             color: white;
         }
 
-        /* Add Conference Section */
         .add-conference {
             background: var(--background-white);
             padding: 80px 0;
@@ -659,7 +658,6 @@
             margin: 2rem 0;
         }
 
-        /* About Section */
         .about {
             padding: 100px 0;
             background: var(--background-light);
@@ -722,7 +720,6 @@
             margin: 0;
         }
 
-        /* Special styling for about-features in add-conference section */
         .add-conference .about-features .about-feature-content h4 {
             color: white;
             font-weight: 700;
@@ -744,7 +741,6 @@
             color: var(--primary-blue);
         }
 
-        /* Calendar Section */
         .calendar-section {
             background: var(--background-light);
             padding: 1.25rem 1rem;
@@ -1036,7 +1032,6 @@
             color: var(--text-gray);
         }
 
-        /* Contact Section */
         .contact {
             padding: 100px 0;
             background: var(--background-light);
@@ -1675,7 +1670,6 @@
     </style>
 </head>
 <body>
-    <!-- Navigation -->
     <nav id="navbar">
         <div class="nav-container">
             <div id="profileSection" class="profile-section hidden">
@@ -2244,12 +2238,9 @@
         </div>
     </footer>
 
-    <!-- Conference Detail Modal Content (Hidden by default) -->
     <div id="conferenceDetailModal" class="hidden">
-        <!-- Conference detail content will be dynamically inserted here -->
     </div>
 
-    <!-- Authentication Modal (Sign in / Sign up) -->
     <div id="authModal" class="hidden" aria-hidden="true">
         <div class="auth-backdrop" style="position:fixed;inset:0;background:rgba(0,0,0,0.5);display:flex;align-items:center;justify-content:center;z-index:2000;">
             <div class="auth-card" style="background:white;padding:1.5rem;border-radius:0.75rem;max-width:420px;width:90%;">
@@ -2264,13 +2255,11 @@
     </div>
 
     <script>
-        // Smooth scrolling for navigation links
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
             anchor.addEventListener('click', function (e) {
                 e.preventDefault();
                 const href = this.getAttribute('href');
                 const profilePage = document.getElementById('profilePage');
-                // If profile page is active, go back to site first, then scroll
                 if (profilePage && profilePage.classList.contains('active')) {
                     document.querySelectorAll('section').forEach(s => s.style.display = '');
                     document.querySelector('footer').style.display = '';
@@ -2288,7 +2277,6 @@
             });
         });
 
-        // Navbar scroll effect
         window.addEventListener('scroll', () => {
             const navbar = document.getElementById('navbar');
             if (window.scrollY > 50) {
@@ -2298,19 +2286,15 @@
             }
         });
 
-        // Conference filtering
         document.querySelectorAll('.filter-btn').forEach(btn => {
             btn.addEventListener('click', () => {
-                // Remove active class from all buttons
                 document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-                // Add active class to clicked button
                 btn.classList.add('active');
                 
                 const filter = btn.getAttribute('data-filter');
                 const cards = document.querySelectorAll('.conference-card');
                 const calendarSection = document.querySelector('.calendar-section');
                 
-                // Show/hide calendar based on filter
                 if (filter === 'upcoming') {
                     calendarSection.classList.add('visible');
                 } else {
@@ -2328,25 +2312,20 @@
             });
         });
 
-        // Conference form submission
         document.getElementById('conferenceForm').addEventListener('submit', async function(e) {
             e.preventDefault();
             
-            // Get form data
             const formData = new FormData(this);
             const conferenceData = Object.fromEntries(formData);
             
-            // Check if should add to calendar
             const addToCalendar = this.querySelector('#addToCalendar').checked;
             
-            // Show loading state
             const submitButton = this.querySelector('button[type="submit"]');
             const originalText = submitButton.textContent;
             submitButton.textContent = 'Submitting...';
             submitButton.disabled = true;
             
             try {
-                // Submit to backend API
                 const response = await fetch(getApiUrl('SUBMIT_CONFERENCE'), {
                     method: 'POST',
                     headers: getApiHeaders(),
@@ -2356,7 +2335,6 @@
                 const result = await response.json();
                 
                 if (response.ok && result.success) {
-                    // If calendar was requested, add it to pending
                     if (addToCalendar && calendar) {
                         const name = conferenceData.conferenceName;
                         const date = conferenceData.startDate;
@@ -2364,36 +2342,29 @@
                         
                         calendar.addPendingMunDate(name, date, location);
                         
-                        alert('Thank you for submitting your conference! Your submission has been sent and will be reviewed by our team.\n\nYour calendar submission is pending approval.');
+                        showMessage('Thank you for submitting your conference! Your submission has been sent and will be reviewed by our team.\n\nYour calendar submission is pending approval.');
                     } else {
-                        alert('Thank you for submitting your conference! Your submission has been sent automatically and will be reviewed by our team.');
+                        showMessage('Thank you for submitting your conference! Your submission has been sent automatically and will be reviewed by our team.');
                     }
                     
-                    // Reset form
                     this.reset();
                 } else {
-                    // Show error message
-                    alert(`Submission failed: ${result.error || 'Unknown error occurred'}`);
+                    showMessage(`Submission failed: ${result.error || 'Unknown error occurred'}`);
                     console.error('Submission error:', result);
                 }
                 
             } catch (error) {
                 console.error('Network error:', error);
-                alert('Failed to submit conference. Please check your internet connection and try again.');
+                showMessage('Failed to submit conference. Please check your internet connection and try again.');
             } finally {
-                // Reset button state
                 submitButton.textContent = originalText;
                 submitButton.disabled = false;
             }
             
-            // Reset form
             this.reset();
         });
 
-        // Conference detail view function
         function showConferenceDetail(conferenceId) {
-            // This would typically fetch data from a backend
-            // For now, we'll show a simple alert
             const conferences = {
                 'ismmun24': {
                     name: 'ISMMUN\'24',
@@ -2484,11 +2455,10 @@
             
             const conference = conferences[conferenceId];
             if (conference) {
-                alert(`${conference.name}\n\n${conference.description}\n\nCommittees: ${conference.committees.length}\nLocation: ${conference.location}\nDates: ${conference.dates}\n\nClick OK to continue browsing. In a full implementation, this would open a detailed page with complete information, documents, and application links.`);
+                showMessage(`${conference.name}\n\n${conference.description}\n\nCommittees: ${conference.committees.length}\nLocation: ${conference.location}\nDates: ${conference.dates}\n\nClick OK to continue browsing. In a full implementation, this would open a detailed page with complete information, documents, and application links.`);
             }
         }
 
-        // Add some scroll animations
         const observerOptions = {
             threshold: 0.1,
             rootMargin: '0px 0px -50px 0px'
@@ -2503,7 +2473,6 @@
             });
         }, observerOptions);
 
-        // Observe sections for animations
         document.querySelectorAll('section').forEach(section => {
             section.style.opacity = '0';
             section.style.transform = 'translateY(30px)';
@@ -2511,14 +2480,11 @@
             observer.observe(section);
         });
 
-        // Contact method functions
         function openEmail(email) {
-            // Open Gmail compose window with the email address
             window.open(`https://mail.google.com/mail/?view=cm&fs=1&to=${email}`, '_blank');
         }
 
         function openWhatsApp(phone) {
-            // Remove any spaces and formatting from phone number
             const cleanPhone = phone.replace(/\s/g, '');
             window.open(`https://wa.me/${cleanPhone}`, '_blank');
         }
@@ -2527,7 +2493,6 @@
             window.open(`https://instagram.com/${username}`, '_blank');
         }
 
-        // Mobile menu functionality
         document.querySelector('.mobile-menu').addEventListener('click', function() {
             const navLinks = document.querySelector('.nav-links');
             if (navLinks.classList.contains('mobile-active')) {
@@ -2544,10 +2509,7 @@
             }
         });
 
-        // Initialize page
-        // Function to check if conference is more than 3 months old
         function isPastConference(dateString) {
-            // Parse date from format like "October 22-23, 2024" or "OCT 22-23, 2024"
             const months = {
                 'JAN': 0, 'FEB': 1, 'MAR': 2, 'APR': 3, 'MAY': 4, 'JUN': 5,
                 'JUL': 6, 'AUG': 7, 'SEP': 8, 'OCT': 9, 'NOV': 10, 'DEC': 11,
@@ -2557,11 +2519,9 @@
             
             let month, year;
             
-            // Extract month and year from string
             const parts = dateString.toUpperCase().split(' ');
             if (parts.length >= 2) {
                 month = months[parts[0].replace(',', '')];
-                // Find the year in parts (it should be 4 digits)
                 for (const part of parts) {
                     if (/^\d{4}$/.test(part)) {
                         year = parseInt(part);
@@ -2571,17 +2531,16 @@
             }
             
             if (month === undefined || year === undefined) {
-                return false; // Default to not past if we can't parse
+                return false;
             }
             
-            const conferenceDate = new Date(year, month, 1); // Use the 1st of the month
+            const conferenceDate = new Date(year, month, 1);
             const threeMonthsAgo = new Date();
             threeMonthsAgo.setMonth(threeMonthsAgo.getMonth() - 3);
             
             return conferenceDate < threeMonthsAgo;
         }
         
-        // Function to update conference categories based on dates
         function updateConferenceCategories() {
             const conferenceCards = document.querySelectorAll('.conference-card');
             
@@ -2590,12 +2549,10 @@
                 if (dateElement) {
                     const dateText = dateElement.textContent;
                     if (isPastConference(dateText)) {
-                        // Add 'past' to data-category if not already there
                         const currentCategories = card.getAttribute('data-category');
                         if (!currentCategories.includes('past')) {
                             card.setAttribute('data-category', currentCategories + ' past');
                             
-                            // Update status label if needed
                             const statusElement = card.querySelector('.conference-status');
                             if (statusElement && !statusElement.textContent.includes('Past')) {
                                 statusElement.textContent = 'Past Event';
@@ -2607,13 +2564,10 @@
         }
         
         document.addEventListener('DOMContentLoaded', function() {
-            // Set initial active filter
             document.querySelector('.filter-btn[data-filter="all"]').classList.add('active');
             
-            // Update conference categories based on dates
             updateConferenceCategories();
             
-            // Add loading animation
             document.body.style.opacity = '0';
             document.body.style.transition = 'opacity 0.5s ease-out';
             
@@ -2642,7 +2596,6 @@
             }
 
             setupEventListeners() {
-                // Navigation buttons
                 document.getElementById('prevMonth').addEventListener('click', () => {
                     this.currentDate.setMonth(this.currentDate.getMonth() - 1);
                     this.renderCalendar();
@@ -2717,13 +2670,11 @@
                 const year = this.currentDate.getFullYear();
                 const month = this.currentDate.getMonth();
 
-                // Update header
                 const monthNames = ['January', 'February', 'March', 'April', 'May', 'June',
                     'July', 'August', 'September', 'October', 'November', 'December'];
                 document.getElementById('currentMonth').textContent = 
                     `${monthNames[month]} ${year}`;
 
-                // Create calendar grid
                 const firstDay = new Date(year, month, 1).getDay();
                 const daysInMonth = new Date(year, month + 1, 0).getDate();
                 const daysInPrevMonth = new Date(year, month, 0).getDate();
@@ -2731,7 +2682,6 @@
                 const calendarGrid = document.getElementById('calendarGrid');
                 calendarGrid.innerHTML = '';
 
-                // Day headers
                 const dayHeaders = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
                 dayHeaders.forEach(day => {
                     const dayHeader = document.createElement('div');
@@ -2740,7 +2690,6 @@
                     calendarGrid.appendChild(dayHeader);
                 });
 
-                // Previous month days
                 for (let i = firstDay - 1; i >= 0; i--) {
                     const dayDiv = document.createElement('div');
                     dayDiv.className = 'other-month';
@@ -2748,7 +2697,6 @@
                     calendarGrid.appendChild(dayDiv);
                 }
 
-                // Current month days
                 const today = new Date();
                 for (let day = 1; day <= daysInMonth; day++) {
                     const dayDiv = document.createElement('div');
@@ -2801,7 +2749,7 @@
                     const munInfo = munsOnDate.map(m => 
                         `${m.name} at ${m.location}`
                     ).join('\n');
-                    alert(`MUNs on ${date.toDateString()}:\n\n${munInfo}`);
+                    showMessage(`MUNs on ${date.toDateString()}:\n\n${munInfo}`);
                 }
             }
 
@@ -2852,7 +2800,7 @@
             showApprovalPanel() {
                 const pending = this.pendingDates;
                 if (pending.length === 0) {
-                    alert('No pending MUN submissions to approve.');
+                    showMessage('No pending MUN submissions to approve.');
                     return;
                 }
 
@@ -2861,7 +2809,7 @@
                     message += `${index + 1}. ${mun.name}\n   Date: ${mun.date}\n   Location: ${mun.location}\n\n`;
                 });
                 message += '\nUse in console:\ncalendar.approveMunDate(id)  - to approve\ncalendar.rejectMunDate(id)  - to reject';
-                alert(message);
+                showMessage(message);
             }
         }
 
@@ -2871,16 +2819,14 @@
             calendar = new MUNCalendar();
         }
 
-        // Admin approval helper (access via console or add your own UI)
         function approvePendingMun(index) {
             if (calendar && calendar.pendingDates[index]) {
                 const munId = calendar.pendingDates[index].id;
                 if (calendar.approveMunDate(munId)) {
-                    alert(`✓ Approved: ${calendar.approvedDates[calendar.approvedDates.length - 1].name}`);
+                    showMessage(`✓ Approved: ${calendar.approvedDates[calendar.approvedDates.length - 1].name}`);
                 }
             }
         }
-    // --- Authentication (signup / signin) ---
     (function(){
         function el(id){return document.getElementById(id);} 
         function showAuth(type){
@@ -2940,8 +2886,8 @@ async function handleSignUp(){
     const name = (el('authName')||{}).value?.trim() || '';
     const email = ((el('authEmail')||{}).value || '').trim().toLowerCase();
     const password = (el('authPassword')||{}).value || '';
-    if(!name || !email || !password){ alert('Please complete all fields'); return; }
-    if(password.length < 8){ alert('Password must be at least 8 characters'); return; }
+    if(!name || !email || !password){ showMessage('Please complete all fields'); return; }
+    if(password.length < 8){ showMessage('Password must be at least 8 characters'); return; }
 
     setFormLoading(form, true);
     try {
@@ -2951,7 +2897,7 @@ async function handleSignUp(){
             body: JSON.stringify({ name, email, password })
         });
         const data = await res.json();
-        if(!res.ok){ alert(data.error || 'Could not create account'); return; }
+        if(!res.ok){ showMessage(data.error || 'Could not create account'); return; }
 
         if(data.requiresVerification) {
             hideAuth();
@@ -2959,11 +2905,11 @@ async function handleSignUp(){
         } else {
             setSession(data.token, data.user);
             hideAuth();
-            alert('Account created and signed in');
+            showMessage('Account created and signed in');
         }
     } catch (err) {
         console.error('Signup error:', err);
-        alert('Network error — please try again');
+        showMessage('Network error — please try again');
     } finally {
         setFormLoading(form, false);
     }
@@ -2974,7 +2920,7 @@ async function handleSignIn(){
     const email = ((el('authEmail')||{}).value || '').trim().toLowerCase();
     const password = (el('authPassword')||{}).value || '';
     const remember = (el('authRemember')||{}).checked || false;
-    if(!email || !password){ alert('Please complete all fields'); return; }
+    if(!email || !password){ showMessage('Please complete all fields'); return; }
 
     setFormLoading(form, true);
     try {
@@ -2984,7 +2930,7 @@ async function handleSignIn(){
             body: JSON.stringify({ email, password })
         });
         const data = await res.json();
-        if(!res.ok){ alert(data.error || 'Invalid credentials'); return; }
+        if(!res.ok){ showMessage(data.error || 'Invalid credentials'); return; }
 
         if(remember){
             localStorage.setItem('munlyRememberEmail', email);
@@ -2994,10 +2940,10 @@ async function handleSignIn(){
 
         setSession(data.token, data.user);
         hideAuth();
-        alert('Signed in');
+        showMessage('Signed in');
     } catch (err) {
         console.error('Signin error:', err);
-        alert('Network error — please try again');
+        showMessage('Network error — please try again');
     } finally {
         setFormLoading(form, false);
     }
@@ -3087,7 +3033,7 @@ function updateNavForUser(){
                 e.preventDefault(); showAuth('signin');
             }
             if(target.id === 'signOutBtn'){
-                e.preventDefault(); clearSession(); updateNavForUser(); alert('Signed out');
+                e.preventDefault(); clearSession(); updateNavForUser(); showMessage('Signed out');
             }
             
             if(target.id === 'authClose'){ e.preventDefault(); hideAuth(); }
@@ -3099,62 +3045,78 @@ function updateNavForUser(){
                 e.preventDefault(); goBackToSite();
             }
             if(target.id === 'profilePageSignOutBtn'){
-                e.preventDefault(); goBackToSite(); clearSession(); updateNavForUser(); alert('Signed out');
+                e.preventDefault(); goBackToSite(); clearSession(); updateNavForUser(); showMessage('Signed out');
             }
         });
 
-function showVerificationPrompt(email){
-    const msg = `Account created! A verification link has been sent to ${email}.\n\nClick the link in the email to verify your account.\n\nDidn't receive it?`;
-    alert(msg);
+        function showVerificationPrompt(email){
+            const msg = `Account created! A verification link has been sent to ${email}.\n\nClick the link in the email to verify your account.\n\nDidn't receive it?`;
+            showMessage(msg);
 
-    setTimeout(() => {
-        const resend = confirm(`Resend verification email to ${email}?`);
-        if(resend) {
-            resendVerificationEmail(email);
+            setTimeout(() => {
+                const resend = confirm(`Resend verification email to ${email}?`);
+                if(resend) {
+                    resendVerificationEmail(email);
+                }
+            }, 1000);
         }
-    }, 1000);
-}
 
-async function resendVerificationEmail(email){
-    try {
-        const res = await fetch(getApiUrl('RESEND_VERIFICATION'), {
-            method: 'POST',
-            headers: getApiHeaders(),
-            body: JSON.stringify({ email })
-        });
-        const data = await res.json();
-        if(!res.ok){ alert(data.error || 'Failed to resend'); return; }
-        alert('Verification email sent!');
-    } catch (err) {
-        console.error('Resend error:', err);
-        alert('Network error');
-    }
-}
+        async function resendVerificationEmail(email){
+            try {
+                const res = await fetch(getApiUrl('RESEND_VERIFICATION'), {
+                    method: 'POST',
+                    headers: getApiHeaders(),
+                    body: JSON.stringify({ email })
+                });
+                const data = await res.json();
+                if(!res.ok){ showMessage(data.error || 'Failed to resend'); return; }
+                showMessage('Verification email sent!');
+            } catch (err) {
+                console.error('Resend error:', err);
+                showMessage('Network error');
+            }
+        }
 
-async function handleVerificationLink(){
-    const params = new URLSearchParams(window.location.search);
-    const token = params.get('token');
+        async function handleVerificationLink(){
+            const params = new URLSearchParams(window.location.search);
+            const token = params.get('token');
 
-    if(!token) return;
+            if(!token) return;
 
-    try {
-        const res = await fetch(getApiUrl('VERIFY_EMAIL'), {
-            method: 'POST',
-            headers: getApiHeaders(),
-            body: JSON.stringify({ token })
-        });
-        const data = await res.json();
-        if(!res.ok){ alert(data.error || 'Verification failed'); return; }
+            try {
+                const res = await fetch(getApiUrl('VERIFY_EMAIL'), {
+                    method: 'POST',
+                    headers: getApiHeaders(),
+                    body: JSON.stringify({ token })
+                });
+                const data = await res.json();
+                if(!res.ok){ showMessage(data.error || 'Verification failed'); return; }
 
-        setSession(data.token, data.user);
-        alert('Email verified! You can now sign in.');
-        // Remove token from URL
-        window.history.replaceState({}, document.title, window.location.pathname);
-    } catch (err) {
-        console.error('Verification error:', err);
-        alert('Network error during verification');
-    }
-}
+                setSession(data.token, data.user);
+                showMessage('Email verified! You can now sign in.');
+                window.history.replaceState({}, document.title, window.location.pathname);
+            } catch (err) {
+                console.error('Verification error:', err);
+                showMessage('Network error during verification');
+            }
+        }
+
+        function showMessage(text, type = 'info'){
+            const modal = el('messageModal');
+            const messageText = el('messageText');
+            const okBtn = el('messageOkBtn');
+
+            messageText.textContent = text;
+            messageText.style.color = type === 'error' ? '#dc2626' : (type === 'success' ? '#16a34a' : 'var(--text-dark)');
+
+            modal.classList.remove('hidden');
+            modal.setAttribute('aria-hidden', 'false');
+
+            okBtn.onclick = function(){
+                modal.classList.add('hidden');
+                modal.setAttribute('aria-hidden', 'true');
+            };
+        }
 
         function initAuth(){
             updateNavForUser();
@@ -3170,5 +3132,15 @@ async function handleVerificationLink(){
     })();
 
     </script>
+    <div id="messageModal" class="hidden" aria-hidden="true">
+        <div class="auth-backdrop" style="position:fixed;inset:0;background:rgba(0,0,0,0.5);display:flex;align-items:center;justify-content:center;z-index:2000;">
+            <div class="auth-card" style="background:white;padding:2rem;border-radius:0.75rem;max-width:500px;width:90%;box-shadow:var(--shadow-xl);text-align:center;">
+                <div id="messageContent" style="margin-bottom:1.5rem;">
+                    <p id="messageText"></p>
+                </div>
+                <button id="messageOkBtn" class="cta-button" style="width:100%;padding:0.75rem;">OK</button>
+            </div>
+        </div>
+    </div>
 </body>
 </html>
