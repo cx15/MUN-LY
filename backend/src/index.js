@@ -22,7 +22,6 @@ export default {
     };
 
     try {
-      // API Routes
       if (path === '/api/submit-conference' && request.method === 'POST') {
         return await handleConferenceSubmission(request, env);
       }
@@ -41,6 +40,14 @@ export default {
 
       if (path === '/api/auth/signin' && request.method === 'POST') {
         return await handleSignIn(request, env);
+      }
+
+      if (path === '/api/auth/verify-email' && request.method === 'POST') {
+        return await handleVerifyEmail(request, env);
+      }
+
+      if (path === '/api/auth/resend-verification' && request.method === 'POST') {
+        return await handleResendVerification(request, env);
       }
 
       if (path === '/api/auth/me' && request.method === 'GET') {
@@ -81,6 +88,116 @@ export default {
     }
   }
 };
+
+// ==================== UTILITY & CRYPTO FUNCTIONS ====================
+
+function bufToHex(buf) {
+  return [...new Uint8Array(buf)].map(b => b.toString(16).padStart(2, '0')).join('');
+}
+
+function hexToBuf(hex) {
+  const bytes = new Uint8Array(hex.length / 2);
+  for (let i = 0; i < hex.length; i += 2) bytes[i / 2] = parseInt(hex.substr(i, 2), 16);
+  return bytes.buffer;
+}
+
+function generateSaltHex() {
+  const arr = new Uint8Array(16);
+  crypto.getRandomValues(arr);
+  return bufToHex(arr.buffer);
+}
+
+function generateVerificationToken() {
+  const arr = new Uint8Array(32);
+  crypto.getRandomValues(arr);
+  return bufToHex(arr.buffer);
+}
+
+async function derivePasswordHash(password, saltHex) {
+  const enc = new TextEncoder();
+  const keyMaterial = await crypto.subtle.importKey(
+    'raw', enc.encode(password), { name: 'PBKDF2' }, false, ['deriveBits']
+  );
+  const bits = await crypto.subtle.deriveBits(
+    { name: 'PBKDF2', salt: hexToBuf(saltHex), iterations: 100000, hash: 'SHA-256' },
+    keyMaterial,
+    256
+  );
+  return bufToHex(bits);
+}
+
+async function hashPassword(password) {
+  const salt = generateSaltHex();
+  const hash = await derivePasswordHash(password, salt);
+  return `${salt}:${hash}`;
+}
+
+function timingSafeEqual(a, b) {
+  if (a.length !== b.length) return false;
+  let result = 0;
+  for (let i = 0; i < a.length; i++) result |= a.charCodeAt(i) ^ b.charCodeAt(i);
+  return result === 0;
+}
+
+async function verifyPassword(password, stored) {
+  const [salt, hash] = stored.split(':');
+  if (!salt || !hash) return false;
+  const computed = await derivePasswordHash(password, salt);
+  return timingSafeEqual(computed, hash);
+}
+
+function base64urlEncode(str) {
+  return btoa(str).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
+}
+
+function base64urlDecode(str) {
+  str = str.replace(/-/g, '+').replace(/_/g, '/');
+  while (str.length % 4) str += '=';
+  return atob(str);
+}
+
+async function hmacSign(data, secret) {
+  const enc = new TextEncoder();
+  const key = await crypto.subtle.importKey(
+    'raw', enc.encode(secret), { name: 'HMAC', hash: 'SHA-256' }, false, ['sign']
+  );
+  const sig = await crypto.subtle.sign('HMAC', key, enc.encode(data));
+  return base64urlEncode(String.fromCharCode(...new Uint8Array(sig)));
+}
+
+async function createToken(payload, secret, expiresInSeconds = 7 * 24 * 60 * 60) {
+  const header = { alg: 'HS256', typ: 'JWT' };
+  const body = { ...payload, iat: Math.floor(Date.now() / 1000), exp: Math.floor(Date.now() / 1000) + expiresInSeconds };
+  const encHeader = base64urlEncode(JSON.stringify(header));
+  const encPayload = base64urlEncode(JSON.stringify(body));
+  const data = `${encHeader}.${encPayload}`;
+  const sig = await hmacSign(data, secret);
+  return `${data}.${sig}`;
+}
+
+async function verifyToken(token, secret) {
+  const parts = token.split('.');
+  if (parts.length !== 3) throw new Error('Malformed token');
+  const [encHeader, encPayload, sig] = parts;
+  const expectedSig = await hmacSign(`${encHeader}.${encPayload}`, secret);
+  if (!timingSafeEqual(sig, expectedSig)) throw new Error('Invalid signature');
+  const payload = JSON.parse(base64urlDecode(encPayload));
+  if (payload.exp && payload.exp < Math.floor(Date.now() / 1000)) throw new Error('Token expired');
+  return payload;
+}
+
+async function getAuthUser(request, env) {
+  const authHeader = request.headers.get('Authorization') || '';
+  const match = authHeader.match(/^Bearer (.+)$/);
+  if (!match) return null;
+  try {
+    return await verifyToken(match[1], env.JWT_SECRET);
+  } catch (e) {
+    return null;
+  }
+}
+
+// ==================== HANDLER FUNCTIONS ====================
 
 async function handleConferenceSubmission(request, env) {
   const corsHeaders = {
@@ -260,7 +377,6 @@ async function deleteConference(request, env) {
   };
 
   try {
-    // Require API key for deletion
     const apiKey = request.headers.get('X-API-Key');
     if (!env.ADMIN_API_KEY || apiKey !== env.ADMIN_API_KEY) {
       return new Response(JSON.stringify({ 
@@ -330,109 +446,6 @@ async function deleteConference(request, env) {
   }
 }
 
-
-function bufToHex(buf) {
-  return [...new Uint8Array(buf)].map(b => b.toString(16).padStart(2, '0')).join('');
-}
-
-function hexToBuf(hex) {
-  const bytes = new Uint8Array(hex.length / 2);
-  for (let i = 0; i < hex.length; i += 2) bytes[i / 2] = parseInt(hex.substr(i, 2), 16);
-  return bytes.buffer;
-}
-
-function generateSaltHex() {
-  const arr = new Uint8Array(16);
-  crypto.getRandomValues(arr);
-  return bufToHex(arr.buffer);
-}
-
-async function derivePasswordHash(password, saltHex) {
-  const enc = new TextEncoder();
-  const keyMaterial = await crypto.subtle.importKey(
-    'raw', enc.encode(password), { name: 'PBKDF2' }, false, ['deriveBits']
-  );
-  const bits = await crypto.subtle.deriveBits(
-    { name: 'PBKDF2', salt: hexToBuf(saltHex), iterations: 100000, hash: 'SHA-256' },
-    keyMaterial,
-    256
-  );
-  return bufToHex(bits);
-}
-
-async function hashPassword(password) {
-  const salt = generateSaltHex();
-  const hash = await derivePasswordHash(password, salt);
-  return `${salt}:${hash}`;
-}
-
-function timingSafeEqual(a, b) {
-  if (a.length !== b.length) return false;
-  let result = 0;
-  for (let i = 0; i < a.length; i++) result |= a.charCodeAt(i) ^ b.charCodeAt(i);
-  return result === 0;
-}
-
-async function verifyPassword(password, stored) {
-  const [salt, hash] = stored.split(':');
-  if (!salt || !hash) return false;
-  const computed = await derivePasswordHash(password, salt);
-  return timingSafeEqual(computed, hash);
-}
-
-
-function base64urlEncode(str) {
-  return btoa(str).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
-}
-
-function base64urlDecode(str) {
-  str = str.replace(/-/g, '+').replace(/_/g, '/');
-  while (str.length % 4) str += '=';
-  return atob(str);
-}
-
-async function hmacSign(data, secret) {
-  const enc = new TextEncoder();
-  const key = await crypto.subtle.importKey(
-    'raw', enc.encode(secret), { name: 'HMAC', hash: 'SHA-256' }, false, ['sign']
-  );
-  const sig = await crypto.subtle.sign('HMAC', key, enc.encode(data));
-  return base64urlEncode(String.fromCharCode(...new Uint8Array(sig)));
-}
-
-async function createToken(payload, secret, expiresInSeconds = 7 * 24 * 60 * 60) {
-  const header = { alg: 'HS256', typ: 'JWT' };
-  const body = { ...payload, iat: Math.floor(Date.now() / 1000), exp: Math.floor(Date.now() / 1000) + expiresInSeconds };
-  const encHeader = base64urlEncode(JSON.stringify(header));
-  const encPayload = base64urlEncode(JSON.stringify(body));
-  const data = `${encHeader}.${encPayload}`;
-  const sig = await hmacSign(data, secret);
-  return `${data}.${sig}`;
-}
-
-async function verifyToken(token, secret) {
-  const parts = token.split('.');
-  if (parts.length !== 3) throw new Error('Malformed token');
-  const [encHeader, encPayload, sig] = parts;
-  const expectedSig = await hmacSign(`${encHeader}.${encPayload}`, secret);
-  if (!timingSafeEqual(sig, expectedSig)) throw new Error('Invalid signature');
-  const payload = JSON.parse(base64urlDecode(encPayload));
-  if (payload.exp && payload.exp < Math.floor(Date.now() / 1000)) throw new Error('Token expired');
-  return payload;
-}
-
-async function getAuthUser(request, env) {
-  const authHeader = request.headers.get('Authorization') || '';
-  const match = authHeader.match(/^Bearer (.+)$/);
-  if (!match) return null;
-  try {
-    return await verifyToken(match[1], env.JWT_SECRET);
-  } catch (e) {
-    return null;
-  }
-}
-
-
 async function handleSignUp(request, env) {
   const corsHeaders = {
     'Access-Control-Allow-Origin': '*',
@@ -477,12 +490,17 @@ async function handleSignUp(request, env) {
     ).bind(name, email, passwordHash, now, now).run();
 
     const userId = result.meta.last_row_id;
-    const token = await createToken({ sub: userId, email, name }, env.JWT_SECRET);
+    const verificationToken = generateVerificationToken();
+    await env.DB.prepare('UPDATE users SET verification_token = ? WHERE id = ?').bind(verificationToken, userId).run();
+
+    await sendVerificationEmail(email, name, verificationToken, env);
 
     return new Response(JSON.stringify({
       success: true,
-      token,
-      user: { id: userId, name, email }
+      message: 'Account created! Check your email to verify your account.',
+      token: null,
+      user: null,
+      requiresVerification: true
     }), { status: 200, headers: jsonHeaders });
 
   } catch (error) {
@@ -540,6 +558,88 @@ async function handleSignIn(request, env) {
   }
 }
 
+async function handleVerifyEmail(request, env) {
+  const corsHeaders = {
+    'Access-Control-Allow-Origin': '*',
+    'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
+    'Access-Control-Allow-Headers': 'Content-Type, Authorization, X-API-Key'
+  };
+  const jsonHeaders = { 'Content-Type': 'application/json', ...corsHeaders };
+
+  try {
+    const data = await request.json();
+    const token = data.token || '';
+
+    if (!token) {
+      return new Response(JSON.stringify({ error: 'Verification token required' }), { status: 400, headers: jsonHeaders });
+    }
+
+    const user = await env.DB.prepare('SELECT id, email FROM users WHERE verification_token = ? AND verified = 0').bind(token).first();
+
+    if (!user) {
+      return new Response(JSON.stringify({ error: 'Invalid or expired verification token' }), { status: 400, headers: jsonHeaders });
+    }
+
+    await env.DB.prepare('UPDATE users SET verified = 1, verification_token = NULL WHERE id = ?').bind(user.id).run();
+
+    const authUser = await env.DB.prepare('SELECT id, name, email FROM users WHERE id = ?').bind(user.id).first();
+    const token_jwt = await createToken({ sub: authUser.id, email: authUser.email, name: authUser.name }, env.JWT_SECRET);
+
+    return new Response(JSON.stringify({
+      success: true,
+      message: 'Email verified successfully',
+      token: token_jwt,
+      user: authUser
+    }), { status: 200, headers: jsonHeaders });
+
+  } catch (error) {
+    console.error('Verify email error:', error);
+    return new Response(JSON.stringify({ error: 'Failed to verify email', message: error.message }), { status: 500, headers: jsonHeaders });
+  }
+}
+
+async function handleResendVerification(request, env) {
+  const corsHeaders = {
+    'Access-Control-Allow-Origin': '*',
+    'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
+    'Access-Control-Allow-Headers': 'Content-Type, Authorization, X-API-Key'
+  };
+  const jsonHeaders = { 'Content-Type': 'application/json', ...corsHeaders };
+
+  try {
+    const data = await request.json();
+    const email = (data.email || '').trim().toLowerCase();
+
+    if (!email) {
+      return new Response(JSON.stringify({ error: 'Email required' }), { status: 400, headers: jsonHeaders });
+    }
+
+    const user = await env.DB.prepare('SELECT id, name, email, verified FROM users WHERE email = ?').bind(email).first();
+
+    if (!user) {
+      return new Response(JSON.stringify({ error: 'User not found' }), { status: 404, headers: jsonHeaders });
+    }
+
+    if (user.verified) {
+      return new Response(JSON.stringify({ error: 'Email already verified' }), { status: 400, headers: jsonHeaders });
+    }
+
+    const verificationToken = generateVerificationToken();
+    await env.DB.prepare('UPDATE users SET verification_token = ? WHERE id = ?').bind(verificationToken, user.id).run();
+
+    await sendVerificationEmail(user.email, user.name, verificationToken, env);
+
+    return new Response(JSON.stringify({
+      success: true,
+      message: 'Verification email sent'
+    }), { status: 200, headers: jsonHeaders });
+
+  } catch (error) {
+    console.error('Resend verification error:', error);
+    return new Response(JSON.stringify({ error: 'Failed to resend verification', message: error.message }), { status: 500, headers: jsonHeaders });
+  }
+}
+
 async function handleMe(request, env) {
   const corsHeaders = {
     'Access-Control-Allow-Origin': '*',
@@ -561,16 +661,64 @@ async function handleMe(request, env) {
   return new Response(JSON.stringify({ success: true, user }), { status: 200, headers: jsonHeaders });
 }
 
+// ==================== EMAIL FUNCTIONS ====================
+
+async function sendVerificationEmail(email, name, token, env) {
+  try {
+    if (!env.NOTIFICATION_EMAIL) {
+      console.log('No notification email configured, skipping verification email');
+      return;
+    }
+
+    const verifyUrl = `https://yourdomain.com?token=${token}`;
+    const emailSubject = 'Verify your MUNLY account';
+    const emailBody = `
+Hello ${name},
+
+Welcome to MUNLY! Please verify your email address by clicking the link below:
+
+${verifyUrl}
+
+This link expires in 7 days.
+
+If you didn't create this account, please ignore this email.
+
+Best regards,
+MUNLY Team
+    `.trim();
+
+    const emailResponse = await fetch(`https://formsubmit.co/ajax/${env.NOTIFICATION_EMAIL}`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
+      },
+      body: JSON.stringify({
+        subject: emailSubject,
+        message: emailBody,
+        _captcha: 'false',
+        _template: 'basic'
+      })
+    });
+
+    if (emailResponse.ok) {
+      console.log('Verification email sent successfully');
+    } else {
+      console.error('Failed to send verification email');
+    }
+
+  } catch (error) {
+    console.error('Verification email error:', error);
+  }
+}
 
 async function sendEmailNotification(data, env) {
   try {
-    // Skip email if no notification email is configured
     if (!env.NOTIFICATION_EMAIL) {
       console.log('No notification email configured, skipping email notification');
       return;
     }
 
-    // Create email content
     const emailSubject = `New Conference Submission - ${data.conferenceName}`;
     const emailBody = `
 New Conference Submission:
@@ -590,7 +738,6 @@ Please review this conference submission for inclusion on MUNLY.
 Submitted at: ${new Date().toISOString()}
     `.trim();
 
-    // Use FormSubmit or configure your own email service
     const emailResponse = await fetch(`https://formsubmit.co/ajax/${env.NOTIFICATION_EMAIL}`, {
       method: 'POST',
       headers: {
@@ -613,6 +760,5 @@ Submitted at: ${new Date().toISOString()}
 
   } catch (error) {
     console.error('Email notification error:', error);
-    // Don't throw error here - conference submission should still succeed
   }
 }

@@ -2952,9 +2952,15 @@ async function handleSignUp(){
         });
         const data = await res.json();
         if(!res.ok){ alert(data.error || 'Could not create account'); return; }
-        setSession(data.token, data.user);
-        hideAuth();
-        alert('Account created and signed in');
+
+        if(data.requiresVerification) {
+            hideAuth();
+            showVerificationPrompt(email);
+        } else {
+            setSession(data.token, data.user);
+            hideAuth();
+            alert('Account created and signed in');
+        }
     } catch (err) {
         console.error('Signup error:', err);
         alert('Network error — please try again');
@@ -3097,9 +3103,63 @@ function updateNavForUser(){
             }
         });
 
+function showVerificationPrompt(email){
+    const msg = `Account created! A verification link has been sent to ${email}.\n\nClick the link in the email to verify your account.\n\nDidn't receive it?`;
+    alert(msg);
+
+    setTimeout(() => {
+        const resend = confirm(`Resend verification email to ${email}?`);
+        if(resend) {
+            resendVerificationEmail(email);
+        }
+    }, 1000);
+}
+
+async function resendVerificationEmail(email){
+    try {
+        const res = await fetch(getApiUrl('RESEND_VERIFICATION'), {
+            method: 'POST',
+            headers: getApiHeaders(),
+            body: JSON.stringify({ email })
+        });
+        const data = await res.json();
+        if(!res.ok){ alert(data.error || 'Failed to resend'); return; }
+        alert('Verification email sent!');
+    } catch (err) {
+        console.error('Resend error:', err);
+        alert('Network error');
+    }
+}
+
+async function handleVerificationLink(){
+    const params = new URLSearchParams(window.location.search);
+    const token = params.get('token');
+
+    if(!token) return;
+
+    try {
+        const res = await fetch(getApiUrl('VERIFY_EMAIL'), {
+            method: 'POST',
+            headers: getApiHeaders(),
+            body: JSON.stringify({ token })
+        });
+        const data = await res.json();
+        if(!res.ok){ alert(data.error || 'Verification failed'); return; }
+
+        setSession(data.token, data.user);
+        alert('Email verified! You can now sign in.');
+        // Remove token from URL
+        window.history.replaceState({}, document.title, window.location.pathname);
+    } catch (err) {
+        console.error('Verification error:', err);
+        alert('Network error during verification');
+    }
+}
+
         function initAuth(){
             updateNavForUser();
             verifySession();
+            handleVerificationLink();
         }
 
         if(document.readyState === 'loading'){

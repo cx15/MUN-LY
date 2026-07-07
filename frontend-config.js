@@ -10,7 +10,9 @@ const CONFIG = {
     HEALTH_CHECK: '/api/health',
     SIGNUP: '/api/auth/signup',
     SIGNIN: '/api/auth/signin',
-    ME: '/api/auth/me'
+    ME: '/api/auth/me',
+    VERIFY_EMAIL: '/api/auth/verify-email',
+    RESEND_VERIFICATION: '/api/auth/resend-verification',
   },
   
   API_KEY: null,
