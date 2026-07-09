@@ -135,6 +135,17 @@
             box-shadow: var(--shadow-lg);
         }
 
+        #authBtn {
+            background: transparent;
+            color: var(--primary-blue);
+            border: 2px solid var(--primary-blue);
+        }
+
+        #authBtn:hover {
+            background: var(--primary-blue);
+            color: white;
+        }
+
         /* Profile Section */
         .profile-section {
             display: flex;
@@ -831,7 +842,7 @@
             cursor: pointer;
             transition: all 0.2s ease;
             font-weight: 600;
-            font-size: 1.05rem; /* larger date numbers */
+            font-size: 1.05rem;
             position: relative;
         }
 
@@ -840,7 +851,7 @@
             color: var(--text-gray);
             font-weight: 700;
             background: var(--background-light);
-            font-size: 0.95rem; /* larger day names */
+            font-size: 0.95rem;
         }
 
         .calendar-grid .other-month {
@@ -848,7 +859,7 @@
         }
 
         .calendar-grid .today {
-            background: transparent; /* no fill for plain today */
+            background: transparent;
             color: var(--text-dark);
             border: 2px solid var(--secondary-blue);
             border-radius: 0.25rem;
@@ -1676,7 +1687,7 @@
                 <div class="profile-avatar" id="profileAvatar"></div>
                 <div class="profile-name" id="profileName"></div>
             </div>
-            <a href="#" class="logo">MUNLY</a>
+            <a href="#home" class="logo" id="munlyLogo">MUNLY</a>
             <ul class="nav-links">
                 <li><a href="#home">Home</a></li>
                 <li><a href="#conferences">Conferences</a></li>
@@ -1879,7 +1890,7 @@
                 </div>
 
                 <!-- SMUN'25 -->
-                <div class="conference-card" data-category="upcoming featured">
+                <div class="conference-card" data-category="past featured">
                     <div class="conference-image">
                         <div class="conference-status">Upcoming</div>
                         <div class="conference-date">OCT 23-25, 2025</div>
@@ -2261,9 +2272,7 @@
                 const href = this.getAttribute('href');
                 const profilePage = document.getElementById('profilePage');
                 if (profilePage && profilePage.classList.contains('active')) {
-                    document.querySelectorAll('section').forEach(s => s.style.display = '');
-                    document.querySelector('footer').style.display = '';
-                    profilePage.classList.remove('active');
+                    goBackToSite();
                 }
                 const target = document.querySelector(href);
                 if (target) {
@@ -2987,13 +2996,27 @@ function updateNavForUser(){
             }
         }
 
+        function restoreNavBar(){
+            const navLinks = document.querySelector('.nav-links');
+            const profileSection = document.querySelector('#profileSection');
+
+            if (window.innerWidth <= 768) {
+                navLinks.style.display = 'none';
+            } else {
+                navLinks.style.display = 'flex';
+            }
+            profileSection.style.display = 'block';
+        }
+
         function showProfilePage(){
             const current = JSON.parse(localStorage.getItem('munlyCurrent') || 'null');
             if(!current) return;
             
             document.querySelectorAll('section:not(#profilePage)').forEach(s => s.style.display = 'none');
             document.querySelector('footer').style.display = 'none';
-            
+            document.querySelector('.nav-links').style.display = 'none';
+            document.querySelector('#profileSection').style.display = 'none';
+
             const profilePage = el('profilePage');
             profilePage.classList.add('active');
             
@@ -3019,10 +3042,13 @@ function updateNavForUser(){
         function goBackToSite(){
             document.querySelectorAll('section').forEach(s => s.style.display = '');
             document.querySelector('footer').style.display = '';
-            
+
             const profilePage = el('profilePage');
             profilePage.classList.remove('active');
-            
+
+            restoreNavBar();
+            updateNavForUser();
+
             window.scrollTo(0, 0);
         }
 
@@ -3117,6 +3143,15 @@ function updateNavForUser(){
                 modal.setAttribute('aria-hidden', 'true');
             };
         }
+
+        document.getElementById('munlyLogo').addEventListener('click', function(e){
+            e.preventDefault();
+            const profilePage = document.getElementById('profilePage');
+            if(profilePage && profilePage.classList.contains('active')){
+                goBackToSite();
+            }
+            window.scrollTo(0, 0);
+        });
 
         function initAuth(){
             updateNavForUser();
