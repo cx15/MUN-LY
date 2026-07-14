@@ -1065,24 +1065,28 @@
         .contact-info p {
             color: var(--text-gray);
             margin-bottom: 2rem;
-            line-height: 1.8;
+            line-height: 0.5;
         }
 
         .contact-methods {
             display: grid;
-            gap: 1.5rem;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 0.5rem;
+            width: fit-content;
         }
 
         .contact-method {
             display: flex;
             align-items: center;
             gap: 1rem;
-            padding: 1rem;
+            padding: 0.3rem;
             background: white;
             border-radius: 0.75rem;
             transition: all 0.3s ease;
             cursor: pointer;
             border: 2px solid transparent;
+            max-width: 100%;
+            height: 80px;
         }
 
         .contact-method:hover {
@@ -1098,13 +1102,13 @@
         .contact-method-icon {
             background: var(--gradient-blue);
             color: white;
-            width: 50px;
-            height: 50px;
+            width: 35px;
+            height: 35px;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 1.25rem;
+            font-size: 1.2rem;
         }
 
         .contact-method-content h4 {
@@ -1693,7 +1697,7 @@
                 <li><a href="#conferences">Conferences</a></li>
                 <li><a href="#about">About</a></li>
                 <li><a href="#resources">Resources</a></li>
-                <li><a href="#contact">Contact</a></li>
+                <li><a href="#footer">Contact</a></li>
                 <li><a href="#add-conference" class="cta-button">Add Conference</a></li>
                 <li id="authContainer"><a href="#" id="authBtn" class="cta-button">Sign In</a></li>
             </ul>
@@ -2089,109 +2093,6 @@
         </div>
     </section>
 
-    <!-- Contact Section -->
-    <section id="contact" class="contact">
-        <div class="container">
-            <div class="section-header">
-                <h2 class="section-title">Join the MUNLY Community</h2>
-                <p class="section-subtitle">Connect with us to list your conference, access resources, or get involved in Libya's MUN community.</p>
-            </div>
-
-            <div class="contact-content">
-                <div class="contact-info">
-                    <h2>Get In Touch</h2>
-                    <p>Connect with us to list your conference, access resources, or get involved in Libya's MUN community.</p>
-
-                    <div class="contact-methods">
-                        <div class="contact-method" onclick="openEmail('info@mun.ly')">
-                            <div class="contact-method-icon">
-                                <i class="fas fa-envelope"></i>
-                            </div>
-                            <div class="contact-method-content">
-                                <h4>Email Us</h4>
-                                <p>info@mun.ly</p>
-                            </div>
-                        </div>
-
-                        <div class="contact-method" onclick="openWhatsApp('+218944962446')">
-                            <div class="contact-method-icon">
-                                <i class="fab fa-whatsapp"></i>
-                            </div>
-                            <div class="contact-method-content">
-                                <h4>WhatsApp</h4>
-                                <p>+218 944962446</p>
-                            </div>
-                        </div>
-
-                        <div class="contact-method" onclick="openInstagram('modelunly')">
-                            <div class="contact-method-icon">
-                                <i class="fab fa-instagram"></i>
-                            </div>
-                            <div class="contact-method-content">
-                                <h4>Instagram</h4>
-                                <p>@modelunly</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="contact-form">
-                    <h3>Add Your Conference</h3>
-                    <p style="margin-bottom: 1.5rem; color: var(--text-gray);">Submit your MUN conference details to be featured on MUNLY</p>
-                    
-                    <form id="conferenceForm">
-                        <div class="form-group">
-                            <label for="conferenceName">Conference Name</label>
-                            <input type="text" id="conferenceName" name="conferenceName" required>
-                        </div>
-
-                        <div class="form-group">
-                            <label for="organizingInstitution">Organizing Institution</label>
-                            <input type="text" id="organizingInstitution" name="organizingInstitution" required>
-                        </div>
-
-                        <div class="form-row">
-                            <div class="form-group">
-                                <label for="city">City</label>
-                                <select id="city" name="city" required>
-                                    <option value="">Select City</option>
-                                    <option value="tripoli">Tripoli</option>
-                                    <option value="benghazi">Benghazi</option>
-                                    <option value="misrata">Misrata</option>
-                                    <option value="sirte">Sirte</option>
-                                    <option value="other">Other</option>
-                                </select>
-                            </div>
-
-                            <div class="form-group">
-                                <label for="contactEmail">Contact Email</label>
-                                <input type="email" id="contactEmail" name="contactEmail" required>
-                            </div>
-                        </div>
-
-                        <div class="form-row">
-                            <div class="form-group">
-                                <label for="startDate">Start Date</label>
-                                <input type="date" id="startDate" name="startDate" required>
-                            </div>
-
-                            <div class="form-group">
-                                <label for="endDate">End Date</label>
-                                <input type="date" id="endDate" name="endDate" required>
-                            </div>
-                        </div>
-
-                        <div class="form-group">
-                            <label for="description">Conference Description</label>
-                            <textarea id="description" name="description" placeholder="Brief description of your conference, including themes, committees, and special features..." required></textarea>
-                        </div>
-
-                        <button type="submit" class="cta-button" style="width: 100%;">Submit Conference</button>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </section>
 
     <!-- Footer -->
     <footer>
@@ -2200,13 +2101,6 @@
                 <div class="footer-section">
                     <h3>MUNLY</h3>
                     <p>Libya's premier Model United Nations platform, connecting students, educators, and institutions across the country to foster diplomatic education and global awareness.</p>
-                    <div class="social-links">
-                        <a href="#"><i class="fab fa-facebook"></i></a>
-                        <a href="#"><i class="fab fa-twitter"></i></a>
-                        <a href="#"><i class="fab fa-instagram"></i></a>
-                        <a href="#"><i class="fab fa-linkedin"></i></a>
-                        <a href="#"><i class="fab fa-facebook"></i></a>
-                    </div>
                 </div>
 
                 <div class="footer-section">
@@ -2215,7 +2109,6 @@
                         <li><a href="#conferences">Conferences</a></li>
                         <li><a href="#about">About Us</a></li>
                         <li><a href="#resources">Resources</a></li>
-                        <li><a href="#contact">Contact</a></li>
                         <li><a href="#add-conference">Host Conference</a></li>
                     </ul>
                 </div>
@@ -2231,15 +2124,52 @@
                     </ul>
                 </div>
 
-                <div class="footer-section">
+                <div id="footer" class="footer-section">
                     <h3>Contact Info</h3>
-                    <ul class="footer-links">
-                        <li><i class="fas fa-envelope"></i> info@mun.ly</li>
-                        <li><i class="fab fa-whatsapp"></i> +218 944962446</li>
-                        <li><i class="fab fa-instagram"></i> @modelunly</li>
-                        <li><i class="fab fa-facebook"></i> MUNLY - Premier MUN platform in Libya</li>
-                        <li><i class="fas fa-map-marker-alt"></i> Libya</li>
-                    </ul>
+                    <div class="contact-content">
+                        <div class="contact-info">
+                            <div class="contact-methods">
+                                <div class="contact-method" onclick="openEmail('info@mun.ly')">
+                                    <div class="contact-method-icon">
+                                        <i class="fas fa-envelope"></i>
+                                    </div>
+                                    <div class="contact-method-content">
+                                        <h4>Email Us</h4>
+                                        <p>info@mun.ly</p>
+                                    </div>
+                                </div>
+
+                                <div class="contact-method" onclick="openWhatsApp('+218944962446')">
+                                    <div class="contact-method-icon">
+                                        <i class="fab fa-whatsapp"></i>
+                                    </div>
+                                    <div class="contact-method-content">
+                                        <h4>WhatsApp</h4>
+                                        <p>+218 944962446</p>
+                                    </div>
+                                </div>
+
+                                <div class="contact-method" onclick="openInstagram('modelunly')">
+                                    <div class="contact-method-icon">
+                                        <i class="fab fa-instagram"></i>
+                                    </div>
+                                    <div class="contact-method-content">
+                                        <h4>Instagram</h4>
+                                        <p>@modelunly</p>
+                                    </div>
+                                </div>
+                                <div class="contact-method" onclick="openFacebook('61578838781979')">
+                                    <div class="contact-method-icon facebook">
+                                        <i class="fab fa-facebook"></i>
+                                    </div>
+                                    <div class="contact-method-content">
+                                        <h4>Facebook</h4>
+                                        <p>MUNLY</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
 
@@ -2321,57 +2251,6 @@
             });
         });
 
-        document.getElementById('conferenceForm').addEventListener('submit', async function(e) {
-            e.preventDefault();
-            
-            const formData = new FormData(this);
-            const conferenceData = Object.fromEntries(formData);
-            
-            const addToCalendar = this.querySelector('#addToCalendar').checked;
-            
-            const submitButton = this.querySelector('button[type="submit"]');
-            const originalText = submitButton.textContent;
-            submitButton.textContent = 'Submitting...';
-            submitButton.disabled = true;
-            
-            try {
-                const response = await fetch(getApiUrl('SUBMIT_CONFERENCE'), {
-                    method: 'POST',
-                    headers: getApiHeaders(),
-                    body: JSON.stringify(conferenceData)
-                });
-                
-                const result = await response.json();
-                
-                if (response.ok && result.success) {
-                    if (addToCalendar && calendar) {
-                        const name = conferenceData.conferenceName;
-                        const date = conferenceData.startDate;
-                        const location = conferenceData.location;
-                        
-                        calendar.addPendingMunDate(name, date, location);
-                        
-                        showMessage('Thank you for submitting your conference! Your submission has been sent and will be reviewed by our team.\n\nYour calendar submission is pending approval.');
-                    } else {
-                        showMessage('Thank you for submitting your conference! Your submission has been sent automatically and will be reviewed by our team.');
-                    }
-                    
-                    this.reset();
-                } else {
-                    showMessage(`Submission failed: ${result.error || 'Unknown error occurred'}`);
-                    console.error('Submission error:', result);
-                }
-                
-            } catch (error) {
-                console.error('Network error:', error);
-                showMessage('Failed to submit conference. Please check your internet connection and try again.');
-            } finally {
-                submitButton.textContent = originalText;
-                submitButton.disabled = false;
-            }
-            
-            this.reset();
-        });
 
         function showConferenceDetail(conferenceId) {
             const conferences = {
@@ -2496,6 +2375,10 @@
         function openWhatsApp(phone) {
             const cleanPhone = phone.replace(/\s/g, '');
             window.open(`https://wa.me/${cleanPhone}`, '_blank');
+        }
+
+        function openFacebook(id) {
+            window.open(`https://facebook.com/profile.php?id=${id}`, '_blank');
         }
 
         function openInstagram(username) {
