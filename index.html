@@ -2755,129 +2755,139 @@
 
         function hideAuth(){ const modal = el('authModal'); modal.classList.add('hidden'); modal.setAttribute('aria-hidden','true'); }
 
-function setSession(token, user){
-    localStorage.setItem('munlyToken', token);
-    localStorage.setItem('munlyCurrent', JSON.stringify(user));
-    updateNavForUser();
-}
-
-function clearSession(){
-    localStorage.removeItem('munlyToken');
-    localStorage.removeItem('munlyCurrent');
-}
-
-function setFormLoading(form, loading){
-    const btn = form.querySelector('button[type="submit"]');
-    if(!btn) return;
-    if(loading){ btn.dataset.originalText = btn.textContent; btn.textContent = 'Please wait…'; btn.disabled = true; }
-    else { btn.textContent = btn.dataset.originalText || btn.textContent; btn.disabled = false; }
-}
-
-async function handleSignUp(){
-    const form = el('authForm');
-    const name = (el('authName')||{}).value?.trim() || '';
-    const email = ((el('authEmail')||{}).value || '').trim().toLowerCase();
-    const password = (el('authPassword')||{}).value || '';
-    if(!name || !email || !password){ showMessage('Please complete all fields'); return; }
-    if(password.length < 8){ showMessage('Password must be at least 8 characters'); return; }
-
-    setFormLoading(form, true);
-    try {
-        const res = await fetch(getApiUrl('SIGNUP'), {
-            method: 'POST',
-            headers: getApiHeaders(),
-            body: JSON.stringify({ name, email, password })
-        });
-        const data = await res.json();
-        if(!res.ok){ showMessage(data.error || 'Could not create account'); return; }
-
-        if(data.requiresVerification) {
-            hideAuth();
-            showVerificationPrompt(email);
-        } else {
-            setSession(data.token, data.user);
-            hideAuth();
-            showMessage('Account created and signed in');
-        }
-    } catch (err) {
-        console.error('Signup error:', err);
-        showMessage('Network error — please try again');
-    } finally {
-        setFormLoading(form, false);
-    }
-}
-
-async function handleSignIn(){
-    const form = el('authForm');
-    const email = ((el('authEmail')||{}).value || '').trim().toLowerCase();
-    const password = (el('authPassword')||{}).value || '';
-    const remember = (el('authRemember')||{}).checked || false;
-    if(!email || !password){ showMessage('Please complete all fields'); return; }
-
-    setFormLoading(form, true);
-    try {
-        const res = await fetch(getApiUrl('SIGNIN'), {
-            method: 'POST',
-            headers: getApiHeaders(),
-            body: JSON.stringify({ email, password })
-        });
-        const data = await res.json();
-        if(!res.ok){ showMessage(data.error || 'Invalid credentials'); return; }
-
-        if(remember){
-            localStorage.setItem('munlyRememberEmail', email);
-        } else {
-            localStorage.removeItem('munlyRememberEmail');
+        function setSession(token, user){
+            localStorage.setItem('munlyToken', token);
+            localStorage.setItem('munlyCurrent', JSON.stringify(user));
+            updateNavForUser();
         }
 
-        setSession(data.token, data.user);
-        hideAuth();
-        showMessage('Signed in');
-    } catch (err) {
-        console.error('Signin error:', err);
-        showMessage('Network error — please try again');
-    } finally {
-        setFormLoading(form, false);
-    }
-}
-
-async function verifySession(){
-    const token = localStorage.getItem('munlyToken');
-    if(!token) return;
-    try {
-        const res = await fetch(getApiUrl('ME'), {
-            headers: { ...getApiHeaders(), 'Authorization': `Bearer ${token}` }
-        });
-        if(!res.ok){ clearSession(); updateNavForUser(); return; }
-        const data = await res.json();
-        localStorage.setItem('munlyCurrent', JSON.stringify(data.user));
-        updateNavForUser();
-    } catch (err) {
-        console.error('Session check failed:', err);
-    }
-}
-
-function updateNavForUser(){
-    const current = JSON.parse(localStorage.getItem('munlyCurrent') || 'null');
-            const authContainer = document.getElementById('authContainer');
-            const profileSection = document.getElementById('profileSection');
-            
-            if(!authContainer) return;
-            
-            if(current){
-                authContainer.style.display = 'none';
-                profileSection.classList.remove('hidden');
-                
-                const firstName = current.name.split(' ')[0];
-                const initials = firstName.charAt(0).toUpperCase();
-                el('profileAvatar').textContent = initials;
-                el('profileName').textContent = `Hi, ${firstName}`;
-            } else {
-                authContainer.style.display = 'block';
-                profileSection.classList.add('hidden');
-                authContainer.innerHTML = `<a href="#" id="authBtn" class="cta-button">Sign In</a>`;
+        async function clearSession(){
+            try {
+                await window.signOut(window.firebaseAuth);
+                localStorage.removeItem('munlyToken');
+                localStorage.removeItem('munlyCurrent');
+            } catch (err) {
+                console.error('Sign out error:', err);
             }
         }
+
+        function setFormLoading(form, loading){
+            const btn = form.querySelector('button[type="submit"]');
+            if(!btn) return;
+            if(loading){ btn.dataset.originalText = btn.textContent; btn.textContent = 'Please wait…'; btn.disabled = true; }
+            else { btn.textContent = btn.dataset.originalText || btn.textContent; btn.disabled = false; }
+        }
+
+        async function handleSignUp(){
+            const form = el('authForm');
+            const name = (el('authName')||{}).value?.trim() || '';
+            const email = ((el('authEmail')||{}).value || '').trim().toLowerCase();
+            const password = (el('authPassword')||{}).value || '';
+
+            if(!name || !email || !password){ showMessage('Please complete all fields', 'error'); return; }
+            if(password.length < 8){ showMessage('Password must be at least 8 characters', 'error'); return; }
+
+            setFormLoading(form, true);
+            try {
+                const userCredential = await window.createUserWithEmailAndPassword(window.firebaseAuth, email, password);
+                const user = userCredential.user;
+
+                await window.sendEmailVerification(user);
+
+                localStorage.setItem('munlyUserName', name);
+                localStorage.setItem('munlyCurrent', JSON.stringify({ id: user.uid, name, email }));
+
+                hideAuth();
+                showMessage(`Account created! Check your email (${email}) to verify your account.`, 'success');
+            } catch (err) {
+                console.error('Signup error:', err);
+                let errorMsg = 'Could not create account';
+                if(err.code === 'auth/email-already-in-use') errorMsg = 'Email already in use';
+                if(err.code === 'auth/weak-password') errorMsg = 'Password is too weak';
+                showMessage(errorMsg, 'error');
+            } finally {
+                setFormLoading(form, false);
+            }
+        }
+
+        async function handleSignIn(){
+            const form = el('authForm');
+            const email = ((el('authEmail')||{}).value || '').trim().toLowerCase();
+            const password = (el('authPassword')||{}).value || '';
+            const remember = (el('authRemember')||{}).checked || false;
+
+            if(!email || !password){ showMessage('Please complete all fields', 'error'); return; }
+
+            setFormLoading(form, true);
+            try {
+                const userCredential = await window.signInWithEmailAndPassword(window.firebaseAuth, email, password);
+                const user = userCredential.user;
+
+                if(!user.emailVerified) {
+                    showMessage('Please verify your email first. Check your inbox for the verification link.', 'error');
+                    await window.signOut(window.firebaseAuth);
+                    return;
+                }
+
+                if(remember){
+                    localStorage.setItem('munlyRememberEmail', email);
+                } else {
+                    localStorage.removeItem('munlyRememberEmail');
+                }
+
+                localStorage.setItem('munlyCurrent', JSON.stringify({ id: user.uid, name: user.displayName || email.split('@')[0], email: user.email }));
+                hideAuth();
+                showMessage('Signed in', 'success');
+                updateNavForUser();
+            } catch (err) {
+                console.error('Signin error:', err);
+                let errorMsg = 'Invalid email or password';
+                if(err.code === 'auth/user-not-found') errorMsg = 'User not found';
+                if(err.code === 'auth/wrong-password') errorMsg = 'Wrong password';
+                showMessage(errorMsg, 'error');
+            } finally {
+                setFormLoading(form, false);
+            }
+        }
+
+        async function verifySession(){
+            window.onAuthStateChanged(window.firebaseAuth, (user) => {
+                if(user) {
+                    localStorage.setItem('munlyCurrent', JSON.stringify({
+                        id: user.uid,
+                        name: user.displayName || user.email.split('@')[0],
+                        email: user.email,
+                        verified: user.emailVerified
+                    }));
+                    updateNavForUser();
+                } else {
+                    localStorage.removeItem('munlyCurrent');
+                    updateNavForUser();
+                }
+            });
+        }
+
+        function updateNavForUser(){
+            const current = JSON.parse(localStorage.getItem('munlyCurrent') || 'null');
+                    const authContainer = document.getElementById('authContainer');
+                    const profileSection = document.getElementById('profileSection');
+
+                    if(!authContainer) return;
+
+                    if(current){
+                        authContainer.style.display = 'none';
+                        profileSection.classList.remove('hidden');
+
+                        const firstName = current.name.split(' ')[0];
+                        const initials = firstName.charAt(0).toUpperCase();
+                        el('profileAvatar').textContent = initials;
+                        el('profileName').textContent = `Hi, ${firstName}`;
+                    } else {
+                        authContainer.style.display = 'block';
+                        profileSection.classList.add('hidden');
+                        authContainer.innerHTML = `<a href="#" id="authBtn" class="cta-button">Sign In</a>`;
+                    }
+                }
 
         function restoreNavBar(){
             const navLinks = document.querySelector('.nav-links');
@@ -3060,5 +3070,33 @@ function updateNavForUser(){
             </div>
         </div>
     </div>
+
+    // ---firebase setup---
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-app.js";
+        import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged, sendEmailVerification } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-auth.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyCCFi6yrcQ_C-cMAcagY2YuP6AcLss4dUc",
+            authDomain: "munly-2b1b4.firebaseapp.com",
+            projectId: "munly-2b1b4",
+            storageBucket: "munly-2b1b4.firebasestorage.app",
+            messagingSenderId: "884261920045",
+            appId: "1:884261920045:web:e76068f1b7d164a404c7a4",
+            measurementId: "G-W2KTM1MZ89"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+
+
+        window.firebaseAuth = auth;
+        window.createUserWithEmailAndPassword = createUserWithEmailAndPassword;
+        window.signInWithEmailAndPassword = signInWithEmailAndPassword;
+        window.signOut = signOut;
+        window.onAuthStateChanged = onAuthStateChanged;
+        window.sendEmailVerification = sendEmailVerification;
+    </script>
 </body>
 </html>
