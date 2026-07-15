@@ -1976,8 +1976,7 @@
                             </div>
                         </div>
                     </div>
-                    
-                    <a href="#contact" class="btn-primary" style="margin-top: 2rem;">Get Started</a>
+                    <a href="https://forms.gle/1XSkQ64V4XrTVoif7" target="_blank" class="btn-primary" style="margin-top: 2rem;">Get Started</a>
                 </div>
             </div>
         </div>
@@ -2792,7 +2791,16 @@
                 const userCredential = await window.createUserWithEmailAndPassword(window.firebaseAuth, email, password);
                 const user = userCredential.user;
 
-                await window.sendEmailVerification(user);
+                try {
+                    await window.sendEmailVerification(user);
+                    console.log('✅ Verification email sent to:', email);
+                } catch (emailError) {
+                    console.error('❌ Email send failed:', emailError);
+                    console.error('Error code:', emailError.code);
+                    console.error('Error message:', emailError.message);
+                    showMessage('Account created, but verification email failed to send. Contact support.', 'error');
+                    return;
+                }
 
                 localStorage.setItem('munlyUserName', name);
                 localStorage.setItem('munlyCurrent', JSON.stringify({ id: user.uid, name, email }));
