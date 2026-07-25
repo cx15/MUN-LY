@@ -54,59 +54,172 @@ function generateHTML(data) {
             .replace(/'/g, '&#039;');
     };
 
-    const formatDate = (d) => {
-        if (!d) return 'TBA';
-        const date = d.toDate ? d.toDate() : new Date(d);
-        return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+    // ---- Date handling ----
+    const toDateObj = (d) => (d ? (d.toDate ? d.toDate() : new Date(d)) : null);
+    const startD = toDateObj(data.startDate);
+    const endD = toDateObj(data.endDate);
+
+    const formatDateRange = (start, end) => {
+        if (!start) return 'TBA';
+        const month = start.toLocaleDateString('en-US', { month: 'long' });
+        const year = start.getFullYear();
+        const startDay = start.getDate();
+        if (!end || start.toDateString() === end.toDateString()) {
+            return `${month} ${startDay}, ${year}`;
+        }
+        const endMonth = end.toLocaleDateString('en-US', { month: 'long' });
+        const endDay = end.getDate();
+        if (month === endMonth) {
+            return `${month} ${startDay}-${endDay}, ${year}`;
+        }
+        return `${month} ${startDay} - ${endMonth} ${endDay}, ${year}`;
     };
+    const dateRangeStr = formatDateRange(startD, endD);
 
-    const start = formatDate(data.startDate);
-    const end = formatDate(data.endDate);
+    // ---- Countdown target (JS Date string the client-side script will parse) ----
+    const countdownTarget = startD ? startD.toISOString() : '';
 
-    let status = 'Upcoming';
-    if (data.endDate) {
-        const endD = data.endDate.toDate ? data.endDate.toDate() : new Date(data.endDate);
-        if (endD < new Date()) status = 'Past Event';
-    }
+    // ---- Hero image: host-uploaded image if present, otherwise fallback to gradient only ----
+    // `data.heroImage` should be a public URL saved when the host uploads their banner image.
+    const heroStyle = data.heroImage
+        ? `background-image: url('${escape(data.heroImage)}'); background-size: cover; background-position: center;`
+        : '';
 
-    const committees = (data.committees || []).length > 0
-        ? data.committees.map(c => `<div class="detail-list-row"><strong>${escape(c.name)}</strong> — ${escape(c.agenda || '')}</div>`).join('')
-        : '<p>No committees listed yet.</p>';
+    // ---- Stats (fall back to 0 / TBA if not provided) ----
+    const committeesCount = data.committeesCount ?? (data.committees ? data.committees.length : 0);
+    const teamSize = data.teamSize ?? (data.organizingTeam ? data.organizingTeam.length : 0);
+    const expectedParticipants = data.expectedParticipants || 'TBA';
+    const daysCount = (startD && endD) ? Math.max(1, Math.round((endD - startD) / 86400000) + 1) : (data.days || 'TBA');
 
-    const team = (data.organizingTeam || []).length > 0
-        ? data.organizingTeam.map(p => `<div class="detail-list-row">${escape(p.name)} — ${escape(p.role || '')}</div>`).join('')
+    // ---- Committees section ----
+    const committeesHtml = (data.committees || []).length > 0
+        ? data.committees.map(c => `
+        <div class="committee-card">
+          <div class="committee-image"><i class="fas fa-users"></i></div>
+          <div class="committee-content">
+            <h4 class="committee-title">${escape(c.name)}</h4>
+            <p>${escape(c.agenda || '')}</p>
+            ${c.level ? `<p><strong>Level:</strong> ${escape(c.level)}</p>` : ''}
+          </div>
+        </div>
+      `).join('')
+        : '<p style="text-align:center;">Committees will be announced soon.</p>';
+
+    // ---- Organizing team / chairs section ----
+    const teamHtml = (data.organizingTeam || []).length > 0
+        ? data.organizingTeam.map(p => `
+        <div class="detail-list-row">${escape(p.name)} — ${escape(p.role || '')}${p.school ? ' · ' + escape(p.school) : ''}</div>
+      `).join('')
         : '<p>No team members listed yet.</p>';
 
-    const chairs = (data.chairs || []).length > 0
-        ? data.chairs.map(p => `<div class="detail-list-row">${escape(p.name)} — ${escape(p.role || 'Chair')}</div>`).join('')
+    const chairsHtml = (data.chairs || []).length > 0
+        ? data.chairs.map(p => `
+        <div class="detail-list-row">${escape(p.name)} — ${escape(p.role || 'Chair')}</div>
+      `).join('')
         : '<p>No chairs listed yet.</p>';
 
+    // ---- Status badge (Upcoming / Ongoing / Past Event) ----
+    let status = 'Upcoming';
+    const now = new Date();
+    if (endD && endD < now) status = 'Past Event';
+    else if (startD && startD <= now && endD && endD >= now) status = 'Ongoing';
+
     return `<!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>${escape(data.name)} | MUNLY</title>
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Inter:wght@400;600&display=swap" rel="stylesheet">
-  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
-  <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    body { font-family: 'Playfair Display', serif; color: #1f2937; background: #f8fafc; }
-    nav { position: fixed; top: 0; width: 100%; background: white; border-bottom: 1px solid #e2e8f0; z-index: 1000; }
-    .nav-container { max-width: 1200px; margin: 0 auto; padding: 0 1.5rem; display: flex; justify-content: space-between; align-items: center; height: 70px; }
-    .logo { font-size: 2rem; font-weight: 700; color: #1e40af; text-decoration: none; }
-    .back-btn { background: #dbeafe; color: #1e40af; padding: 0.5rem 1rem; border-radius: 0.5rem; text-decoration: none; font-weight: 600; border: none; cursor: pointer; }
-    .back-btn:hover { background: #3b82f6; color: white; }
-    .container { max-width: 900px; margin: 0 auto; padding: 100px 1.5rem 3rem; }
-    .detail-header { background: white; padding: 2rem; border-radius: 1rem; box-shadow: 0 1px 3px rgba(0,0,0,0.1); margin-bottom: 2rem; }
-    .detail-header h1 { font-size: 2.5rem; margin-bottom: 1rem; }
-    .status-badge { display: inline-block; background: #dbeafe; color: #1e40af; padding: 0.4rem 0.8rem; border-radius: 2rem; font-size: 0.85rem; font-weight: 600; text-transform: uppercase; }
-    .detail-meta { display: flex; gap: 2rem; color: #6b7280; margin-bottom: 1rem; font-family: 'Inter', sans-serif; font-size: 0.95rem; }
-    .detail-section { background: white; padding: 2rem; border-radius: 1rem; box-shadow: 0 1px 3px rgba(0,0,0,0.1); margin-bottom: 2rem; }
-    .detail-section h2 { font-size: 1.5rem; margin-bottom: 1.5rem; color: #1e40af; border-bottom: 2px solid #dbeafe; padding-bottom: 0.75rem; }
-    .detail-list-row { padding: 0.75rem 0; border-bottom: 1px solid #e2e8f0; font-family: 'Inter', sans-serif; font-size: 0.95rem; }
-    .detail-list-row:last-child { border-bottom: none; }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>${escape(data.name)} | MUNLY</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+<style>
+  :root {
+    --primary-blue: #1e40af;
+    --secondary-blue: #3b82f6;
+    --light-blue: #dbeafe;
+    --dark-blue: #1e3a8a;
+    --accent-blue: #60a5fa;
+    --text-dark: #1f2937;
+    --text-gray: #6b7280;
+    --text-light: #9ca3af;
+    --background-white: #ffffff;
+    --background-light: #f9fafb;
+    --border-light: #e5e5e5;
+    --gradient-blue: linear-gradient(135deg, var(--primary-blue), var(--secondary-blue));
+    --gradient-light: linear-gradient(135deg, var(--background-light), var(--light-blue));
+    --shadow-sm: 0 1px 2px rgba(0,0,0,0.05);
+    --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -1px rgba(0,0,0,0.06);
+    --shadow-lg: 0 10px 15px -3px rgba(0,0,0,0.1), 0 4px 6px -2px rgba(0,0,0,0.05);
+  }
+  * { margin:0; padding:0; box-sizing:border-box; font-family:'Playfair Display', serif; }
+  html { scroll-behavior: smooth; }
+  body { color: var(--text-dark); background: var(--background-light); line-height: 1.6; }
+  h1,h2,h3,h4,h5 { font-weight:700; line-height:1.2; }
+  h2 { font-size:2.5rem; margin-bottom:1.5rem; }
+  h3 { font-size:2rem; margin-bottom:1.25rem; }
+  p { color: var(--text-gray); margin-bottom:1rem; }
+  a { color: var(--primary-blue); text-decoration:none; }
+
+  nav { position:fixed; top:0; left:0; width:100%; background:white; box-shadow:var(--shadow-sm); z-index:1000; }
+  .nav-container { max-width:1200px; margin:0 auto; padding:1rem 1.5rem; display:flex; justify-content:space-between; align-items:center; }
+  .logo { font-weight:700; font-size:1.5rem; color:var(--primary-blue); }
+  .back-btn { background: var(--light-blue); color: var(--primary-blue); padding: 0.6rem 1.2rem; border-radius: 0.5rem; font-weight:600; border:none; cursor:pointer; }
+  .back-btn:hover { background: var(--secondary-blue); color:white; }
+
+  .hero { ${heroStyle} color:white; padding:160px 0 80px; text-align:center; position:relative; overflow:hidden; background-color: var(--primary-blue); }
+  .hero::before { content:''; position:absolute; inset:0; background-color:var(--primary-blue); opacity:${data.heroImage ? '0.7' : '0'}; }
+  .hero-content { max-width:1200px; margin:0 auto; padding:0 1.5rem; position:relative; z-index:1; }
+  .conference-logo { width:80px; height:80px; background:var(--light-blue); color:var(--primary-blue); border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:2.5rem; margin:0 auto 2rem; }
+  .conference-title { font-size:3.5rem; margin-bottom:0.5rem; }
+  .conference-subtitle { font-size:1.5rem; margin-bottom:1.5rem; opacity:0.9; color:white; }
+  .conference-date-line { display:inline-flex; align-items:center; gap:0.5rem; margin-bottom:2.5rem; font-size:1.25rem; opacity:0.9; }
+  .status-badge { display:inline-block; background:rgba(255,255,255,0.15); padding:0.4rem 1rem; border-radius:2rem; font-size:0.85rem; font-weight:700; text-transform:uppercase; letter-spacing:0.5px; margin-bottom:1.5rem; }
+
+  .countdown { margin:2.5rem 0 3rem; }
+  .countdown h3 { font-size:1.5rem; margin-bottom:1.5rem; }
+  .countdown-timer { display:flex; justify-content:center; gap:1rem; flex-wrap:wrap; }
+  .countdown-item { display:flex; flex-direction:column; align-items:center; background:rgba(255,255,255,0.1); border-radius:0.75rem; padding:1rem; min-width:80px; }
+  .countdown-number { font-size:2rem; font-weight:700; margin-bottom:0.25rem; }
+  .countdown-label { font-size:0.8rem; text-transform:uppercase; letter-spacing:1px; opacity:0.8; }
+
+  section { padding:100px 0; }
+  .container { max-width:1200px; margin:0 auto; padding:0 1.5rem; }
+  .section-header { text-align:center; margin-bottom:4rem; }
+  .section-title { font-size:2.5rem; margin-bottom:1rem; }
+  .section-subtitle { font-size:1.25rem; color:var(--text-gray); max-width:800px; margin:0 auto; }
+
+  .about-text h3 { margin-bottom:1.5rem; font-size:1.75rem; }
+  .location-info { margin-top:2rem; padding:1.5rem; background:var(--light-blue); border-radius:1rem; border-left:4px solid var(--primary-blue); }
+  .location-info h4 { color:var(--primary-blue); margin-bottom:1rem; display:flex; align-items:center; gap:0.5rem; }
+  .location-btn { display:inline-flex; align-items:center; gap:0.5rem; margin-top:1rem; padding:0.75rem 1.5rem; background:var(--primary-blue); color:white; border-radius:0.5rem; font-weight:500; }
+  .location-btn:hover { background:var(--dark-blue); }
+
+  .stats-grid { display:grid; grid-template-columns:repeat(auto-fit, minmax(200px, 1fr)); gap:2rem; margin:4rem 0; }
+  .stat-card { background:white; border-radius:1rem; padding:2rem; text-align:center; box-shadow:var(--shadow-sm); }
+  .stat-number { font-size:3rem; font-weight:800; color:var(--primary-blue); margin-bottom:0.5rem; }
+  .stat-label { color:var(--text-gray); }
+
+  .committees-grid { display:grid; grid-template-columns:repeat(auto-fit, minmax(300px, 1fr)); gap:2rem; }
+  .committee-card { background:white; border-radius:1rem; overflow:hidden; box-shadow:var(--shadow-sm); }
+  .committee-image { height:140px; background:var(--gradient-blue); display:flex; align-items:center; justify-content:center; font-size:2.5rem; color:white; }
+  .committee-content { padding:1.5rem; }
+  .committee-title { font-size:1.3rem; margin-bottom:0.75rem; }
+
+  .detail-section { background:white; padding:2rem; border-radius:1rem; box-shadow:var(--shadow-sm); margin-bottom:2rem; }
+  .detail-list-row { padding:0.75rem 0; border-bottom:1px solid var(--border-light); }
+  .detail-list-row:last-child { border-bottom:none; }
+
+  .cta-button { display:inline-block; background:var(--gradient-blue); color:white; padding:0.9rem 2rem; border-radius:0.5rem; font-weight:600; border:none; cursor:pointer; }
+  .cta-button:hover { transform:translateY(-2px); box-shadow:var(--shadow-lg); }
+
+  footer { background:var(--primary-blue); color:white; padding:2rem 0; text-align:center; }
+  footer p { color: rgba(255,255,255,0.85); margin: 0; }
+
+  @media (max-width:768px) {
+    .conference-title { font-size:2.5rem; }
+    .stats-grid, .committees-grid { grid-template-columns:1fr; }
+  }
+</style>
 </head>
 <body>
   <nav>
@@ -116,42 +229,128 @@ function generateHTML(data) {
     </div>
   </nav>
 
-  <div class="container">
-    <div class="detail-header">
-      <span class="status-badge">${status}</span>
-      <h1>${escape(data.name)}</h1>
-      <div class="detail-meta">
-        <div><i class="fas fa-map-marker-alt"></i> ${escape(data.venue || 'TBA')}</div>
-        <div><i class="fas fa-calendar"></i> ${start}${end !== start ? ' – ' + end : ''}</div>
+  <!-- Hero -->
+  <section class="hero">
+    <div class="hero-content">
+      <div class="conference-logo"><i class="fas fa-globe"></i></div>
+      <div class="status-badge">${status}</div>
+      <h1 class="conference-title">${escape(data.name)}</h1>
+      <p class="conference-subtitle">${escape(data.institution || '')}</p>
+      <div class="conference-date-line">
+        <i class="fas fa-calendar-alt"></i> ${dateRangeStr}${data.venue ? ' | ' + escape(data.venue) : ''}
+      </div>
+
+      <div class="countdown">
+        <h3>Conference Starts In</h3>
+        <div class="countdown-timer" id="countdown">
+          <div class="countdown-item"><span class="countdown-number" id="days">0</span><span class="countdown-label">Days</span></div>
+          <div class="countdown-item"><span class="countdown-number" id="hours">0</span><span class="countdown-label">Hours</span></div>
+          <div class="countdown-item"><span class="countdown-number" id="minutes">0</span><span class="countdown-label">Minutes</span></div>
+          <div class="countdown-item"><span class="countdown-number" id="seconds">0</span><span class="countdown-label">Seconds</span></div>
+        </div>
       </div>
     </div>
+  </section>
 
-    <div class="detail-section">
-      <h2>About</h2>
-      ${data.institution ? '<p><strong>Institution:</strong> ' + escape(data.institution) + '</p>' : ''}
-      ${data.languages ? '<p><strong>Languages:</strong> ' + escape(data.languages) + '</p>' : ''}
-    </div>
+  <!-- About -->
+  <section id="about">
+    <div class="container">
+      <div class="section-header">
+        <h2 class="section-title">About ${escape(data.name)}</h2>
+        ${data.tagline ? `<p class="section-subtitle">${escape(data.tagline)}</p>` : ''}
+      </div>
 
-    <div class="detail-section">
-      <h2>Committees</h2>
-      ${committees}
-    </div>
+      <div class="about-text">
+        ${data.description ? `<p>${escape(data.description)}</p>` : '<p>Conference details will be updated soon.</p>'}
 
-    <div class="detail-section">
-      <h2>Organizing Team</h2>
-      ${team}
-    </div>
+        <div class="location-info">
+          <h4><i class="fas fa-map-marker-alt"></i> Conference Location</h4>
+          <p><strong>${escape(data.venue || 'TBA')}</strong></p>
+          ${data.mapsUrl ? `<a href="${escape(data.mapsUrl)}" target="_blank" class="location-btn"><i class="fas fa-external-link-alt"></i> View on Google Maps</a>` : ''}
+        </div>
+      </div>
 
-    <div class="detail-section">
-      <h2>Chairs</h2>
-      ${chairs}
+      <div class="stats-grid">
+        <div class="stat-card"><div class="stat-number">${escape(String(expectedParticipants))}</div><div class="stat-label">Expected Participants</div></div>
+        <div class="stat-card"><div class="stat-number">${escape(String(daysCount))}</div><div class="stat-label">Conference Days</div></div>
+        <div class="stat-card"><div class="stat-number">${committeesCount}</div><div class="stat-label">Committees</div></div>
+        <div class="stat-card"><div class="stat-number">${teamSize}</div><div class="stat-label">Team Members</div></div>
+      </div>
     </div>
+  </section>
 
-    <div class="detail-section">
-      <h2>Contact</h2>
-      <p><strong>Email:</strong> <a href="mailto:${escape(data.contactEmail || '')}">${escape(data.contactEmail || '')}</a></p>
+  <!-- Committees -->
+  <section id="committees" style="background: var(--background-light);">
+    <div class="container">
+      <div class="section-header">
+        <h2 class="section-title">Committees</h2>
+      </div>
+      <div class="committees-grid">
+        ${committeesHtml}
+      </div>
     </div>
-  </div>
+  </section>
+
+  <!-- Team & Chairs -->
+  <section id="team">
+    <div class="container">
+      <div class="section-header">
+        <h2 class="section-title">Meet the Team</h2>
+      </div>
+      <div class="detail-section">
+        <h3>Organizing Team</h3>
+        ${teamHtml}
+      </div>
+      <div class="detail-section">
+        <h3>Chairs & Moderators</h3>
+        ${chairsHtml}
+      </div>
+    </div>
+  </section>
+
+  <!-- Contact / Apply -->
+  <section id="apply" style="background: var(--background-light);">
+    <div class="container">
+      <div class="section-header">
+        <h2 class="section-title">Get Involved</h2>
+        <p class="section-subtitle">Interested in ${escape(data.name)}? Reach out to the organizing team.</p>
+      </div>
+      <div class="detail-section" style="text-align:center;">
+        ${data.applicationUrl ? `<a href="${escape(data.applicationUrl)}" target="_blank" class="cta-button" style="margin-bottom:1.5rem; display:inline-block;">Apply Now</a><br>` : ''}
+        <p><strong>Contact:</strong> <a href="mailto:${escape(data.contactEmail || '')}">${escape(data.contactEmail || '')}</a></p>
+        ${data.contactPhone ? `<p><strong>Phone:</strong> ${escape(data.contactPhone)}</p>` : ''}
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <div class="container">
+      <p>&copy; ${startD ? startD.getFullYear() : new Date().getFullYear()} ${escape(data.name)}. Organized by MUNLY. All rights reserved.</p>
+    </div>
+  </footer>
+
+  <script>
+    function updateCountdown() {
+      const targetDate = new Date('${countdownTarget}').getTime();
+      const now = new Date().getTime();
+      const timeLeft = targetDate - now;
+
+      if (targetDate && timeLeft > 0) {
+        const days = Math.floor(timeLeft / 86400000);
+        const hours = Math.floor((timeLeft % 86400000) / 3600000);
+        const minutes = Math.floor((timeLeft % 3600000) / 60000);
+        const seconds = Math.floor((timeLeft % 60000) / 1000);
+        document.getElementById('days').innerText = days;
+        document.getElementById('hours').innerText = hours;
+        document.getElementById('minutes').innerText = minutes;
+        document.getElementById('seconds').innerText = seconds;
+      } else {
+        document.getElementById('countdown').innerHTML = '<h3>Conference has started!</h3>';
+      }
+    }
+    updateCountdown();
+    setInterval(updateCountdown, 1000);
+  </script>
 </body>
 </html>`;
 }

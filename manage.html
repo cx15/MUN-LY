@@ -1,0 +1,1170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Manage Conference | MUNLY</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #1e40af;
+      --primary-light: #dbeafe;
+      --secondary: #3b82f6;
+      --dark: #1e3a8a;
+      --text: #1f2937;
+      --text-gray: #6b7280;
+      --border: #e2e8f0;
+      --bg: #f8fafc;
+      --white: #ffffff;
+      --success: #16a34a;
+      --error: #dc2626;
+      --warning: #d97706;
+      --shadow: 0 1px 3px rgba(0,0,0,0.08);
+      --shadow-md: 0 4px 12px rgba(0,0,0,0.1);
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+    }
+
+    /* ── Layout ── */
+    .app { display: flex; min-height: 100vh; }
+
+    /* ── Sidebar ── */
+    .sidebar {
+      width: 240px;
+      background: var(--white);
+      border-right: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      position: fixed;
+      top: 0; left: 0; bottom: 0;
+      z-index: 100;
+      overflow-y: auto;
+    }
+
+    .sidebar-logo {
+      padding: 1.5rem;
+      border-bottom: 1px solid var(--border);
+      font-family: 'Playfair Display', serif;
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--primary);
+      text-decoration: none;
+      display: block;
+    }
+
+    .sidebar-conf-name {
+      padding: 1rem 1.5rem;
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: var(--text-gray);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      border-bottom: 1px solid var(--border);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .sidebar-nav { padding: 1rem 0; flex: 1; }
+
+    .nav-item {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 0.75rem 1.5rem;
+      cursor: pointer;
+      color: var(--text-gray);
+      font-size: 0.9rem;
+      font-weight: 500;
+      border-left: 3px solid transparent;
+      transition: all 0.2s;
+      text-decoration: none;
+    }
+
+    .nav-item:hover { background: var(--bg); color: var(--primary); }
+    .nav-item.active { color: var(--primary); background: var(--primary-light); border-left-color: var(--primary); }
+    .nav-item i { width: 18px; text-align: center; }
+
+    .sidebar-footer {
+      padding: 1rem 1.5rem;
+      border-top: 1px solid var(--border);
+    }
+
+    .back-site-btn {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      color: var(--text-gray);
+      font-size: 0.85rem;
+      text-decoration: none;
+      padding: 0.5rem;
+      border-radius: 0.5rem;
+      transition: all 0.2s;
+    }
+
+    .back-site-btn:hover { color: var(--primary); background: var(--bg); }
+
+    /* ── Main Content ── */
+    .main {
+      margin-left: 240px;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* ── Top Bar ── */
+    .topbar {
+      background: var(--white);
+      border-bottom: 1px solid var(--border);
+      padding: 1rem 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 50;
+    }
+
+    .topbar h1 { font-size: 1.1rem; font-weight: 600; color: var(--text); }
+
+    .topbar-actions { display: flex; align-items: center; gap: 1rem; }
+
+    .view-live-btn {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: var(--primary);
+      color: white;
+      padding: 0.5rem 1rem;
+      border-radius: 0.5rem;
+      font-size: 0.85rem;
+      font-weight: 600;
+      text-decoration: none;
+      transition: all 0.2s;
+    }
+
+    .view-live-btn:hover { background: var(--dark); }
+
+    .status-pill {
+      padding: 0.35rem 0.75rem;
+      border-radius: 2rem;
+      font-size: 0.8rem;
+      font-weight: 600;
+    }
+
+    .status-pill.live { background: #dcfce7; color: var(--success); }
+    .status-pill.pending { background: #fef3c7; color: var(--warning); }
+
+    /* ── Sections ── */
+    .content { padding: 2rem; }
+    .section { display: none; }
+    .section.active { display: block; }
+
+    /* ── Cards ── */
+    .card {
+      background: var(--white);
+      border-radius: 0.75rem;
+      box-shadow: var(--shadow);
+      margin-bottom: 1.5rem;
+      overflow: hidden;
+    }
+
+    .card-header {
+      padding: 1.25rem 1.5rem;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .card-header h2 {
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--text);
+    }
+
+    .card-body { padding: 1.5rem; }
+
+    /* ── Banner / Logo Upload ── */
+    .banner-upload-area {
+      position: relative;
+      height: 200px;
+      border-radius: 0.75rem;
+      overflow: hidden;
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 1.5rem;
+      cursor: pointer;
+    }
+
+    .banner-upload-area img {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .banner-overlay {
+      position: absolute;
+      inset: 0;
+      background: rgba(0,0,0,0.4);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      gap: 0.5rem;
+      opacity: 0;
+      transition: opacity 0.2s;
+    }
+
+    .banner-upload-area:hover .banner-overlay { opacity: 1; }
+    .banner-overlay i { font-size: 1.5rem; }
+    .banner-overlay span { font-size: 0.9rem; font-weight: 600; }
+
+    .logo-upload-row {
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+    }
+
+    .logo-preview {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      background: var(--primary-light);
+      border: 3px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      flex-shrink: 0;
+      cursor: pointer;
+      position: relative;
+    }
+
+    .logo-preview img { width: 100%; height: 100%; object-fit: cover; }
+    .logo-preview i { font-size: 1.5rem; color: var(--primary); }
+
+    .logo-upload-info h3 { font-size: 0.95rem; font-weight: 600; margin-bottom: 0.25rem; }
+    .logo-upload-info p { font-size: 0.8rem; color: var(--text-gray); margin: 0; }
+
+    .upload-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: var(--primary-light);
+      color: var(--primary);
+      padding: 0.5rem 1rem;
+      border-radius: 0.5rem;
+      font-size: 0.85rem;
+      font-weight: 600;
+      border: none;
+      cursor: pointer;
+      margin-top: 0.5rem;
+      transition: all 0.2s;
+    }
+
+    .upload-btn:hover { background: var(--primary); color: white; }
+
+    .upload-progress {
+      display: none;
+      margin-top: 0.5rem;
+      font-size: 0.8rem;
+      color: var(--text-gray);
+    }
+
+    .upload-progress.visible { display: block; }
+
+    /* ── Form Elements ── */
+    .form-group { margin-bottom: 1.25rem; }
+    .form-group label { display: block; font-size: 0.85rem; font-weight: 600; color: var(--text); margin-bottom: 0.4rem; }
+
+    .form-group input,
+    .form-group textarea,
+    .form-group select {
+      width: 100%;
+      padding: 0.6rem 0.9rem;
+      border: 1px solid var(--border);
+      border-radius: 0.5rem;
+      font-size: 0.9rem;
+      font-family: 'Inter', sans-serif;
+      color: var(--text);
+      background: var(--white);
+      transition: border-color 0.2s;
+    }
+
+    .form-group input:focus,
+    .form-group textarea:focus,
+    .form-group select:focus {
+      outline: none;
+      border-color: var(--secondary);
+    }
+
+    .form-group textarea { resize: vertical; min-height: 90px; }
+
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+
+    /* ── Repeating List Items (committees, team, etc.) ── */
+    .repeat-list { display: flex; flex-direction: column; gap: 0.75rem; margin-bottom: 1rem; }
+
+    .repeat-item {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 0.5rem;
+      padding: 1rem;
+      position: relative;
+    }
+
+    .repeat-item-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 0.75rem;
+    }
+
+    .repeat-item-title { font-size: 0.85rem; font-weight: 600; color: var(--text); }
+
+    .remove-btn {
+      background: none;
+      border: none;
+      color: var(--error);
+      cursor: pointer;
+      font-size: 0.85rem;
+      padding: 0.25rem;
+    }
+
+    .remove-btn:hover { opacity: 0.7; }
+
+    .add-item-btn {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: none;
+      border: 2px dashed var(--border);
+      color: var(--text-gray);
+      padding: 0.6rem 1rem;
+      border-radius: 0.5rem;
+      font-size: 0.85rem;
+      font-weight: 600;
+      cursor: pointer;
+      width: 100%;
+      justify-content: center;
+      transition: all 0.2s;
+    }
+
+    .add-item-btn:hover { border-color: var(--primary); color: var(--primary); background: var(--primary-light); }
+
+    /* ── Save Button ── */
+    .save-btn {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: var(--primary);
+      color: white;
+      padding: 0.65rem 1.5rem;
+      border-radius: 0.5rem;
+      font-size: 0.9rem;
+      font-weight: 600;
+      border: none;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .save-btn:hover { background: var(--dark); }
+    .save-btn:disabled { opacity: 0.6; cursor: not-allowed; }
+
+    /* ── Toast notification ── */
+    .toast {
+      position: fixed;
+      bottom: 2rem;
+      right: 2rem;
+      background: var(--text);
+      color: white;
+      padding: 0.75rem 1.25rem;
+      border-radius: 0.5rem;
+      font-size: 0.9rem;
+      font-weight: 500;
+      box-shadow: var(--shadow-md);
+      z-index: 999;
+      display: none;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .toast.visible { display: flex; }
+    .toast.success { background: var(--success); }
+    .toast.error { background: var(--error); }
+
+    /* ── Loading / Auth screens ── */
+    .fullscreen-center {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      gap: 1rem;
+      color: var(--text-gray);
+      font-size: 0.95rem;
+    }
+
+    .fullscreen-center i { font-size: 2rem; color: var(--primary); }
+
+    /* ── Responsive ── */
+    @media (max-width: 768px) {
+      .sidebar { width: 100%; height: auto; position: relative; flex-direction: row; }
+      .main { margin-left: 0; }
+      .form-row { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- Loading screen -->
+<div id="loadingScreen" class="fullscreen-center">
+  <i class="fas fa-spinner fa-spin"></i>
+  <span>Loading your conference...</span>
+</div>
+
+<!-- Auth error screen -->
+<div id="authScreen" class="fullscreen-center" style="display:none;">
+  <i class="fas fa-lock"></i>
+  <span>You need to be signed in to manage a conference.</span>
+  <a href="index.html" style="color: var(--primary); font-weight: 600;">← Back to MUNLY</a>
+</div>
+
+<!-- Main App -->
+<div class="app" id="appContainer" style="display:none;">
+
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <a href="index.html" class="sidebar-logo">MUNLY</a>
+    <div class="sidebar-conf-name" id="sidebarConfName">Conference</div>
+    <nav class="sidebar-nav">
+      <div class="nav-item active" data-section="overview"><i class="fas fa-tachometer-alt"></i> Overview</div>
+      <div class="nav-item" data-section="media"><i class="fas fa-image"></i> Page & Media</div>
+      <div class="nav-item" data-section="committees"><i class="fas fa-users"></i> Committees</div>
+      <div class="nav-item" data-section="team"><i class="fas fa-user-tie"></i> Team & Chairs</div>
+      <div class="nav-item" data-section="schedule"><i class="fas fa-calendar-alt"></i> Schedule</div>
+      <div class="nav-item" data-section="contact"><i class="fas fa-envelope"></i> Contact & Links</div>
+    </nav>
+    <div class="sidebar-footer">
+      <a href="index.html" class="back-site-btn"><i class="fas fa-arrow-left"></i> Back to site</a>
+    </div>
+  </aside>
+
+  <!-- Main -->
+  <div class="main">
+    <!-- Top bar -->
+    <div class="topbar">
+      <h1 id="topbarTitle">Conference Manager</h1>
+      <div class="topbar-actions">
+        <span class="status-pill pending" id="statusPill">Pending Review</span>
+        <a href="#" id="viewLiveBtn" class="view-live-btn" target="_blank" style="display:none;">
+          <i class="fas fa-external-link-alt"></i> View Live Page
+        </a>
+      </div>
+    </div>
+
+    <div class="content">
+
+      <!-- ── SECTION: Overview ── -->
+      <div class="section active" id="section-overview">
+        <div class="card">
+          <div class="card-header"><h2>Basic Information</h2></div>
+          <div class="card-body">
+            <div class="form-group">
+              <label>Conference Name</label>
+              <input type="text" id="ovName">
+            </div>
+            <div class="form-group">
+              <label>Organizing Institution</label>
+              <input type="text" id="ovInstitution">
+            </div>
+            <div class="form-group">
+              <label>Venue</label>
+              <input type="text" id="ovVenue">
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label>Start Date</label>
+                <input type="date" id="ovStartDate">
+              </div>
+              <div class="form-group">
+                <label>End Date</label>
+                <input type="date" id="ovEndDate">
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label>Language(s)</label>
+                <input type="text" id="ovLanguages" placeholder="e.g. English, Arabic">
+              </div>
+              <div class="form-group">
+                <label>Dress Code</label>
+                <input type="text" id="ovDressCode" placeholder="e.g. Western Business">
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label>Participation Fee</label>
+                <input type="text" id="ovFee" placeholder="e.g. Free, 20 LYD">
+              </div>
+              <div class="form-group">
+                <label>Expected Participants</label>
+                <input type="number" id="ovExpected" placeholder="e.g. 200">
+              </div>
+            </div>
+            <div class="form-group">
+              <label>Conference Description / Tagline</label>
+              <textarea id="ovDescription" placeholder="Brief description shown on your conference page..."></textarea>
+            </div>
+            <div class="form-group">
+              <label>Google Maps URL (optional)</label>
+              <input type="url" id="ovMapsUrl" placeholder="https://maps.app.goo.gl/...">
+            </div>
+            <div class="form-group">
+              <label>Application / Registration URL (optional)</label>
+              <input type="url" id="ovApplicationUrl" placeholder="https://forms.gle/...">
+            </div>
+            <button class="save-btn" id="saveOverviewBtn" onclick="saveOverview()">
+              <i class="fas fa-save"></i> Save Changes
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── SECTION: Page & Media ── -->
+      <div class="section" id="section-media">
+        <!-- Banner -->
+        <div class="card">
+          <div class="card-header"><h2>Conference Banner</h2></div>
+          <div class="card-body">
+            <p style="font-size:0.85rem; color:var(--text-gray); margin-bottom:1rem;">
+              This image appears as the hero background on your conference page. Recommended: 1920×600px.
+            </p>
+            <div class="banner-upload-area" id="bannerPreviewArea" onclick="document.getElementById('bannerInput').click()">
+              <img id="bannerPreviewImg" src="" alt="" style="display:none;">
+              <div class="banner-overlay">
+                <i class="fas fa-camera"></i>
+                <span>Click to upload banner</span>
+              </div>
+            </div>
+            <input type="file" id="bannerInput" accept="image/*" style="display:none;" onchange="uploadImage('banner', this)">
+            <div class="upload-progress" id="bannerProgress">Uploading banner...</div>
+          </div>
+        </div>
+
+        <!-- Logo -->
+        <div class="card">
+          <div class="card-header"><h2>Conference Logo</h2></div>
+          <div class="card-body">
+            <div class="logo-upload-row">
+              <div class="logo-preview" id="logoPreviewArea" onclick="document.getElementById('logoInput').click()">
+                <img id="logoPreviewImg" src="" alt="" style="display:none;">
+                <i class="fas fa-globe" id="logoPlaceholderIcon"></i>
+              </div>
+              <div class="logo-upload-info">
+                <h3>Upload your logo</h3>
+                <p>Shown in the hero section. Recommended: square image, at least 200×200px.</p>
+                <button class="upload-btn" onclick="document.getElementById('logoInput').click()">
+                  <i class="fas fa-upload"></i> Choose Image
+                </button>
+                <div class="upload-progress" id="logoProgress">Uploading logo...</div>
+              </div>
+            </div>
+            <input type="file" id="logoInput" accept="image/*" style="display:none;" onchange="uploadImage('logo', this)">
+          </div>
+        </div>
+      </div>
+
+      <!-- ── SECTION: Committees ── -->
+      <div class="section" id="section-committees">
+        <div class="card">
+          <div class="card-header">
+            <h2>Committees</h2>
+            <button class="save-btn" onclick="saveCommittees()"><i class="fas fa-save"></i> Save</button>
+          </div>
+          <div class="card-body">
+            <div class="repeat-list" id="committeeList"></div>
+            <button class="add-item-btn" onclick="addCommittee()">
+              <i class="fas fa-plus"></i> Add Committee
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── SECTION: Team & Chairs ── -->
+      <div class="section" id="section-team">
+        <div class="card">
+          <div class="card-header">
+            <h2>Organizing Team</h2>
+            <button class="save-btn" onclick="saveTeam()"><i class="fas fa-save"></i> Save</button>
+          </div>
+          <div class="card-body">
+            <div class="repeat-list" id="teamList"></div>
+            <button class="add-item-btn" onclick="addTeamMember()">
+              <i class="fas fa-plus"></i> Add Team Member
+            </button>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-header">
+            <h2>Chairs & Moderators</h2>
+            <button class="save-btn" onclick="saveChairs()"><i class="fas fa-save"></i> Save</button>
+          </div>
+          <div class="card-body">
+            <div class="repeat-list" id="chairList"></div>
+            <button class="add-item-btn" onclick="addChair()">
+              <i class="fas fa-plus"></i> Add Chair
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── SECTION: Schedule ── -->
+      <div class="section" id="section-schedule">
+        <div class="card">
+          <div class="card-header">
+            <h2>Conference Schedule</h2>
+            <button class="save-btn" onclick="saveSchedule()"><i class="fas fa-save"></i> Save</button>
+          </div>
+          <div class="card-body">
+            <div class="repeat-list" id="scheduleList"></div>
+            <button class="add-item-btn" onclick="addScheduleItem()">
+              <i class="fas fa-plus"></i> Add Schedule Item
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── SECTION: Contact & Links ── -->
+      <div class="section" id="section-contact">
+        <div class="card">
+          <div class="card-header"><h2>Contact Information</h2></div>
+          <div class="card-body">
+            <div class="form-row">
+              <div class="form-group">
+                <label>Contact Email</label>
+                <input type="email" id="ctEmail">
+              </div>
+              <div class="form-group">
+                <label>Contact Phone</label>
+                <input type="tel" id="ctPhone">
+              </div>
+            </div>
+            <button class="save-btn" onclick="saveContact()">
+              <i class="fas fa-save"></i> Save
+            </button>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-header">
+            <h2>Social Media Links</h2>
+            <button class="save-btn" onclick="saveSocial()"><i class="fas fa-save"></i> Save</button>
+          </div>
+          <div class="card-body">
+            <div class="repeat-list" id="socialList"></div>
+            <button class="add-item-btn" onclick="addSocialLink()">
+              <i class="fas fa-plus"></i> Add Social Link
+            </button>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /content -->
+  </div><!-- /main -->
+</div><!-- /app -->
+
+<!-- Toast -->
+<div class="toast" id="toast"></div>
+
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-app.js";
+  import { getFirestore, doc, getDoc, updateDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-firestore.js";
+  import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-auth.js";
+  import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-storage.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyCCFi6yrcQ_C-cMAcagY2YuP6AcLss4dUc",
+    authDomain: "munly-2b1b4.firebaseapp.com",
+    projectId: "munly-2b1b4",
+    storageBucket: "munly-2b1b4.firebasestorage.app",
+    messagingSenderId: "884261920045",
+    appId: "1:884261920045:web:e76068f1b7d164a404c7a4"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
+  const auth = getAuth(app);
+  const storage = getStorage(app);
+
+  // Get conference ID from URL
+  const params = new URLSearchParams(window.location.search);
+  const confId = params.get('id');
+
+  let confData = {};
+
+  // ── Expose globals for inline handlers ──
+  window.db = db;
+  window.storage = storage;
+  window.confId = confId;
+  window.ref = ref;
+  window.uploadBytes = uploadBytes;
+  window.getDownloadURL = getDownloadURL;
+  window.updateDoc = updateDoc;
+  window.doc = doc;
+  window.serverTimestamp = serverTimestamp;
+
+  // ── Auth check ──
+  onAuthStateChanged(auth, async (user) => {
+    if (!user) {
+      document.getElementById('loadingScreen').style.display = 'none';
+      document.getElementById('authScreen').style.display = 'flex';
+      return;
+    }
+
+    if (!confId) {
+      window.location.href = 'index.html';
+      return;
+    }
+
+    try {
+      const docSnap = await getDoc(doc(db, 'conferences', confId));
+      if (!docSnap.exists()) {
+        showToast('Conference not found.', 'error');
+        setTimeout(() => window.location.href = 'index.html', 2000);
+        return;
+      }
+
+      confData = docSnap.data();
+      window.confData = confData;
+
+      // Owner check
+      if (confData.ownerId !== user.uid) {
+        document.getElementById('loadingScreen').style.display = 'none';
+        document.getElementById('authScreen').innerHTML = `
+          <i class="fas fa-ban"></i>
+          <span>You don't have permission to manage this conference.</span>
+          <a href="index.html" style="color: var(--primary); font-weight: 600;">← Back to MUNLY</a>
+        `;
+        document.getElementById('authScreen').style.display = 'flex';
+        return;
+      }
+
+      // All good — populate the UI
+      populateAll(confData);
+      document.getElementById('loadingScreen').style.display = 'none';
+      document.getElementById('appContainer').style.display = 'flex';
+
+    } catch (err) {
+      console.error(err);
+      showToast('Error loading conference.', 'error');
+    }
+  });
+
+  function populateAll(data) {
+    // Sidebar/topbar
+    document.getElementById('sidebarConfName').textContent = data.name || 'Untitled';
+    document.getElementById('topbarTitle').textContent = data.name || 'Conference Manager';
+    document.getElementById('statusPill').textContent = data.approved ? 'Live' : 'Pending Review';
+    document.getElementById('statusPill').className = 'status-pill ' + (data.approved ? 'live' : 'pending');
+
+    if (data.detailPageUrl) {
+      const btn = document.getElementById('viewLiveBtn');
+      btn.href = data.detailPageUrl;
+      btn.style.display = 'flex';
+    }
+
+    // Overview
+    setValue('ovName', data.name);
+    setValue('ovInstitution', data.institution);
+    setValue('ovVenue', data.venue);
+    setValue('ovLanguages', data.languages);
+    setValue('ovDressCode', data.dressCode);
+    setValue('ovFee', data.fee);
+    setValue('ovExpected', data.expectedParticipants);
+    setValue('ovDescription', data.description);
+    setValue('ovMapsUrl', data.mapsUrl);
+    setValue('ovApplicationUrl', data.applicationUrl);
+
+    if (data.startDate) {
+      const d = data.startDate.toDate ? data.startDate.toDate() : new Date(data.startDate);
+      document.getElementById('ovStartDate').value = d.toISOString().split('T')[0];
+    }
+    if (data.endDate) {
+      const d = data.endDate.toDate ? data.endDate.toDate() : new Date(data.endDate);
+      document.getElementById('ovEndDate').value = d.toISOString().split('T')[0];
+    }
+
+    // Media
+    if (data.heroImage) {
+      document.getElementById('bannerPreviewImg').src = data.heroImage;
+      document.getElementById('bannerPreviewImg').style.display = 'block';
+    }
+    if (data.logoImage) {
+      document.getElementById('logoPreviewImg').src = data.logoImage;
+      document.getElementById('logoPreviewImg').style.display = 'block';
+      document.getElementById('logoPlaceholderIcon').style.display = 'none';
+    }
+
+    // Committees
+    renderCommittees(data.committees || []);
+
+    // Team & Chairs
+    renderTeam(data.organizingTeam || []);
+    renderChairs(data.chairs || []);
+
+    // Schedule
+    renderSchedule(data.schedule || []);
+
+    // Contact
+    setValue('ctEmail', data.contactEmail);
+    setValue('ctPhone', data.contactPhone);
+
+    // Social
+    renderSocial(data.socialLinks || []);
+  }
+
+  function setValue(id, val) {
+    const el = document.getElementById(id);
+    if (el && val !== undefined && val !== null) el.value = val;
+  }
+
+  // ── Committees ──
+  function renderCommittees(list) {
+    const container = document.getElementById('committeeList');
+    container.innerHTML = '';
+    list.forEach((c, i) => {
+      container.appendChild(makeCommitteeRow(c, i));
+    });
+  }
+
+  function makeCommitteeRow(c = {}, i = Date.now()) {
+    const div = document.createElement('div');
+    div.className = 'repeat-item';
+    div.dataset.key = i;
+    div.innerHTML = `
+      <div class="repeat-item-header">
+        <span class="repeat-item-title">Committee ${document.querySelectorAll('#committeeList .repeat-item').length + 1}</span>
+        <button class="remove-btn" onclick="this.closest('.repeat-item').remove()"><i class="fas fa-trash"></i></button>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><label>Committee Name</label><input type="text" class="cm-name" value="${esc(c.name)}"></div>
+        <div class="form-group"><label>Difficulty Level</label>
+          <select class="cm-level">
+            <option value="">Select level</option>
+            <option value="beginner" ${c.level === 'beginner' ? 'selected' : ''}>Beginner</option>
+            <option value="intermediate" ${c.level === 'intermediate' ? 'selected' : ''}>Intermediate</option>
+            <option value="advanced" ${c.level === 'advanced' ? 'selected' : ''}>Advanced</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-group"><label>Agenda Topic</label><input type="text" class="cm-agenda" value="${esc(c.agenda)}"></div>
+    `;
+    return div;
+  }
+
+  window.addCommittee = () => {
+    document.getElementById('committeeList').appendChild(makeCommitteeRow());
+  };
+
+  window.saveCommittees = async () => {
+    const rows = document.querySelectorAll('#committeeList .repeat-item');
+    const committees = [...rows].map(r => ({
+      name: r.querySelector('.cm-name').value.trim(),
+      level: r.querySelector('.cm-level').value,
+      agenda: r.querySelector('.cm-agenda').value.trim()
+    })).filter(c => c.name);
+
+    await saveToFirestore({ committees, committeesCount: committees.length });
+    showToast('Committees saved!', 'success');
+  };
+
+  // ── Team ──
+  function renderTeam(list) {
+    const container = document.getElementById('teamList');
+    container.innerHTML = '';
+    list.forEach(p => container.appendChild(makePersonRow(p, 'team')));
+  }
+
+  window.addTeamMember = () => {
+    document.getElementById('teamList').appendChild(makePersonRow({}, 'team'));
+  };
+
+  window.saveTeam = async () => {
+    const rows = document.querySelectorAll('#teamList .repeat-item');
+    const organizingTeam = [...rows].map(r => ({
+      name: r.querySelector('.person-name').value.trim(),
+      role: r.querySelector('.person-role').value.trim(),
+      school: r.querySelector('.person-school').value.trim()
+    })).filter(p => p.name);
+
+    await saveToFirestore({ organizingTeam, teamSize: organizingTeam.length });
+    showToast('Team saved!', 'success');
+  };
+
+  // ── Chairs ──
+  function renderChairs(list) {
+    const container = document.getElementById('chairList');
+    container.innerHTML = '';
+    list.forEach(p => container.appendChild(makePersonRow(p, 'chair')));
+  }
+
+  window.addChair = () => {
+    document.getElementById('chairList').appendChild(makePersonRow({}, 'chair'));
+  };
+
+  window.saveChairs = async () => {
+    const rows = document.querySelectorAll('#chairList .repeat-item');
+    const chairs = [...rows].map(r => ({
+      name: r.querySelector('.person-name').value.trim(),
+      role: r.querySelector('.person-role').value.trim() || 'Chair',
+      assignment: r.querySelector('.person-school').value.trim()
+    })).filter(p => p.name);
+
+    await saveToFirestore({ chairs });
+    showToast('Chairs saved!', 'success');
+  };
+
+  function makePersonRow(p = {}, type) {
+    const schoolLabel = type === 'chair' ? 'Committee Assignment' : 'School / Institution';
+    const div = document.createElement('div');
+    div.className = 'repeat-item';
+    div.innerHTML = `
+      <div class="repeat-item-header">
+        <span class="repeat-item-title">${type === 'chair' ? 'Chair' : 'Team Member'}</span>
+        <button class="remove-btn" onclick="this.closest('.repeat-item').remove()"><i class="fas fa-trash"></i></button>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><label>Full Name</label><input type="text" class="person-name" value="${esc(p.name)}"></div>
+        <div class="form-group"><label>Role / Title</label><input type="text" class="person-role" value="${esc(p.role)}"></div>
+      </div>
+      <div class="form-group"><label>${schoolLabel}</label><input type="text" class="person-school" value="${esc(p.school || p.assignment)}"></div>
+    `;
+    return div;
+  }
+
+  // ── Schedule ──
+  function renderSchedule(list) {
+    const container = document.getElementById('scheduleList');
+    container.innerHTML = '';
+    list.forEach(s => container.appendChild(makeScheduleRow(s)));
+  }
+
+  function makeScheduleRow(s = {}) {
+    const div = document.createElement('div');
+    div.className = 'repeat-item';
+    div.innerHTML = `
+      <div class="repeat-item-header">
+        <span class="repeat-item-title">Schedule Item</span>
+        <button class="remove-btn" onclick="this.closest('.repeat-item').remove()"><i class="fas fa-trash"></i></button>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><label>Day</label><input type="text" class="sc-day" placeholder="e.g. Day 1" value="${esc(s.day)}"></div>
+        <div class="form-group"><label>Time</label><input type="text" class="sc-time" placeholder="e.g. 9:00 AM" value="${esc(s.time)}"></div>
+      </div>
+      <div class="form-group"><label>Session / Event</label><input type="text" class="sc-session" value="${esc(s.session)}"></div>
+    `;
+    return div;
+  }
+
+  window.addScheduleItem = () => {
+    document.getElementById('scheduleList').appendChild(makeScheduleRow());
+  };
+
+  window.saveSchedule = async () => {
+    const rows = document.querySelectorAll('#scheduleList .repeat-item');
+    const schedule = [...rows].map(r => ({
+      day: r.querySelector('.sc-day').value.trim(),
+      time: r.querySelector('.sc-time').value.trim(),
+      session: r.querySelector('.sc-session').value.trim()
+    })).filter(s => s.session);
+
+    await saveToFirestore({ schedule });
+    showToast('Schedule saved!', 'success');
+  };
+
+  // ── Social Links ──
+  function renderSocial(list) {
+    const container = document.getElementById('socialList');
+    container.innerHTML = '';
+    list.forEach(s => container.appendChild(makeSocialRow(s)));
+  }
+
+  function makeSocialRow(s = {}) {
+    const div = document.createElement('div');
+    div.className = 'repeat-item';
+    div.innerHTML = `
+      <div class="repeat-item-header">
+        <span class="repeat-item-title">Social Link</span>
+        <button class="remove-btn" onclick="this.closest('.repeat-item').remove()"><i class="fas fa-trash"></i></button>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><label>Platform</label>
+          <select class="sl-platform">
+            <option value="Instagram" ${s.platform === 'Instagram' ? 'selected' : ''}>Instagram</option>
+            <option value="Twitter" ${s.platform === 'Twitter' ? 'selected' : ''}>Twitter / X</option>
+            <option value="LinkedIn" ${s.platform === 'LinkedIn' ? 'selected' : ''}>LinkedIn</option>
+            <option value="Facebook" ${s.platform === 'Facebook' ? 'selected' : ''}>Facebook</option>
+            <option value="WhatsApp" ${s.platform === 'WhatsApp' ? 'selected' : ''}>WhatsApp</option>
+            <option value="Website" ${s.platform === 'Website' ? 'selected' : ''}>Website</option>
+          </select>
+        </div>
+        <div class="form-group"><label>URL</label><input type="url" class="sl-url" value="${esc(s.url)}" placeholder="https://..."></div>
+      </div>
+    `;
+    return div;
+  }
+
+  window.addSocialLink = () => {
+    document.getElementById('socialList').appendChild(makeSocialRow());
+  };
+
+  window.saveSocial = async () => {
+    const rows = document.querySelectorAll('#socialList .repeat-item');
+    const socialLinks = [...rows].map(r => ({
+      platform: r.querySelector('.sl-platform').value,
+      url: r.querySelector('.sl-url').value.trim()
+    })).filter(s => s.url);
+
+    await saveToFirestore({ socialLinks });
+    showToast('Social links saved!', 'success');
+  };
+
+  // ── Contact ──
+  window.saveContact = async () => {
+    await saveToFirestore({
+      contactEmail: document.getElementById('ctEmail').value.trim(),
+      contactPhone: document.getElementById('ctPhone').value.trim()
+    });
+    showToast('Contact info saved!', 'success');
+  };
+
+  // ── Overview ──
+  window.saveOverview = async () => {
+    const startVal = document.getElementById('ovStartDate').value;
+    const endVal = document.getElementById('ovEndDate').value;
+
+    const payload = {
+      name: document.getElementById('ovName').value.trim(),
+      institution: document.getElementById('ovInstitution').value.trim(),
+      venue: document.getElementById('ovVenue').value.trim(),
+      languages: document.getElementById('ovLanguages').value.trim(),
+      dressCode: document.getElementById('ovDressCode').value.trim(),
+      fee: document.getElementById('ovFee').value.trim(),
+      expectedParticipants: document.getElementById('ovExpected').value || null,
+      description: document.getElementById('ovDescription').value.trim(),
+      mapsUrl: document.getElementById('ovMapsUrl').value.trim(),
+      applicationUrl: document.getElementById('ovApplicationUrl').value.trim(),
+    };
+
+    if (startVal) payload.startDate = new Date(startVal);
+    if (endVal) payload.endDate = new Date(endVal);
+
+    const btn = document.getElementById('saveOverviewBtn');
+    btn.disabled = true;
+    await saveToFirestore(payload);
+    btn.disabled = false;
+
+    // Update topbar name
+    if (payload.name) {
+      document.getElementById('topbarTitle').textContent = payload.name;
+      document.getElementById('sidebarConfName').textContent = payload.name;
+    }
+    showToast('Overview saved!', 'success');
+  };
+
+  // ── Image Upload ──
+  window.uploadImage = async (type, input) => {
+    const file = input.files[0];
+    if (!file) return;
+
+    const progressEl = document.getElementById(type === 'banner' ? 'bannerProgress' : 'logoProgress');
+    progressEl.classList.add('visible');
+    progressEl.textContent = `Uploading ${type}...`;
+
+    try {
+      const storageRef = window.ref(storage, `conferences/${confId}/${type}_${Date.now()}_${file.name}`);
+      await window.uploadBytes(storageRef, file);
+      const url = await window.getDownloadURL(storageRef);
+
+      // Save URL to Firestore
+      const field = type === 'banner' ? 'heroImage' : 'logoImage';
+      await saveToFirestore({ [field]: url });
+
+      // Update preview
+      if (type === 'banner') {
+        document.getElementById('bannerPreviewImg').src = url;
+        document.getElementById('bannerPreviewImg').style.display = 'block';
+      } else {
+        document.getElementById('logoPreviewImg').src = url;
+        document.getElementById('logoPreviewImg').style.display = 'block';
+        document.getElementById('logoPlaceholderIcon').style.display = 'none';
+      }
+
+      progressEl.textContent = '✓ Uploaded!';
+      setTimeout(() => progressEl.classList.remove('visible'), 2000);
+      showToast(`${type === 'banner' ? 'Banner' : 'Logo'} uploaded! Your page is being updated...`, 'success');
+    } catch (err) {
+      console.error(err);
+      progressEl.textContent = 'Upload failed. Try again.';
+      showToast('Upload failed. Please try again.', 'error');
+    }
+  };
+
+  // ── Core Save to Firestore ──
+  async function saveToFirestore(fields) {
+    try {
+      await updateDoc(doc(db, 'conferences', confId), {
+        ...fields,
+        updatedAt: serverTimestamp()
+      });
+    } catch (err) {
+      console.error('Save error:', err);
+      showToast('Error saving. Please try again.', 'error');
+      throw err;
+    }
+  }
+
+  // ── Toast ──
+  function showToast(msg, type = 'info') {
+    const toast = document.getElementById('toast');
+    toast.textContent = msg;
+    toast.className = `toast visible ${type}`;
+    setTimeout(() => toast.classList.remove('visible'), 3500);
+  }
+
+  window.showToast = showToast;
+
+  // ── Sidebar Navigation ──
+  document.querySelectorAll('.nav-item[data-section]').forEach(item => {
+    item.addEventListener('click', () => {
+      document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+      document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+      item.classList.add('active');
+      document.getElementById('section-' + item.dataset.section).classList.add('active');
+    });
+  });
+
+  // ── Utility ──
+  function esc(val) {
+    if (!val) return '';
+    return String(val).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+  }
+</script>
+</body>
+</html>

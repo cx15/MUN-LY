@@ -3939,7 +3939,7 @@
             if(target.id === 'wzAddScheduleItem'){ e.preventDefault(); addScheduleRow(); }
             if(target.id === 'wzAddSocialLink'){ e.preventDefault(); addSocialRow(); }
             if(target.classList && target.classList.contains('my-conf-edit-btn')){
-                e.preventDefault(); openWizard('edit', target.dataset.id);
+                e.preventDefault(); window.location.href = `manage.html?id=${target.dataset.id}`;
             }
             if(target.classList && target.classList.contains('my-conf-view-btn')){
                 e.preventDefault(); showConferenceDetailFromCache(target.dataset.id, true);
@@ -4080,8 +4080,23 @@
         const category = (endDate < now ? 'past' : 'upcoming') + ' featured';
         card.setAttribute('data-category', category);
 
-        const dateStr = startDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric'});
-        const endDateStr = endDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric'});
+        const formatDateRange = (start, end) => {
+            const month = start.toLocaleDateString('en-US', { month: 'short' }).toUpperCase();
+            const year = end.getFullYear();
+            const startDay = start.getDate();
+            const endDay = end.getDate();
+            const endMonth = end.toLocaleDateString('en-US', { month: 'short' }).toUpperCase();
+
+            if (start.toDateString() === end.toDateString()) {
+                return `${month} ${startDay}, ${year}`;
+            }
+            if (month === endMonth) {
+                return `${month} ${startDay}-${endDay}, ${year}`;
+            }
+            return `${month} ${startDay} - ${endMonth} ${endDay}, ${year}`;
+        };
+
+        const dateRangeStr = formatDateRange(startDate, endDate);
 
         const initials = (conf.name || '???').trim().substring(0, 3).toUpperCase();
         const committeesCount = conf.committeesCount ?? (conf.committees ? conf.committees.length : 0);
@@ -4095,7 +4110,7 @@
         card.innerHTML = `
       <div class="conference-image">
         <div class="conference-status">${statusLabel}</div>
-        <div class="conference-date">${dateStr.toUpperCase()} - ${endDateStr.toUpperCase()}</div>
+        <div class="conference-date">${dateRangeStr}</div>
         <div style="width: 100%; height: 100%; background: linear-gradient(135deg, #3B82F6, #1E40AF); display: flex; align-items: center; justify-content: center; color: white; font-size: 2rem; font-weight: bold;">
           ${initials}
         </div>
