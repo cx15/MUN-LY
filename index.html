@@ -6,7 +6,6 @@
     <title>MUNLY - Libya's Premier MUN Platform</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
-    <script src="frontend-config.js"></script>
     <style>
         :root {
             --primary-blue: #1e40af;
@@ -211,7 +210,7 @@
             margin: 3px 0;
             transition: 0.3s;
         }
-        
+
         .nav-links.mobile-active {
             display: flex;
             flex-direction: column;
@@ -225,18 +224,18 @@
             align-items: center;
             z-index: 1000;
         }
-        
+
         .nav-links.mobile-active li {
             margin: 0.8rem 0;
         }
-        
+
         /* Mobile CTA button styling */
         .mobile-cta {
             width: 100%;
             text-align: center;
             margin-top: 1rem !important;
         }
-        
+
         .mobile-cta .cta-button {
             width: 80%;
             margin: 0 auto;
@@ -469,12 +468,12 @@
             border-top-left-radius: 1rem;
             border-top-right-radius: 1rem;
         }
-        
+
         .conference-status, .conference-date {
             z-index: 2;
             position: relative;
         }
-        
+
         .conference-logo {
             position: absolute;
             bottom: -30px;
@@ -1282,57 +1281,57 @@
             .nav-links {
                 display: none;
             }
-            
+
             .mobile-menu {
                 display: flex;
             }
-            
+
             .hero h1 {
                 font-size: 2.5rem;
             }
-            
+
             .hero p {
                 font-size: 1.2rem;
             }
-            
+
             .hero-buttons {
                 flex-direction: column;
                 align-items: center;
             }
-            
+
             .section-title {
                 font-size: 2rem;
             }
-            
+
             .conferences-grid {
                 grid-template-columns: 1fr;
             }
-            
+
             .about-content {
                 grid-template-columns: 1fr;
                 gap: 2rem;
             }
-            
+
             .contact-content {
                 grid-template-columns: 1fr;
                 gap: 2rem;
             }
-            
+
             .form-row {
                 grid-template-columns: 1fr;
             }
-            
+
             .footer-content {
                 grid-template-columns: 1fr;
                 text-align: center;
             }
-            
+
             .nav-links.mobile-active li:last-child {
                 margin-top: 1rem;
                 width: 100%;
                 text-align: center;
             }
-            
+
             .nav-links.mobile-active li:last-child .cta-button {
                 display: inline-block;
                 width: 80%;
@@ -1670,6 +1669,325 @@
             box-shadow: var(--shadow-lg);
         }
 
+        /* Conference Wizard */
+        .wizard-card {
+            background: white;
+            border-radius: 1rem;
+            max-width: 640px;
+            width: 100%;
+            max-height: 88vh;
+            display: flex;
+            flex-direction: column;
+            box-shadow: var(--shadow-xl);
+        }
+
+        .wizard-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.5rem 1.5rem 1rem;
+            border-bottom: 1px solid var(--border-light);
+        }
+
+        .wizard-header h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.4rem;
+            color: var(--text-dark);
+        }
+
+        .wizard-close {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--text-gray);
+            line-height: 1;
+        }
+
+        .wizard-steps {
+            display: flex;
+            justify-content: space-between;
+            padding: 1rem 1.5rem;
+            gap: 0.5rem;
+        }
+
+        .wizard-step-indicator {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.4rem;
+            opacity: 0.5;
+        }
+
+        .wizard-step-indicator.active,
+        .wizard-step-indicator.completed {
+            opacity: 1;
+        }
+
+        .wizard-step-num {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            background: var(--border-light);
+            color: var(--text-gray);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 0.85rem;
+        }
+
+        .wizard-step-indicator.active .wizard-step-num {
+            background: var(--gradient-blue);
+            color: white;
+        }
+
+        .wizard-step-indicator.completed .wizard-step-num {
+            background: var(--secondary-blue);
+            color: white;
+        }
+
+        .wizard-step-label {
+            font-size: 0.75rem;
+            color: var(--text-gray);
+            text-align: center;
+        }
+
+        .wizard-body {
+            padding: 0 1.5rem;
+            overflow-y: auto;
+            flex: 1;
+        }
+
+        .wizard-panel-intro {
+            color: var(--text-gray);
+            margin-bottom: 1rem;
+            font-size: 0.9rem;
+        }
+
+        .wizard-subheading {
+            font-size: 1.05rem;
+            color: var(--primary-blue);
+            margin-bottom: 0.75rem;
+        }
+
+        .wz-repeat-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .wz-repeat-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(110px, 1fr)) auto;
+            gap: 0.5rem;
+            align-items: center;
+            background: var(--background-light);
+            padding: 0.75rem;
+            border-radius: 0.5rem;
+        }
+
+        .wz-repeat-row input,
+        .wz-repeat-row select {
+            padding: 0.5rem;
+            border: 2px solid var(--border-light);
+            border-radius: 0.4rem;
+            font-family: inherit;
+            font-size: 0.85rem;
+            width: 100%;
+        }
+
+        .wz-repeat-row input:focus,
+        .wz-repeat-row select:focus {
+            outline: none;
+            border-color: var(--primary-blue);
+        }
+
+        .wz-remove-row {
+            background: #fee2e2;
+            color: #dc2626;
+            border: none;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 1.1rem;
+            line-height: 1;
+            transition: all 0.2s ease;
+        }
+
+        .wz-remove-row:hover {
+            background: #dc2626;
+            color: white;
+        }
+
+        .wz-add-btn {
+            background: transparent;
+            color: var(--primary-blue);
+            border: 2px dashed var(--primary-blue);
+            padding: 0.6rem 1.2rem;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.9rem;
+            transition: all 0.2s ease;
+        }
+
+        .wz-add-btn:hover {
+            background: var(--light-blue);
+        }
+
+        .wz-counter {
+            margin-top: 0.5rem;
+            color: var(--text-gray);
+            font-size: 0.85rem;
+        }
+
+        .wizard-note {
+            background: var(--light-blue);
+            border-left: 4px solid var(--primary-blue);
+            padding: 1rem;
+            border-radius: 0.5rem;
+            font-size: 0.9rem;
+            color: var(--text-dark);
+            margin-top: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .wizard-note a {
+            color: var(--primary-blue);
+            font-weight: 600;
+        }
+
+        .wizard-nav {
+            display: flex;
+            justify-content: space-between;
+            gap: 1rem;
+            padding: 1.25rem 1.5rem;
+            border-top: 1px solid var(--border-light);
+        }
+
+        .wizard-btn-primary {
+            background: var(--gradient-blue);
+            color: white;
+            border: none;
+            padding: 0.75rem 2rem;
+            border-radius: 0.5rem;
+            font-weight: 600;
+            cursor: pointer;
+            margin-left: auto;
+            transition: all 0.2s ease;
+        }
+
+        .wizard-btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .wizard-btn-primary:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .wizard-btn-secondary {
+            background: transparent;
+            color: var(--primary-blue);
+            border: 2px solid var(--primary-blue);
+            padding: 0.75rem 2rem;
+            border-radius: 0.5rem;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        /* My Conferences (profile page) */
+        .my-conference-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem;
+            background: var(--background-light);
+            border-radius: 0.75rem;
+            margin-bottom: 0.75rem;
+            flex-wrap: wrap;
+        }
+
+        .my-conference-name {
+            font-weight: 600;
+            color: var(--text-dark);
+        }
+
+        .my-conference-meta {
+            font-size: 0.85rem;
+            color: var(--text-gray);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-top: 0.25rem;
+            flex-wrap: wrap;
+        }
+
+        .my-conference-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .wz-small-btn {
+            padding: 0.4rem 0.9rem;
+            border-radius: 0.4rem;
+            font-size: 0.8rem;
+            font-weight: 600;
+            cursor: pointer;
+            border: 2px solid var(--primary-blue);
+            background: transparent;
+            color: var(--primary-blue);
+        }
+
+        .wz-small-btn-primary {
+            background: var(--primary-blue);
+            color: white;
+        }
+
+        .conf-status-badge {
+            display: inline-block;
+            padding: 0.2rem 0.6rem;
+            border-radius: 1rem;
+            font-size: 0.7rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .conf-status-badge.pending {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .conf-status-badge.approved {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .detail-list-row {
+            padding: 0.6rem 0;
+            border-bottom: 1px solid var(--border-light);
+            font-size: 0.9rem;
+        }
+
+        .detail-list-row:last-child {
+            border-bottom: none;
+        }
+
+        @media (max-width: 768px) {
+            .wizard-steps { padding: 0.75rem 1rem; }
+            .wizard-step-label { display: none; }
+            .wizard-body { padding: 0 1rem; }
+            .wizard-nav { padding: 1rem; flex-wrap: wrap; }
+        }
+
         /* Utility Classes */
         .text-center { text-align: center; }
         .text-blue { color: var(--primary-blue); }
@@ -1685,992 +2003,1089 @@
     </style>
 </head>
 <body>
-    <nav id="navbar">
-        <div class="nav-container">
-            <div id="profileSection" class="profile-section hidden">
-                <div class="profile-avatar" id="profileAvatar"></div>
-                <div class="profile-name" id="profileName"></div>
-            </div>
-            <a href="#home" class="logo" id="munlyLogo">MUNLY</a>
-            <ul class="nav-links">
-                <li><a href="#home">Home</a></li>
-                <li><a href="#conferences">Conferences</a></li>
-                <li><a href="#about">About</a></li>
-                <li><a href="#resources">Resources</a></li>
-                <li><a href="#footer">Contact</a></li>
-                <li><a href="#add-conference" class="cta-button">Add Conference</a></li>
-                <li id="authContainer"><a href="#" id="authBtn" class="cta-button">Sign In</a></li>
-            </ul>
-            <div class="mobile-menu">
-                <span></span>
-                <span></span>
-                <span></span>
+<nav id="navbar">
+    <div class="nav-container">
+        <div id="profileSection" class="profile-section hidden">
+            <div class="profile-avatar" id="profileAvatar"></div>
+            <div class="profile-name" id="profileName"></div>
+        </div>
+        <a href="#home" class="logo" id="munlyLogo">MUNLY</a>
+        <ul class="nav-links">
+            <li><a href="#home">Home</a></li>
+            <li><a href="#conferences">Conferences</a></li>
+            <li><a href="#about">About</a></li>
+            <li><a href="#resources">Resources</a></li>
+            <li><a href="#footer">Contact</a></li>
+            <li><a href="#add-conference" class="cta-button">Add Conference</a></li>
+            <li id="authContainer"><a href="#" id="authBtn" class="cta-button">Sign In</a></li>
+        </ul>
+        <div class="mobile-menu">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+    </div>
+</nav>
+
+<!-- Profile Page -->
+<section id="profilePage">
+    <div class="profile-page-container">
+        <div class="profile-page-header">
+            <div class="profile-page-avatar" id="profilePageAvatar"></div>
+            <div class="profile-page-header-info">
+                <h1 id="profilePageName">-</h1>
+                <p id="profilePageEmail">-</p>
             </div>
         </div>
-    </nav>
 
-    <!-- Profile Page -->
-    <section id="profilePage">
-        <div class="profile-page-container">
-            <div class="profile-page-header">
-                <div class="profile-page-avatar" id="profilePageAvatar"></div>
-                <div class="profile-page-header-info">
-                    <h1 id="profilePageName">-</h1>
-                    <p id="profilePageEmail">-</p>
+        <div class="profile-page-sections">
+            <!-- Dashboard Section -->
+            <div class="profile-section-card">
+                <h2>Dashboard</h2>
+                <div class="dashboard-placeholder">
+                    <i class="fas fa-chart-line" style="font-size: 3rem; color: var(--primary-blue);"></i>
+                    <p>Dashboard features coming soon! Check back later for your activity and statistics.</p>
                 </div>
             </div>
 
-            <div class="profile-page-sections">
-                <!-- Dashboard Section -->
-                <div class="profile-section-card">
-                    <h2>Dashboard</h2>
-                    <div class="dashboard-placeholder">
-                        <i class="fas fa-chart-line" style="font-size: 3rem; color: var(--primary-blue);"></i>
-                        <p>Dashboard features coming soon! Check back later for your activity and statistics.</p>
-                    </div>
+            <!-- My Conferences Section -->
+            <div class="profile-section-card">
+                <h2>My Conferences</h2>
+                <div id="myConferencesList">
+                    <p class="empty-message">Sign in to see conferences you've submitted.</p>
                 </div>
+            </div>
 
-                <!-- Personal Info Section -->
-                <div class="profile-section-card">
-                    <h2>Personal Information</h2>
-                    <div class="profile-info-row">
-                        <div class="profile-info-row-label">Full Name</div>
-                        <div class="profile-info-row-value" id="profileInfoName">-</div>
-                    </div>
-                    <div class="profile-info-row">
-                        <div class="profile-info-row-label">Email Address</div>
-                        <div class="profile-info-row-value" id="profileInfoEmail">-</div>
-                    </div>
-                    <div class="profile-info-row">
-                        <div class="profile-info-row-label">Member Since</div>
-                        <div class="profile-info-row-value" id="profileInfoMemberSince">-</div>
-                    </div>
-                    <div class="profile-page-actions">
-                        <button class="profile-back-btn" id="profileBackBtn">Back to Site</button>
-                        <button class="profile-signout-btn" id="profilePageSignOutBtn">Sign Out</button>
-                    </div>
+            <!-- Personal Info Section -->
+            <div class="profile-section-card">
+                <h2>Personal Information</h2>
+                <div class="profile-info-row">
+                    <div class="profile-info-row-label">Full Name</div>
+                    <div class="profile-info-row-value" id="profileInfoName">-</div>
+                </div>
+                <div class="profile-info-row">
+                    <div class="profile-info-row-label">Email Address</div>
+                    <div class="profile-info-row-value" id="profileInfoEmail">-</div>
+                </div>
+                <div class="profile-info-row">
+                    <div class="profile-info-row-label">Member Since</div>
+                    <div class="profile-info-row-value" id="profileInfoMemberSince">-</div>
+                </div>
+                <div class="profile-page-actions">
+                    <button class="profile-back-btn" id="profileBackBtn">Back to Site</button>
+                    <button class="profile-signout-btn" id="profilePageSignOutBtn">Sign Out</button>
                 </div>
             </div>
         </div>
-    </section>
+    </div>
+</section>
 
-    <!-- Hero Section -->
-    <section id="home" class="hero">
-        <div class="hero-content">
-            <h1>Libya's Premier MUN Platform</h1>
-            <p>Connect with the vibrant Model United Nations community across Libya.<br>
+<!-- Hero Section -->
+<section id="home" class="hero">
+    <div class="hero-content">
+        <h1>Libya's Premier MUN Platform</h1>
+        <p>Connect with the vibrant Model United Nations community across Libya.<br>
             Find conferences, build networks, and shape the future of diplomacy.</p>
-            
-            <div class="hero-buttons">
-                <a href="#conferences" class="btn-primary">Explore Conferences</a>
-                <a href="#about" class="btn-secondary">Learn More</a>
-            </div>
-            
-            <img src="1q18u0m2ms.png" alt="MUNLY Logo" class="hero-logo" style="max-width: 150px; margin-top: 2rem; filter: brightness(1.5) contrast(1.1);">
+
+        <div class="hero-buttons">
+            <a href="#conferences" class="btn-primary">Explore Conferences</a>
+            <a href="#about" class="btn-secondary">Learn More</a>
         </div>
-    </section>
 
-    <!-- Conferences Section -->
-    <section id="conferences" class="conferences">
-        <div class="container">
-            <div class="section-header">
-                <h2 class="section-title">Find Your Perfect MUN Conference</h2>
-                <p class="section-subtitle">Discover upcoming and past Model United Nations conferences across Libya</p>
-            </div>
-
-            <div class="conference-filters">
-                <button class="filter-btn active" data-filter="all">All Conferences</button>
-                <button class="filter-btn" data-filter="upcoming">Upcoming</button>
-                <button class="filter-btn" data-filter="past">Past Events</button>
-                <button class="filter-btn" data-filter="featured">Featured</button>
-            </div>
-
-            <!-- Calendar Section -->
-            <div class="calendar-section">
-                <div class="calendar-header">
-                    <h3><i class="fas fa-calendar-alt"></i> MUN Calendar</h3>
-                </div>
-
-                <div class="calendar-container">
-                    <div class="calendar-nav">
-                        <button id="prevMonth" class="nav-btn"><i class="fas fa-chevron-left"></i></button>
-                        <h4 id="currentMonth"></h4>
-                        <button id="nextMonth" class="nav-btn"><i class="fas fa-chevron-right"></i></button>
-                    </div>
-                    <div class="calendar-grid" id="calendarGrid"></div>
-                </div>
-
-                <div class="mun-dates-list">
-                    <h4>Upcoming MUNs</h4>
-                    <div id="munDatesList" class="mun-list"></div>
-                </div>
-            </div>
-
-            <div class="conferences-grid">
-                <!-- ISMMUN'24 -->
-                <div class="conference-card" data-category="past featured">
-                    <div class="conference-image">
-                        <div class="conference-status">Past Event</div>
-                        <div class="conference-date">OCT 22-24, 2024</div>
-                        <img src="gmrrl00hya.jpeg" alt="ISMMUN'24 Conference Group Photo" style="width: 100%; height: 100%; object-fit: cover;">
-                        <div class="image-overlay" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(59, 130, 246, 0.2); z-index: 1;"></div>
-                        <div class="conference-logo">ISM</div>
-                    </div>
-                    <div class="conference-content">
-                        <h3 class="conference-title">ISMMUN'24</h3>
-                        <p class="conference-subtitle">International School of Martyrs Model United Nations</p>
-                        <div class="conference-location">
-                            <i class="fas fa-map-marker-alt"></i>
-                            <span>Tripoli, Libya</span>
-                        </div>
-                        <div class="conference-stats">
-                            <div class="conference-stat">
-                                <div class="conference-stat-number">40</div>
-                                <div class="conference-stat-label">Participants</div>
-                            </div>
-                            <div class="conference-stat">
-                                <div class="conference-stat-number">2</div>
-                                <div class="conference-stat-label">Committees</div>
-                            </div>
-                            <div class="conference-stat">
-                                <div class="conference-stat-number">3</div>
-                                <div class="conference-stat-label">Days</div>
-                            </div>
-                        </div>
-                        <p class="conference-description">The inaugural three-day ISM Model United Nations conference featuring SOCHUM and UN Women committees.</p>
-                        <div class="conference-tags">
-                            <span class="conference-tag">ISM Students</span>
-                            <span class="conference-tag">Foundation</span>
-                            <span class="conference-tag">Beginner Friendly</span>
-                        </div>
-                        <div class="conference-actions">
-                            <a href="ismmun24.html" class="btn-small btn-outline">View Details</a>
-                            <a href="ismmun24.html" class="btn-small cta-button">Gallery</a>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- ISMMUN'25 -->
-                <div class="conference-card" data-category="past featured">
-                    <div class="conference-image">
-                        <div class="conference-status">Past Event</div>
-                        <div class="conference-date">MAY 1-3, 2025</div>
-                        <img src="7abxe18a8k.jpeg" alt="MUN Conference Group Photo" style="width: 100%; height: 100%; object-fit: cover;">
-                        <div class="image-overlay" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(59, 130, 246, 0.2); z-index: 1;"></div>
-                        <div class="conference-logo">ISM</div>
-                    </div>
-                    <div class="conference-content">
-                        <h3 class="conference-title">ISMMUN'25</h3>
-                        <p class="conference-subtitle">International School of Martyrs Model United Nations</p>
-                        <div class="conference-location">
-                            <i class="fas fa-map-marker-alt"></i>
-                            <span>Tripoli, Libya</span>
-                        </div>
-                        <div class="conference-stats">
-                            <div class="conference-stat">
-                                <div class="conference-stat-number">80</div>
-                                <div class="conference-stat-label">Participants</div>
-                            </div>
-                            <div class="conference-stat">
-                                <div class="conference-stat-number">2</div>
-                                <div class="conference-stat-label">Committees</div>
-                            </div>
-                            <div class="conference-stat">
-                                <div class="conference-stat-number">3</div>
-                                <div class="conference-stat-label">Days</div>
-                            </div>
-                        </div>
-                        <p class="conference-description">An expanded three-day ISM conference featuring ECOSOC and UNODC committees with enhanced delegate experience.</p>
-                        <div class="conference-tags">
-                            <span class="conference-tag">ISM Students</span>
-                            <span class="conference-tag">Advanced</span>
-                            <span class="conference-tag">Crisis</span>
-                        </div>
-                        <div class="conference-actions">
-                            <a href="ismmun25.html" class="btn-small btn-outline">View Results</a>
-                            <a href="ismmun25.html" class="btn-small cta-button">Resources</a>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- SMUN'25 -->
-                <div class="conference-card" data-category="past featured">
-                    <div class="conference-image">
-                        <div class="conference-status">Upcoming</div>
-                        <div class="conference-date">OCT 23-25, 2025</div>
-                        <img src="rksodm8cte.jpeg" alt="South Mediterranean University Campus" style="width: 100%; height: 100%; object-fit: cover;">
-                        <div class="image-overlay" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(59, 130, 246, 0.2); z-index: 1;"></div>
-                        <div class="conference-logo">SMU</div>
-                    </div>
-                    <div class="conference-content">
-                        <h3 class="conference-title">SMUN'25</h3>
-                        <p class="conference-subtitle">South Mediterranean University Model United Nations</p>
-                        <div class="conference-location">
-                            <i class="fas fa-map-marker-alt"></i>
-                            <span>Tripoli, Libya</span>
-                        </div>
-                        <div class="conference-stats">
-                            <div class="conference-stat">
-                                <div class="conference-stat-number">300+</div>
-                                <div class="conference-stat-label">Expected</div>
-                            </div>
-                            <div class="conference-stat">
-                                <div class="conference-stat-number">5</div>
-                                <div class="conference-stat-label">Committees</div>
-                            </div>
-                            <div class="conference-stat">
-                                <div class="conference-stat-number">3</div>
-                                <div class="conference-stat-label">Days</div>
-                            </div>
-                        </div>
-                        <p class="conference-description">Open to English-fluent students from international schools across Libya, promoting inclusive MUN participation.</p>
-                        <div class="conference-tags">
-                            <span class="conference-tag">International Schools</span>
-                            <span class="conference-tag">English Fluency</span>
-                            <span class="conference-tag">Inclusive</span>
-                        </div>
-                        <div class="conference-actions">
-                            <a href="smumun25.html" class="btn-small btn-outline">Learn More</a>
-                            <a href="smumun25.html" class="btn-small cta-button">Apply Now</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Add Conference Section -->
-    <section id="add-conference" class="add-conference">
-        <div class="container">
-            <div class="add-conference-card">
-                <div class="add-conference-content">
-                    <h2>Host Your Conference</h2>
-                    <p>Organize a Model UN conference and reach delegates across Libya and beyond.</p>
-                    
-                    <div class="about-features">
-                        <div class="about-feature">
-                            <div class="about-feature-icon">
-                                <i class="fas fa-bullhorn"></i>
-                            </div>
-                            <div class="about-feature-content">
-                                <h4>Free Promotion</h4>
-                                <p>Get your conference featured on Libya's premier MUN platform</p>
-                            </div>
-                        </div>
-                        <div class="about-feature">
-                            <div class="about-feature-icon">
-                                <i class="fas fa-users"></i>
-                            </div>
-                            <div class="about-feature-content">
-                                <h4>Delegate Network</h4>
-                                <p>Access our growing community of passionate MUN delegates</p>
-                            </div>
-                        </div>
-                        <div class="about-feature">
-                            <div class="about-feature-icon">
-                                <i class="fas fa-tools"></i>
-                            </div>
-                            <div class="about-feature-content">
-                                <h4>Organizing Tools</h4>
-                                <p>Professional resources and support for successful conferences</p>
-                            </div>
-                        </div>
-                    </div>
-                    <a href="https://forms.gle/1XSkQ64V4XrTVoif7" target="_blank" class="btn-primary" style="margin-top: 2rem;">Get Started</a>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- About Section -->
-    <section id="about" class="about">
-        <div class="container">
-            <div class="about-content">
-                <div class="about-text">
-                    <h2>Empowering Libya's Future Diplomats</h2>
-                    <p>MUNLY is Libya's premier platform for Model United Nations conferences, connecting students, educators, and institutions across the country.</p>
-                    <p>Since our inception, we've been dedicated to fostering diplomatic education, critical thinking, and global awareness among Libyan youth. Our platform serves as the central hub for MUN activities, providing comprehensive information about conferences, resources for participants, and tools for organizers.</p>
-                    
-                    <div class="about-features">
-                        <div class="about-feature">
-                            <div class="about-feature-icon">
-                                <i class="fas fa-globe"></i>
-                            </div>
-                            <div class="about-feature-content">
-                                <h4>Global Perspective</h4>
-                                <p>Connecting Libya to the international MUN community</p>
-                            </div>
-                        </div>
-                        <div class="about-feature">
-                            <div class="about-feature-icon">
-                                <i class="fas fa-handshake"></i>
-                            </div>
-                            <div class="about-feature-content">
-                                <h4>Diplomatic Skills</h4>
-                                <p>Developing negotiation and public speaking abilities</p>
-                            </div>
-                        </div>
-                        <div class="about-feature">
-                            <div class="about-feature-icon">
-                                <i class="fas fa-heart"></i>
-                            </div>
-                            <div class="about-feature-content">
-                                <h4>Community Building</h4>
-                                <p>Creating lasting connections among young leaders</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="about-image">
-                    <img src="i7dwtfgu3n.jpeg" alt="MUN delegate speaking at a conference" style="width: 100%; height: 100%; object-fit: cover; border-radius: 1rem;">
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Resources Section -->
-    <section id="resources" class="resources">
-        <div class="container">
-            <div class="section-header">
-                <h2 class="section-title">MUN Resources & Tools</h2>
-                <p class="section-subtitle">Everything you need for a successful Model UN experience</p>
-            </div>
-
-            <div class="resources-grid">
-                <div class="resource-card">
-                    <div class="resource-icon">
-                        <i class="fas fa-book"></i>
-                    </div>
-                    <h3>Delegate Handbook</h3>
-                    <p>Comprehensive guide covering rules of procedure, research methods, and debate strategies for delegates of all levels.</p>
-                    <div class="resource-meta">
-                        <span class="resource-type">PDF Guide</span>
-                        <span class="resource-size">2.5 MB</span>
-                    </div>
-                    <a href="#" class="btn-primary">Download</a>
-                </div>
-
-                <div class="resource-card">
-                    <div class="resource-icon">
-                        <i class="fas fa-chalkboard-teacher"></i>
-                    </div>
-                    <h3>Chair Training Kit</h3>
-                    <p>Complete training materials for committee chairs including session management and crisis development techniques.</p>
-                    <div class="resource-meta">
-                        <span class="resource-type">Training Package</span>
-                        <span class="resource-size">5.2 MB</span>
-                    </div>
-                    <a href="#" class="btn-primary">Access</a>
-                </div>
-
-                <div class="resource-card">
-                    <div class="resource-icon">
-                        <i class="fas fa-clipboard-list"></i>
-                    </div>
-                    <h3>Conference Planning Guide</h3>
-                    <p>Step-by-step guide for organizing successful MUN conferences, from planning to execution and evaluation.</p>
-                    <div class="resource-meta">
-                        <span class="resource-type">Planning Tool</span>
-                        <span class="resource-size">3.8 MB</span>
-                    </div>
-                    <a href="#" class="btn-primary">View</a>
-                </div>
-
-                <div class="resource-card">
-                    <div class="resource-icon">
-                        <i class="fas fa-database"></i>
-                    </div>
-                    <h3>Research Database</h3>
-                    <p>Curated collection of research sources, country profiles, and current global issues for committee preparation.</p>
-                    <div class="resource-meta">
-                        <span class="resource-type">Online Database</span>
-                        <span class="resource-size">Updated Daily</span>
-                    </div>
-                    <a href="#" class="btn-primary">Browse</a>
-                    </div>
-            </div>
-        </div>
-    </section>
-
-
-    <!-- Footer -->
-    <footer>
-        <div class="container">
-            <div class="footer-content">
-                <div class="footer-section">
-                    <h3>MUNLY</h3>
-                    <p>Libya's premier Model United Nations platform, connecting students, educators, and institutions across the country to foster diplomatic education and global awareness.</p>
-                </div>
-
-                <div class="footer-section">
-                    <h3>Quick Links</h3>
-                    <ul class="footer-links">
-                        <li><a href="#conferences">Conferences</a></li>
-                        <li><a href="#about">About Us</a></li>
-                        <li><a href="#resources">Resources</a></li>
-                        <li><a href="#add-conference">Host Conference</a></li>
-                    </ul>
-                </div>
-
-                <div class="footer-section">
-                    <h3>Resources</h3>
-                    <ul class="footer-links">
-                        <li><a href="#">Delegate Handbook</a></li>
-                        <li><a href="#">Chair Training</a></li>
-                        <li><a href="#">Planning Guide</a></li>
-                        <li><a href="#">Research Database</a></li>
-                        <li><a href="#">Past Conferences</a></li>
-                    </ul>
-                </div>
-
-                <div id="footer" class="footer-section">
-                    <h3>Contact Info</h3>
-                    <div class="contact-content">
-                        <div class="contact-info">
-                            <div class="contact-methods">
-                                <div class="contact-method" onclick="openEmail('info@mun.ly')">
-                                    <div class="contact-method-icon">
-                                        <i class="fas fa-envelope"></i>
-                                    </div>
-                                    <div class="contact-method-content">
-                                        <h4>Email Us</h4>
-                                        <p>info@mun.ly</p>
-                                    </div>
-                                </div>
-
-                                <div class="contact-method" onclick="openWhatsApp('+218944962446')">
-                                    <div class="contact-method-icon">
-                                        <i class="fab fa-whatsapp"></i>
-                                    </div>
-                                    <div class="contact-method-content">
-                                        <h4>WhatsApp</h4>
-                                        <p>+218 944962446</p>
-                                    </div>
-                                </div>
-
-                                <div class="contact-method" onclick="openInstagram('modelunly')">
-                                    <div class="contact-method-icon">
-                                        <i class="fab fa-instagram"></i>
-                                    </div>
-                                    <div class="contact-method-content">
-                                        <h4>Instagram</h4>
-                                        <p>@modelunly</p>
-                                    </div>
-                                </div>
-                                <div class="contact-method" onclick="openFacebook('61578838781979')">
-                                    <div class="contact-method-icon facebook">
-                                        <i class="fab fa-facebook"></i>
-                                    </div>
-                                    <div class="contact-method-content">
-                                        <h4>Facebook</h4>
-                                        <p>MUNLY</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="footer-bottom">
-                <p>&copy; 2025 MUNLY. All rights reserved. | Empowering Libya's Future Diplomats</p>
-            </div>
-        </div>
-    </footer>
-
-    <div id="conferenceDetailModal" class="hidden">
+        <img src="MunlyLogo3.png" alt="MUNLY Logo" class="hero-logo" style="max-width: 150px; margin-top: 2rem; filter: brightness(1) contrast(1.1);">
     </div>
+</section>
 
-    <div id="authModal" class="hidden" aria-hidden="true">
-        <div class="auth-backdrop" style="position:fixed;inset:0;background:rgba(0,0,0,0.5);display:flex;align-items:center;justify-content:center;z-index:2000;">
-            <div class="auth-card" style="background:white;padding:1.5rem;border-radius:0.75rem;max-width:420px;width:90%;">
-                <button id="authClose" style="float:right;background:none;border:none;font-size:1.25rem;cursor:pointer;">&times;</button>
-                <h3 id="authTitle">Sign In</h3>
-                <form id="authForm"></form>
-                <div style="margin-top:0.5rem;font-size:0.9rem;color:var(--text-gray);">
-                    <span id="authToggleText">Don't have an account? </span><a href="#" id="authToggleLink">Sign up</a>
+<!-- Conferences Section -->
+<section id="conferences" class="conferences">
+    <div class="container">
+        <div class="section-header">
+            <h2 class="section-title">Find Your Perfect MUN Conference</h2>
+            <p class="section-subtitle">Discover upcoming and past Model United Nations conferences across Libya</p>
+        </div>
+
+        <div class="conference-filters">
+            <button class="filter-btn active" data-filter="all">All Conferences</button>
+            <button class="filter-btn" data-filter="upcoming">Upcoming</button>
+            <button class="filter-btn" data-filter="past">Past Events</button>
+            <button class="filter-btn" data-filter="featured">Featured</button>
+        </div>
+
+        <!-- Calendar Section -->
+        <div class="calendar-section">
+            <div class="calendar-header">
+                <h3><i class="fas fa-calendar-alt"></i> MUN Calendar</h3>
+            </div>
+
+            <div class="calendar-container">
+                <div class="calendar-nav">
+                    <button id="prevMonth" class="nav-btn"><i class="fas fa-chevron-left"></i></button>
+                    <h4 id="currentMonth"></h4>
+                    <button id="nextMonth" class="nav-btn"><i class="fas fa-chevron-right"></i></button>
+                </div>
+                <div class="calendar-grid" id="calendarGrid"></div>
+            </div>
+
+            <div class="mun-dates-list">
+                <h4>Upcoming MUNs</h4>
+                <div id="munDatesList" class="mun-list"></div>
+            </div>
+        </div>
+
+        <div class="conferences-grid" id="conferencesContainer">
+
+            <!-- ISMMUN'24 -->
+            <div class="conference-card" data-category="past featured">
+                <div class="conference-image">
+                    <div class="conference-status">Past Event</div>
+                    <div class="conference-date">OCT 22-24, 2024</div>
+                    <img src="gmrrl00hya.jpeg" alt="ISMMUN'24 Conference Group Photo" style="width: 100%; height: 100%; object-fit: cover;">
+                    <div class="image-overlay" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(59, 130, 246, 0.2); z-index: 1;"></div>
+                    <div class="conference-logo">ISM</div>
+                </div>
+                <div class="conference-content">
+                    <h3 class="conference-title">ISMMUN'24</h3>
+                    <p class="conference-subtitle">International School of Martyrs Model United Nations</p>
+                    <div class="conference-location">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <span>Tripoli, Libya</span>
+                    </div>
+                    <div class="conference-stats">
+                        <div class="conference-stat">
+                            <div class="conference-stat-number">40</div>
+                            <div class="conference-stat-label">Participants</div>
+                        </div>
+                        <div class="conference-stat">
+                            <div class="conference-stat-number">2</div>
+                            <div class="conference-stat-label">Committees</div>
+                        </div>
+                        <div class="conference-stat">
+                            <div class="conference-stat-number">3</div>
+                            <div class="conference-stat-label">Days</div>
+                        </div>
+                    </div>
+                    <p class="conference-description">The inaugural three-day ISM Model United Nations conference featuring SOCHUM and UN Women committees.</p>
+                    <div class="conference-tags">
+                        <span class="conference-tag">ISM Students</span>
+                        <span class="conference-tag">Foundation</span>
+                        <span class="conference-tag">Beginner Friendly</span>
+                    </div>
+                    <div class="conference-actions">
+                        <a href="ismmun24.html" class="btn-small btn-outline">View Details</a>
+                        <a href="ismmun24.html" class="btn-small cta-button">Gallery</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ISMMUN'25 -->
+            <div class="conference-card" data-category="past featured">
+                <div class="conference-image">
+                    <div class="conference-status">Past Event</div>
+                    <div class="conference-date">MAY 1-3, 2025</div>
+                    <img src="7abxe18a8k.jpeg" alt="MUN Conference Group Photo" style="width: 100%; height: 100%; object-fit: cover;">
+                    <div class="image-overlay" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(59, 130, 246, 0.2); z-index: 1;"></div>
+                    <div class="conference-logo">ISM</div>
+                </div>
+                <div class="conference-content">
+                    <h3 class="conference-title">ISMMUN'25</h3>
+                    <p class="conference-subtitle">International School of Martyrs Model United Nations</p>
+                    <div class="conference-location">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <span>Tripoli, Libya</span>
+                    </div>
+                    <div class="conference-stats">
+                        <div class="conference-stat">
+                            <div class="conference-stat-number">80</div>
+                            <div class="conference-stat-label">Participants</div>
+                        </div>
+                        <div class="conference-stat">
+                            <div class="conference-stat-number">2</div>
+                            <div class="conference-stat-label">Committees</div>
+                        </div>
+                        <div class="conference-stat">
+                            <div class="conference-stat-number">3</div>
+                            <div class="conference-stat-label">Days</div>
+                        </div>
+                    </div>
+                    <p class="conference-description">An expanded three-day ISM conference featuring ECOSOC and UNODC committees with enhanced delegate experience.</p>
+                    <div class="conference-tags">
+                        <span class="conference-tag">ISM Students</span>
+                        <span class="conference-tag">Advanced</span>
+                        <span class="conference-tag">Crisis</span>
+                    </div>
+                    <div class="conference-actions">
+                        <a href="ismmun25.html" class="btn-small btn-outline">View Results</a>
+                        <a href="ismmun25.html" class="btn-small cta-button">Resources</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SMUN'25 -->
+            <div class="conference-card" data-category="past featured">
+                <div class="conference-image">
+                    <div class="conference-status">Past Event</div>
+                    <div class="conference-date">OCT 23-25, 2025</div>
+                    <img src="rksodm8cte.jpeg" alt="South Mediterranean University Campus" style="width: 100%; height: 100%; object-fit: cover;">
+                    <div class="image-overlay" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(59, 130, 246, 0.2); z-index: 1;"></div>
+                    <div class="conference-logo">SMU</div>
+                </div>
+                <div class="conference-content">
+                    <h3 class="conference-title">SMUN'25</h3>
+                    <p class="conference-subtitle">South Mediterranean University Model United Nations</p>
+                    <div class="conference-location">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <span>Tripoli, Libya</span>
+                    </div>
+                    <div class="conference-stats">
+                        <div class="conference-stat">
+                            <div class="conference-stat-number">300+</div>
+                            <div class="conference-stat-label">Expected</div>
+                        </div>
+                        <div class="conference-stat">
+                            <div class="conference-stat-number">5</div>
+                            <div class="conference-stat-label">Committees</div>
+                        </div>
+                        <div class="conference-stat">
+                            <div class="conference-stat-number">3</div>
+                            <div class="conference-stat-label">Days</div>
+                        </div>
+                    </div>
+                    <p class="conference-description">Open to English-fluent students from international schools across Libya, promoting inclusive MUN participation.</p>
+                    <div class="conference-tags">
+                        <span class="conference-tag">International Schools</span>
+                        <span class="conference-tag">English Fluency</span>
+                        <span class="conference-tag">Inclusive</span>
+                    </div>
+                    <div class="conference-actions">
+                        <a href="smumun25.html" class="btn-small btn-outline">Learn More</a>
+                        <a href="smumun25.html" class="btn-small cta-button">Apply Now</a>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
+</section>
 
-    <script>
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function (e) {
-                e.preventDefault();
-                const href = this.getAttribute('href');
-                const profilePage = document.getElementById('profilePage');
-                if (profilePage && profilePage.classList.contains('active')) {
-                    goBackToSite();
-                }
-                const target = document.querySelector(href);
-                if (target) {
-                    setTimeout(() => {
-                        target.scrollIntoView({
-                            behavior: 'smooth',
-                            block: 'start'
-                        });
-                    }, 10);
-                }
-            });
-        });
+<!-- Add Conference Section -->
+<section id="add-conference" class="add-conference">
+    <div class="container">
+        <div class="add-conference-card">
+            <div class="add-conference-content">
+                <h2>Host Your Conference</h2>
+                <p>Organize a Model UN conference and reach delegates across Libya and beyond.</p>
 
-        window.addEventListener('scroll', () => {
-            const navbar = document.getElementById('navbar');
-            if (window.scrollY > 50) {
-                navbar.classList.add('scrolled');
-            } else {
-                navbar.classList.remove('scrolled');
+                <div class="about-features">
+                    <div class="about-feature">
+                        <div class="about-feature-icon">
+                            <i class="fas fa-bullhorn"></i>
+                        </div>
+                        <div class="about-feature-content">
+                            <h4>Free Promotion</h4>
+                            <p>Get your conference featured on Libya's premier MUN platform</p>
+                        </div>
+                    </div>
+                    <div class="about-feature">
+                        <div class="about-feature-icon">
+                            <i class="fas fa-users"></i>
+                        </div>
+                        <div class="about-feature-content">
+                            <h4>Delegate Network</h4>
+                            <p>Access our growing community of passionate MUN delegates</p>
+                        </div>
+                    </div>
+                    <div class="about-feature">
+                        <div class="about-feature-icon">
+                            <i class="fas fa-tools"></i>
+                        </div>
+                        <div class="about-feature-content">
+                            <h4>Organizing Tools</h4>
+                            <p>Professional resources and support for successful conferences</p>
+                        </div>
+                    </div>
+                </div>
+                <button type="button" id="openConferenceWizardBtn" class="btn-primary" style="margin-top: 2rem; border: none; cursor: pointer;">Get Started</button>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- About Section -->
+<section id="about" class="about">
+    <div class="container">
+        <div class="about-content">
+            <div class="about-text">
+                <h2>Empowering Libya's Future Diplomats</h2>
+                <p>MUNLY is Libya's premier platform for Model United Nations conferences, connecting students, educators, and institutions across the country.</p>
+                <p>Since our inception, we've been dedicated to fostering diplomatic education, critical thinking, and global awareness among Libyan youth. Our platform serves as the central hub for MUN activities, providing comprehensive information about conferences, resources for participants, and tools for organizers.</p>
+
+                <div class="about-features">
+                    <div class="about-feature">
+                        <div class="about-feature-icon">
+                            <i class="fas fa-globe"></i>
+                        </div>
+                        <div class="about-feature-content">
+                            <h4>Global Perspective</h4>
+                            <p>Connecting Libya to the international MUN community</p>
+                        </div>
+                    </div>
+                    <div class="about-feature">
+                        <div class="about-feature-icon">
+                            <i class="fas fa-handshake"></i>
+                        </div>
+                        <div class="about-feature-content">
+                            <h4>Diplomatic Skills</h4>
+                            <p>Developing negotiation and public speaking abilities</p>
+                        </div>
+                    </div>
+                    <div class="about-feature">
+                        <div class="about-feature-icon">
+                            <i class="fas fa-heart"></i>
+                        </div>
+                        <div class="about-feature-content">
+                            <h4>Community Building</h4>
+                            <p>Creating lasting connections among young leaders</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="about-image">
+                <img src="i7dwtfgu3n.jpeg" alt="MUN delegate speaking at a conference" style="width: 100%; height: 100%; object-fit: cover; border-radius: 1rem;">
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Resources Section -->
+<section id="resources" class="resources">
+    <div class="container">
+        <div class="section-header">
+            <h2 class="section-title">MUN Resources & Tools</h2>
+            <p class="section-subtitle">Everything you need for a successful Model UN experience</p>
+        </div>
+
+        <div class="resources-grid">
+            <div class="resource-card">
+                <div class="resource-icon">
+                    <i class="fas fa-book"></i>
+                </div>
+                <h3>Delegate Handbook</h3>
+                <p>Comprehensive guide covering rules of procedure, research methods, and debate strategies for delegates of all levels.</p>
+                <div class="resource-meta">
+                    <span class="resource-type">PDF Guide</span>
+                    <span class="resource-size">2.5 MB</span>
+                </div>
+                <a href="#" class="btn-primary">Download</a>
+            </div>
+
+            <div class="resource-card">
+                <div class="resource-icon">
+                    <i class="fas fa-chalkboard-teacher"></i>
+                </div>
+                <h3>Chair Training Kit</h3>
+                <p>Complete training materials for committee chairs including session management and crisis development techniques.</p>
+                <div class="resource-meta">
+                    <span class="resource-type">Training Package</span>
+                    <span class="resource-size">5.2 MB</span>
+                </div>
+                <a href="#" class="btn-primary">Access</a>
+            </div>
+
+            <div class="resource-card">
+                <div class="resource-icon">
+                    <i class="fas fa-clipboard-list"></i>
+                </div>
+                <h3>Conference Planning Guide</h3>
+                <p>Step-by-step guide for organizing successful MUN conferences, from planning to execution and evaluation.</p>
+                <div class="resource-meta">
+                    <span class="resource-type">Planning Tool</span>
+                    <span class="resource-size">3.8 MB</span>
+                </div>
+                <a href="#" class="btn-primary">View</a>
+            </div>
+
+            <div class="resource-card">
+                <div class="resource-icon">
+                    <i class="fas fa-database"></i>
+                </div>
+                <h3>Research Database</h3>
+                <p>Curated collection of research sources, country profiles, and current global issues for committee preparation.</p>
+                <div class="resource-meta">
+                    <span class="resource-type">Online Database</span>
+                    <span class="resource-size">Updated Daily</span>
+                </div>
+                <a href="#" class="btn-primary">Browse</a>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>MUNLY</h3>
+                <p>Libya's premier Model United Nations platform, connecting students, educators, and institutions across the country to foster diplomatic education and global awareness.</p>
+            </div>
+
+            <div class="footer-section">
+                <h3>Quick Links</h3>
+                <ul class="footer-links">
+                    <li><a href="#conferences">Conferences</a></li>
+                    <li><a href="#about">About Us</a></li>
+                    <li><a href="#resources">Resources</a></li>
+                    <li><a href="#add-conference">Host Conference</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-section">
+                <h3>Resources</h3>
+                <ul class="footer-links">
+                    <li><a href="#">Delegate Handbook</a></li>
+                    <li><a href="#">Chair Training</a></li>
+                    <li><a href="#">Planning Guide</a></li>
+                    <li><a href="#">Research Database</a></li>
+                    <li><a href="#">Past Conferences</a></li>
+                </ul>
+            </div>
+
+            <div id="footer" class="footer-section">
+                <h3>Contact Info</h3>
+                <div class="contact-content">
+                    <div class="contact-info">
+                        <div class="contact-methods">
+                            <div class="contact-method" onclick="openEmail('info@mun.ly')">
+                                <div class="contact-method-icon">
+                                    <i class="fas fa-envelope"></i>
+                                </div>
+                                <div class="contact-method-content">
+                                    <h4>Email Us</h4>
+                                    <p>info@mun.ly</p>
+                                </div>
+                            </div>
+
+                            <div class="contact-method" onclick="openWhatsApp('+218944962446')">
+                                <div class="contact-method-icon">
+                                    <i class="fab fa-whatsapp"></i>
+                                </div>
+                                <div class="contact-method-content">
+                                    <h4>WhatsApp</h4>
+                                    <p>+218 944962446</p>
+                                </div>
+                            </div>
+
+                            <div class="contact-method" onclick="openInstagram('modelunly')">
+                                <div class="contact-method-icon">
+                                    <i class="fab fa-instagram"></i>
+                                </div>
+                                <div class="contact-method-content">
+                                    <h4>Instagram</h4>
+                                    <p>@modelunly</p>
+                                </div>
+                            </div>
+                            <div class="contact-method" onclick="openFacebook('61578838781979')">
+                                <div class="contact-method-icon facebook">
+                                    <i class="fab fa-facebook"></i>
+                                </div>
+                                <div class="contact-method-content">
+                                    <h4>Facebook</h4>
+                                    <p>MUNLY</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer-bottom">
+            <p>&copy; 2025 MUNLY. All rights reserved. | Empowering Libya's Future Diplomats</p>
+        </div>
+    </div>
+</footer>
+
+<div id="conferenceDetailModal" class="hidden">
+</div>
+
+<div id="authModal" class="hidden" aria-hidden="true">
+    <div class="auth-backdrop" style="position:fixed;inset:0;background:rgba(0,0,0,0.5);display:flex;align-items:center;justify-content:center;z-index:2000;">
+        <div class="auth-card" style="background:white;padding:1.5rem;border-radius:0.75rem;max-width:420px;width:90%;">
+            <button id="authClose" style="float:right;background:none;border:none;font-size:1.25rem;cursor:pointer;">&times;</button>
+            <h3 id="authTitle">Sign In</h3>
+            <form id="authForm"></form>
+            <div style="margin-top:0.5rem;font-size:0.9rem;color:var(--text-gray);">
+                <span id="authToggleText">Don't have an account? </span><a href="#" id="authToggleLink">Sign up</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Conference Submission / Edit Wizard -->
+<div id="conferenceWizardModal" class="hidden" aria-hidden="true">
+    <div class="auth-backdrop" style="position:fixed;inset:0;background:rgba(0,0,0,0.5);display:flex;align-items:center;justify-content:center;z-index:2050;padding:1.5rem;">
+        <div class="wizard-card">
+            <div class="wizard-header">
+                <h3 id="wizardTitle">Submit Your Conference</h3>
+                <button type="button" id="wizardClose" class="wizard-close">&times;</button>
+            </div>
+
+            <div class="wizard-steps">
+                <div class="wizard-step-indicator active" data-step="1"><span class="wizard-step-num">1</span><span class="wizard-step-label">Basics</span></div>
+                <div class="wizard-step-indicator" data-step="2"><span class="wizard-step-num">2</span><span class="wizard-step-label">Committees</span></div>
+                <div class="wizard-step-indicator" data-step="3"><span class="wizard-step-num">3</span><span class="wizard-step-label">People</span></div>
+                <div class="wizard-step-indicator" data-step="4"><span class="wizard-step-num">4</span><span class="wizard-step-label">Schedule</span></div>
+            </div>
+
+            <div class="wizard-body">
+
+                <!-- Step 1: Basics -->
+                <div class="wizard-panel" data-panel="1">
+                    <div class="form-group"><label>Conference Name</label><input type="text" id="wzName" required></div>
+                    <div class="form-group"><label>Organizing Institution</label><input type="text" id="wzInstitution"></div>
+                    <div class="form-group"><label>Venue</label><input type="text" id="wzVenue" required></div>
+                    <div class="form-row">
+                        <div class="form-group"><label>Start Date</label><input type="date" id="wzStartDate" required></div>
+                        <div class="form-group"><label>End Date</label><input type="date" id="wzEndDate" required></div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group"><label>Language(s)</label><input type="text" id="wzLanguages" placeholder="e.g. English, Arabic"></div>
+                        <div class="form-group"><label>Dress Code</label><input type="text" id="wzDressCode" placeholder="e.g. Western Business"></div>
+                    </div>
+                    <div class="form-group"><label>Participation Fee</label><input type="text" id="wzFee" placeholder="e.g. Free, 20 LYD, 15 USD"></div>
+                </div>
+
+                <!-- Step 2: Committees -->
+                <div class="wizard-panel hidden" data-panel="2">
+                    <p class="wizard-panel-intro">Add each committee, its agenda topic, and difficulty level.</p>
+                    <div id="wzCommitteesList" class="wz-repeat-list"></div>
+                    <button type="button" id="wzAddCommittee" class="wz-add-btn"><i class="fas fa-plus"></i> Add Committee</button>
+                    <p id="wzCommitteeCount" class="wz-counter">0 committees added</p>
+                </div>
+
+                <!-- Step 3: People -->
+                <div class="wizard-panel hidden" data-panel="3">
+                    <h4 class="wizard-subheading">Organizing Team</h4>
+                    <div id="wzTeamList" class="wz-repeat-list"></div>
+                    <button type="button" id="wzAddTeamMember" class="wz-add-btn"><i class="fas fa-plus"></i> Add Team Member</button>
+
+                    <h4 class="wizard-subheading" style="margin-top:2rem;">Chairs</h4>
+                    <div id="wzChairsList" class="wz-repeat-list"></div>
+                    <button type="button" id="wzAddChair" class="wz-add-btn"><i class="fas fa-plus"></i> Add Chair</button>
+
+                    <h4 class="wizard-subheading" style="margin-top:2rem;">Head of Conference Contact</h4>
+                    <div class="form-row">
+                        <div class="form-group"><label>Email</label><input type="email" id="wzContactEmail" required></div>
+                        <div class="form-group"><label>Phone</label><input type="tel" id="wzContactPhone"></div>
+                    </div>
+                </div>
+
+                <!-- Step 4: Schedule & Submit -->
+                <div class="wizard-panel hidden" data-panel="4">
+                    <h4 class="wizard-subheading">Conference Schedule</h4>
+                    <div id="wzScheduleList" class="wz-repeat-list"></div>
+                    <button type="button" id="wzAddScheduleItem" class="wz-add-btn"><i class="fas fa-plus"></i> Add Schedule Item</button>
+
+                    <h4 class="wizard-subheading" style="margin-top:2rem;">Social Media</h4>
+                    <div id="wzSocialList" class="wz-repeat-list"></div>
+                    <button type="button" id="wzAddSocialLink" class="wz-add-btn"><i class="fas fa-plus"></i> Add Social Link</button>
+
+                    <div class="wizard-note">
+                        <i class="fas fa-paperclip"></i>
+                        Have a venue confirmation document or code of conduct? Email it to
+                        <a href="mailto:info@mun.ly">info@mun.ly</a> with your conference name.
+                        Your logo, banner, and photo gallery can be added once your conference is approved.
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="wizard-nav">
+                <button type="button" id="wizardBackBtn" class="wizard-btn-secondary hidden">Back</button>
+                <button type="button" id="wizardNextBtn" class="wizard-btn-primary">Next</button>
+                <button type="button" id="wizardSubmitBtn" class="wizard-btn-primary hidden">Submit Conference</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function (e) {
+            e.preventDefault();
+            const href = this.getAttribute('href');
+            const profilePage = document.getElementById('profilePage');
+            if (profilePage && profilePage.classList.contains('active')) {
+                goBackToSite();
+            }
+            const target = document.querySelector(href);
+            if (target) {
+                setTimeout(() => {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }, 10);
             }
         });
+    });
 
-        document.querySelectorAll('.filter-btn').forEach(btn => {
-            btn.addEventListener('click', () => {
-                document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-                btn.classList.add('active');
-                
-                const filter = btn.getAttribute('data-filter');
-                const cards = document.querySelectorAll('.conference-card');
-                const calendarSection = document.querySelector('.calendar-section');
-                
-                if (filter === 'upcoming') {
-                    calendarSection.classList.add('visible');
-                } else {
-                    calendarSection.classList.remove('visible');
-                }
-                
-                cards.forEach(card => {
-                    if (filter === 'all' || card.getAttribute('data-category').includes(filter)) {
-                        card.style.display = 'block';
-                        card.style.animation = 'fadeInUp 0.5s ease-out';
-                    } else {
-                        card.style.display = 'none';
-                    }
-                });
-            });
-        });
-
-
-        function showConferenceDetail(conferenceId) {
-            const conferences = {
-                'ismmun24': {
-                    name: 'ISMMUN\'24',
-                    fullName: 'International School of Martyrs Model United Nations 2024',
-                    location: 'Tripoli, Libya',
-                    dates: 'October 22-23, 2024',
-                    status: 'Past Event',
-                    description: 'A successful two-day conference that brought together 180+ young diplomats from across Libya to address pressing global issues through 6 diverse committees.',
-                    committees: [
-                        'UN Security Council',
-                        'UN Human Rights Council', 
-                        'Economic and Social Council',
-                        'World Health Organization',
-                        'Arab League',
-                        'Crisis Committee'
-                    ],
-                    schedule: [
-                        { time: '09:00 - 10:00', event: 'Check-in & Welcome' },
-                        { time: '10:00 - 12:00', event: 'Opening Ceremony' },
-                        { time: '13:00 - 15:00', event: 'Committee Session I' },
-                        { time: '15:30 - 17:30', event: 'Committee Session II' },
-                        { time: '09:00 - 11:00', event: 'Committee Session III' },
-                        { time: '11:30 - 13:30', event: 'Committee Session IV' },
-                        { time: '14:30 - 16:00', event: 'Closing Ceremony' }
-                    ]
-                },
-                'ismmun25': {
-                    name: 'ISMMUN\'25',
-                    fullName: 'International School of Martyrs Model United Nations 2025',
-                    location: 'Tripoli, Libya',
-                    dates: 'May 1-3, 2025',
-                    status: 'Recent Event',
-                    description: 'An expanded three-day conference featuring 250+ delegates, innovative committee formats and enhanced delegate experience with international participation across 8 specialized committees.',
-                    committees: [
-                        'UN Security Council',
-                        'UN General Assembly',
-                        'Economic and Social Council',
-                        'World Health Organization',
-                        'Arab League',
-                        'African Union',
-                        'Crisis Committee',
-                        'International Court of Justice'
-                    ],
-                    schedule: [
-                        { time: '16:00 - 17:00', event: 'Check-in' },
-                        { time: '17:00 - 18:30', event: 'Opening Ceremony' },
-                        { time: '19:00 - 21:00', event: 'Committee Session I' },
-                        { time: '09:00 - 11:00', event: 'Committee Session II' },
-                        { time: '11:30 - 13:30', event: 'Committee Session III' },
-                        { time: '14:30 - 16:30', event: 'Committee Session IV' },
-                        { time: '17:00 - 19:00', event: 'Committee Session V' },
-                        { time: '09:00 - 11:00', event: 'Committee Session VI' },
-                        { time: '11:30 - 13:00', event: 'Closing Ceremony' }
-                    ]
-                },
-                'smumun25': {
-                    name: 'SMUN\'25',
-                    fullName: 'South Mediterranean University Model United Nations \'25',
-                    location: 'Tripoli, Libya', 
-                    dates: 'October 22-24, 2025',
-                    status: 'Upcoming',
-                    description: 'The largest MUN conference in central Libya, expecting 300+ delegates and focusing on healthcare diplomacy, sustainable development, and regional cooperation through 10 specialized committees.',
-                    committees: [
-                        'World Health Organization',
-                        'UN Environment Programme',
-                        'UN Human Rights Council',
-                        'Economic and Social Council',
-                        'African Union',
-                        'Arab League',
-                        'WHO Emergency Committee',
-                        'UN Security Council',
-                        'Crisis Committee',
-                        'International Court of Justice'
-                    ],
-                    schedule: [
-                        { time: '15:00 - 16:00', event: 'Check-in' },
-                        { time: '16:00 - 17:30', event: 'Opening Ceremony' },
-                        { time: '18:00 - 20:00', event: 'Committee Session I' },
-                        { time: '09:00 - 11:00', event: 'Committee Session II' },
-                        { time: '11:30 - 13:30', event: 'Committee Session III' },
-                        { time: '14:30 - 16:30', event: 'Committee Session IV' },
-                        { time: '17:00 - 19:00', event: 'Committee Session V' },
-                        { time: '09:00 - 11:00', event: 'Committee Session VI' },
-                        { time: '11:30 - 13:00', event: 'Closing Ceremony & Awards' }
-                    ]
-                }
-            };
-            
-            const conference = conferences[conferenceId];
-            if (conference) {
-                showMessage(`${conference.name}\n\n${conference.description}\n\nCommittees: ${conference.committees.length}\nLocation: ${conference.location}\nDates: ${conference.dates}\n\nClick OK to continue browsing. In a full implementation, this would open a detailed page with complete information, documents, and application links.`);
-            }
+    window.addEventListener('scroll', () => {
+        const navbar = document.getElementById('navbar');
+        if (window.scrollY > 50) {
+            navbar.classList.add('scrolled');
+        } else {
+            navbar.classList.remove('scrolled');
         }
+    });
 
-        const observerOptions = {
-            threshold: 0.1,
-            rootMargin: '0px 0px -50px 0px'
+    document.querySelectorAll('.filter-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+
+            const filter = btn.getAttribute('data-filter');
+            const cards = document.querySelectorAll('.conference-card');
+            const calendarSection = document.querySelector('.calendar-section');
+
+            if (filter === 'upcoming') {
+                calendarSection.classList.add('visible');
+            } else {
+                calendarSection.classList.remove('visible');
+            }
+
+            cards.forEach(card => {
+                if (filter === 'all' || card.getAttribute('data-category').includes(filter)) {
+                    card.style.display = 'block';
+                    card.style.animation = 'fadeInUp 0.5s ease-out';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        });
+    });
+
+
+    function showConferenceDetail(conferenceId) {
+        const conferences = {
+            'ismmun24': {
+                name: 'ISMMUN\'24',
+                fullName: 'International School of Martyrs Model United Nations 2024',
+                location: 'Tripoli, Libya',
+                dates: 'October 22-23, 2024',
+                status: 'Past Event',
+                description: 'A successful two-day conference that brought together 180+ young diplomats from across Libya to address pressing global issues through 6 diverse committees.',
+                committees: [
+                    'UN Security Council',
+                    'UN Human Rights Council',
+                    'Economic and Social Council',
+                    'World Health Organization',
+                    'Arab League',
+                    'Crisis Committee'
+                ],
+                schedule: [
+                    { time: '09:00 - 10:00', event: 'Check-in & Welcome' },
+                    { time: '10:00 - 12:00', event: 'Opening Ceremony' },
+                    { time: '13:00 - 15:00', event: 'Committee Session I' },
+                    { time: '15:30 - 17:30', event: 'Committee Session II' },
+                    { time: '09:00 - 11:00', event: 'Committee Session III' },
+                    { time: '11:30 - 13:30', event: 'Committee Session IV' },
+                    { time: '14:30 - 16:00', event: 'Closing Ceremony' }
+                ]
+            },
+            'ismmun25': {
+                name: 'ISMMUN\'25',
+                fullName: 'International School of Martyrs Model United Nations 2025',
+                location: 'Tripoli, Libya',
+                dates: 'May 1-3, 2025',
+                status: 'Recent Event',
+                description: 'An expanded three-day conference featuring 250+ delegates, innovative committee formats and enhanced delegate experience with international participation across 8 specialized committees.',
+                committees: [
+                    'UN Security Council',
+                    'UN General Assembly',
+                    'Economic and Social Council',
+                    'World Health Organization',
+                    'Arab League',
+                    'African Union',
+                    'Crisis Committee',
+                    'International Court of Justice'
+                ],
+                schedule: [
+                    { time: '16:00 - 17:00', event: 'Check-in' },
+                    { time: '17:00 - 18:30', event: 'Opening Ceremony' },
+                    { time: '19:00 - 21:00', event: 'Committee Session I' },
+                    { time: '09:00 - 11:00', event: 'Committee Session II' },
+                    { time: '11:30 - 13:30', event: 'Committee Session III' },
+                    { time: '14:30 - 16:30', event: 'Committee Session IV' },
+                    { time: '17:00 - 19:00', event: 'Committee Session V' },
+                    { time: '09:00 - 11:00', event: 'Committee Session VI' },
+                    { time: '11:30 - 13:00', event: 'Closing Ceremony' }
+                ]
+            },
+            'smumun25': {
+                name: 'SMUN\'25',
+                fullName: 'South Mediterranean University Model United Nations \'25',
+                location: 'Tripoli, Libya',
+                dates: 'October 22-24, 2025',
+                status: 'Upcoming',
+                description: 'The largest MUN conference in central Libya, expecting 300+ delegates and focusing on healthcare diplomacy, sustainable development, and regional cooperation through 10 specialized committees.',
+                committees: [
+                    'World Health Organization',
+                    'UN Environment Programme',
+                    'UN Human Rights Council',
+                    'Economic and Social Council',
+                    'African Union',
+                    'Arab League',
+                    'WHO Emergency Committee',
+                    'UN Security Council',
+                    'Crisis Committee',
+                    'International Court of Justice'
+                ],
+                schedule: [
+                    { time: '15:00 - 16:00', event: 'Check-in' },
+                    { time: '16:00 - 17:30', event: 'Opening Ceremony' },
+                    { time: '18:00 - 20:00', event: 'Committee Session I' },
+                    { time: '09:00 - 11:00', event: 'Committee Session II' },
+                    { time: '11:30 - 13:30', event: 'Committee Session III' },
+                    { time: '14:30 - 16:30', event: 'Committee Session IV' },
+                    { time: '17:00 - 19:00', event: 'Committee Session V' },
+                    { time: '09:00 - 11:00', event: 'Committee Session VI' },
+                    { time: '11:30 - 13:00', event: 'Closing Ceremony & Awards' }
+                ]
+            }
         };
 
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.style.opacity = '1';
-                    entry.target.style.transform = 'translateY(0)';
-                }
-            });
-        }, observerOptions);
+        const conference = conferences[conferenceId];
+        if (conference) {
+            showMessage(`${conference.name}\n\n${conference.description}\n\nCommittees: ${conference.committees.length}\nLocation: ${conference.location}\nDates: ${conference.dates}\n\nClick OK to continue browsing. In a full implementation, this would open a detailed page with complete information, documents, and application links.`);
+        }
+    }
 
-        document.querySelectorAll('section').forEach(section => {
-            section.style.opacity = '0';
-            section.style.transform = 'translateY(30px)';
-            section.style.transition = 'opacity 0.8s ease-out, transform 0.8s ease-out';
-            observer.observe(section);
+    const observerOptions = {
+        threshold: 0.1,
+        rootMargin: '0px 0px -50px 0px'
+    };
+
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.style.opacity = '1';
+                entry.target.style.transform = 'translateY(0)';
+            }
         });
+    }, observerOptions);
 
-        function openEmail(email) {
-            window.open(`https://mail.google.com/mail/?view=cm&fs=1&to=${email}`, '_blank');
-        }
+    document.querySelectorAll('section').forEach(section => {
+        section.style.opacity = '0';
+        section.style.transform = 'translateY(30px)';
+        section.style.transition = 'opacity 0.8s ease-out, transform 0.8s ease-out';
+        observer.observe(section);
+    });
 
-        function openWhatsApp(phone) {
-            const cleanPhone = phone.replace(/\s/g, '');
-            window.open(`https://wa.me/${cleanPhone}`, '_blank');
-        }
+    function openEmail(email) {
+        window.open(`https://mail.google.com/mail/?view=cm&fs=1&to=${email}`, '_blank');
+    }
 
-        function openFacebook(id) {
-            window.open(`https://facebook.com/profile.php?id=${id}`, '_blank');
-        }
+    function openWhatsApp(phone) {
+        const cleanPhone = phone.replace(/\s/g, '');
+        window.open(`https://wa.me/${cleanPhone}`, '_blank');
+    }
 
-        function openInstagram(username) {
-            window.open(`https://instagram.com/${username}`, '_blank');
-        }
+    function openFacebook(id) {
+        window.open(`https://facebook.com/profile.php?id=${id}`, '_blank');
+    }
 
-        document.querySelector('.mobile-menu').addEventListener('click', function() {
-            const navLinks = document.querySelector('.nav-links');
-            if (navLinks.classList.contains('mobile-active')) {
-                navLinks.classList.remove('mobile-active');
-            } else {
-                navLinks.classList.add('mobile-active');
-                
-                // Add click handler to close menu when links are clicked
-                navLinks.querySelectorAll('a').forEach(link => {
-                    link.addEventListener('click', function() {
-                        navLinks.classList.remove('mobile-active');
-                    });
+    function openInstagram(username) {
+        window.open(`https://instagram.com/${username}`, '_blank');
+    }
+
+    document.querySelector('.mobile-menu').addEventListener('click', function() {
+        const navLinks = document.querySelector('.nav-links');
+        if (navLinks.classList.contains('mobile-active')) {
+            navLinks.classList.remove('mobile-active');
+        } else {
+            navLinks.classList.add('mobile-active');
+
+            // Add click handler to close menu when links are clicked
+            navLinks.querySelectorAll('a').forEach(link => {
+                link.addEventListener('click', function() {
+                    navLinks.classList.remove('mobile-active');
                 });
-            }
-        });
+            });
+        }
+    });
 
-        function isPastConference(dateString) {
-            const months = {
-                'JAN': 0, 'FEB': 1, 'MAR': 2, 'APR': 3, 'MAY': 4, 'JUN': 5,
-                'JUL': 6, 'AUG': 7, 'SEP': 8, 'OCT': 9, 'NOV': 10, 'DEC': 11,
-                'JANUARY': 0, 'FEBRUARY': 1, 'MARCH': 2, 'APRIL': 3, 'JUNE': 5,
-                'JULY': 6, 'AUGUST': 7, 'SEPTEMBER': 8, 'OCTOBER': 9, 'NOVEMBER': 10, 'DECEMBER': 11
-            };
-            
-            let month, year;
-            
-            const parts = dateString.toUpperCase().split(' ');
-            if (parts.length >= 2) {
-                month = months[parts[0].replace(',', '')];
-                for (const part of parts) {
-                    if (/^\d{4}$/.test(part)) {
-                        year = parseInt(part);
-                        break;
-                    }
+    function isPastConference(dateString) {
+        const months = {
+            'JAN': 0, 'FEB': 1, 'MAR': 2, 'APR': 3, 'MAY': 4, 'JUN': 5,
+            'JUL': 6, 'AUG': 7, 'SEP': 8, 'OCT': 9, 'NOV': 10, 'DEC': 11,
+            'JANUARY': 0, 'FEBRUARY': 1, 'MARCH': 2, 'APRIL': 3, 'JUNE': 5,
+            'JULY': 6, 'AUGUST': 7, 'SEPTEMBER': 8, 'OCTOBER': 9, 'NOVEMBER': 10, 'DECEMBER': 11
+        };
+
+        let month, year;
+
+        const parts = dateString.toUpperCase().split(' ');
+        if (parts.length >= 2) {
+            month = months[parts[0].replace(',', '')];
+            for (const part of parts) {
+                if (/^\d{4}$/.test(part)) {
+                    year = parseInt(part);
+                    break;
                 }
             }
-            
-            if (month === undefined || year === undefined) {
-                return false;
-            }
-            
-            const conferenceDate = new Date(year, month, 1);
-            const threeMonthsAgo = new Date();
-            threeMonthsAgo.setMonth(threeMonthsAgo.getMonth() - 3);
-            
-            return conferenceDate < threeMonthsAgo;
         }
-        
-        function updateConferenceCategories() {
-            const conferenceCards = document.querySelectorAll('.conference-card');
-            
-            conferenceCards.forEach(card => {
-                const dateElement = card.querySelector('.conference-date');
-                if (dateElement) {
-                    const dateText = dateElement.textContent;
-                    if (isPastConference(dateText)) {
-                        const currentCategories = card.getAttribute('data-category');
-                        if (!currentCategories.includes('past')) {
-                            card.setAttribute('data-category', currentCategories + ' past');
-                            
-                            const statusElement = card.querySelector('.conference-status');
-                            if (statusElement && !statusElement.textContent.includes('Past')) {
-                                statusElement.textContent = 'Past Event';
-                            }
+
+        if (month === undefined || year === undefined) {
+            return false;
+        }
+
+        const conferenceDate = new Date(year, month, 1);
+        const threeMonthsAgo = new Date();
+        threeMonthsAgo.setMonth(threeMonthsAgo.getMonth() - 3);
+
+        return conferenceDate < threeMonthsAgo;
+    }
+
+    function updateConferenceCategories() {
+        const conferenceCards = document.querySelectorAll('.conference-card');
+
+        conferenceCards.forEach(card => {
+            const dateElement = card.querySelector('.conference-date');
+            if (dateElement) {
+                const dateText = dateElement.textContent;
+                if (isPastConference(dateText)) {
+                    const currentCategories = card.getAttribute('data-category');
+                    if (!currentCategories.includes('past')) {
+                        card.setAttribute('data-category', currentCategories + ' past');
+
+                        const statusElement = card.querySelector('.conference-status');
+                        if (statusElement && !statusElement.textContent.includes('Past')) {
+                            statusElement.textContent = 'Past Event';
                         }
                     }
                 }
+            }
+        });
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        document.querySelector('.filter-btn[data-filter="all"]').classList.add('active');
+
+        updateConferenceCategories();
+
+        document.body.style.opacity = '0';
+        document.body.style.transition = 'opacity 0.5s ease-out';
+
+        setTimeout(() => {
+            document.body.style.opacity = '1';
+        }, 100);
+
+        // Initialize Calendar
+        initializeCalendar();
+    });
+
+    // ==================== CALENDAR FUNCTIONALITY ====================
+
+    class MUNCalendar {
+        constructor() {
+            this.currentDate = new Date();
+            this.approvedDates = this.loadApprovedDates();
+            this.pendingDates = this.loadPendingDates();
+            this.init();
+        }
+
+        init() {
+            this.setupEventListeners();
+            this.renderCalendar();
+            this.renderMunList();
+        }
+
+        setupEventListeners() {
+            document.getElementById('prevMonth').addEventListener('click', () => {
+                this.currentDate.setMonth(this.currentDate.getMonth() - 1);
+                this.renderCalendar();
+            });
+
+            document.getElementById('nextMonth').addEventListener('click', () => {
+                this.currentDate.setMonth(this.currentDate.getMonth() + 1);
+                this.renderCalendar();
             });
         }
-        
-        document.addEventListener('DOMContentLoaded', function() {
-            document.querySelector('.filter-btn[data-filter="all"]').classList.add('active');
-            
-            updateConferenceCategories();
-            
-            document.body.style.opacity = '0';
-            document.body.style.transition = 'opacity 0.5s ease-out';
-            
-            setTimeout(() => {
-                document.body.style.opacity = '1';
-            }, 100);
 
-            // Initialize Calendar
-            initializeCalendar();
-        });
+        addPendingMunDate(name, date, location) {
+            const munDate = {
+                id: Date.now(),
+                name,
+                date,
+                location,
+                submittedAt: new Date().toISOString()
+            };
 
-        // ==================== CALENDAR FUNCTIONALITY ====================
+            this.pendingDates.push(munDate);
+            this.savePendingDates();
+            return munDate.id;
+        }
 
-        class MUNCalendar {
-            constructor() {
-                this.currentDate = new Date();
-                this.approvedDates = this.loadApprovedDates();
-                this.pendingDates = this.loadPendingDates();
-                this.init();
-            }
+        approveMunDate(id) {
+            const pending = this.pendingDates.find(d => d.id === id);
+            if (pending) {
+                const approved = {
+                    ...pending,
+                    approvedAt: new Date().toISOString()
+                };
+                delete approved.submittedAt;
 
-            init() {
-                this.setupEventListeners();
+                this.approvedDates.push(approved);
+                this.pendingDates = this.pendingDates.filter(d => d.id !== id);
+
+                this.saveApprovedDates();
+                this.savePendingDates();
                 this.renderCalendar();
                 this.renderMunList();
+
+                return true;
+            }
+            return false;
+        }
+
+        rejectMunDate(id) {
+            this.pendingDates = this.pendingDates.filter(d => d.id !== id);
+            this.savePendingDates();
+        }
+
+        loadApprovedDates() {
+            const saved = localStorage.getItem('munCalendarApproved');
+            return saved ? JSON.parse(saved) : [];
+        }
+
+        loadPendingDates() {
+            const saved = localStorage.getItem('munCalendarPending');
+            return saved ? JSON.parse(saved) : [];
+        }
+
+        saveApprovedDates() {
+            localStorage.setItem('munCalendarApproved', JSON.stringify(this.approvedDates));
+        }
+
+        savePendingDates() {
+            localStorage.setItem('munCalendarPending', JSON.stringify(this.pendingDates));
+        }
+
+        renderCalendar() {
+            const year = this.currentDate.getFullYear();
+            const month = this.currentDate.getMonth();
+
+            const monthNames = ['January', 'February', 'March', 'April', 'May', 'June',
+                'July', 'August', 'September', 'October', 'November', 'December'];
+            document.getElementById('currentMonth').textContent =
+                `${monthNames[month]} ${year}`;
+
+            const firstDay = new Date(year, month, 1).getDay();
+            const daysInMonth = new Date(year, month + 1, 0).getDate();
+            const daysInPrevMonth = new Date(year, month, 0).getDate();
+
+            const calendarGrid = document.getElementById('calendarGrid');
+            calendarGrid.innerHTML = '';
+
+            const dayHeaders = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+            dayHeaders.forEach(day => {
+                const dayHeader = document.createElement('div');
+                dayHeader.className = 'day-header';
+                dayHeader.textContent = day;
+                calendarGrid.appendChild(dayHeader);
+            });
+
+            for (let i = firstDay - 1; i >= 0; i--) {
+                const dayDiv = document.createElement('div');
+                dayDiv.className = 'other-month';
+                dayDiv.textContent = daysInPrevMonth - i;
+                calendarGrid.appendChild(dayDiv);
             }
 
-            setupEventListeners() {
-                document.getElementById('prevMonth').addEventListener('click', () => {
-                    this.currentDate.setMonth(this.currentDate.getMonth() - 1);
-                    this.renderCalendar();
-                });
+            const today = new Date();
+            for (let day = 1; day <= daysInMonth; day++) {
+                const dayDiv = document.createElement('div');
+                const currentDate = new Date(year, month, day);
 
-                document.getElementById('nextMonth').addEventListener('click', () => {
-                    this.currentDate.setMonth(this.currentDate.getMonth() + 1);
-                    this.renderCalendar();
-                });
-            }
-
-            addPendingMunDate(name, date, location) {
-                const munDate = {
-                    id: Date.now(),
-                    name,
-                    date,
-                    location,
-                    submittedAt: new Date().toISOString()
-                };
-
-                this.pendingDates.push(munDate);
-                this.savePendingDates();
-                return munDate.id;
-            }
-
-            approveMunDate(id) {
-                const pending = this.pendingDates.find(d => d.id === id);
-                if (pending) {
-                    const approved = {
-                        ...pending,
-                        approvedAt: new Date().toISOString()
-                    };
-                    delete approved.submittedAt;
-                    
-                    this.approvedDates.push(approved);
-                    this.pendingDates = this.pendingDates.filter(d => d.id !== id);
-                    
-                    this.saveApprovedDates();
-                    this.savePendingDates();
-                    this.renderCalendar();
-                    this.renderMunList();
-                    
-                    return true;
-                }
-                return false;
-            }
-
-            rejectMunDate(id) {
-                this.pendingDates = this.pendingDates.filter(d => d.id !== id);
-                this.savePendingDates();
-            }
-
-            loadApprovedDates() {
-                const saved = localStorage.getItem('munCalendarApproved');
-                return saved ? JSON.parse(saved) : [];
-            }
-
-            loadPendingDates() {
-                const saved = localStorage.getItem('munCalendarPending');
-                return saved ? JSON.parse(saved) : [];
-            }
-
-            saveApprovedDates() {
-                localStorage.setItem('munCalendarApproved', JSON.stringify(this.approvedDates));
-            }
-
-            savePendingDates() {
-                localStorage.setItem('munCalendarPending', JSON.stringify(this.pendingDates));
-            }
-
-            renderCalendar() {
-                const year = this.currentDate.getFullYear();
-                const month = this.currentDate.getMonth();
-
-                const monthNames = ['January', 'February', 'March', 'April', 'May', 'June',
-                    'July', 'August', 'September', 'October', 'November', 'December'];
-                document.getElementById('currentMonth').textContent = 
-                    `${monthNames[month]} ${year}`;
-
-                const firstDay = new Date(year, month, 1).getDay();
-                const daysInMonth = new Date(year, month + 1, 0).getDate();
-                const daysInPrevMonth = new Date(year, month, 0).getDate();
-
-                const calendarGrid = document.getElementById('calendarGrid');
-                calendarGrid.innerHTML = '';
-
-                const dayHeaders = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
-                dayHeaders.forEach(day => {
-                    const dayHeader = document.createElement('div');
-                    dayHeader.className = 'day-header';
-                    dayHeader.textContent = day;
-                    calendarGrid.appendChild(dayHeader);
-                });
-
-                for (let i = firstDay - 1; i >= 0; i--) {
-                    const dayDiv = document.createElement('div');
-                    dayDiv.className = 'other-month';
-                    dayDiv.textContent = daysInPrevMonth - i;
-                    calendarGrid.appendChild(dayDiv);
-                }
-
-                const today = new Date();
-                for (let day = 1; day <= daysInMonth; day++) {
-                    const dayDiv = document.createElement('div');
-                    const currentDate = new Date(year, month, day);
-
-                    // Check if this day has an APPROVED MUN event
-                    const hasMun = this.approvedDates.some(d => {
-                        const munDate = new Date(d.date);
-                        return munDate.toDateString() === currentDate.toDateString();
-                    });
-
-                    // If there's a conference on this date, prioritize conference styling
-                    if (hasMun) {
-                        dayDiv.classList.add('mun-date');
-                    } else if (currentDate.toDateString() === today.toDateString()) {
-                        dayDiv.classList.add('today');
-                    }
-
-                    dayDiv.textContent = day;
-                    dayDiv.style.cursor = hasMun ? 'pointer' : 'default';
-                    
-                    if (hasMun) {
-                        dayDiv.addEventListener('click', () => {
-                            this.showMunOnDate(currentDate);
-                        });
-                    }
-
-                    calendarGrid.appendChild(dayDiv);
-                }
-
-                // Next month days
-                const totalCells = calendarGrid.children.length - 7;
-                // Use 35 cells (5 rows x 7 columns) instead of 42 (6 rows)
-                const remainingCells = 35 - totalCells;
-                for (let i = 1; i <= remainingCells; i++) {
-                    const dayDiv = document.createElement('div');
-                    dayDiv.className = 'other-month';
-                    dayDiv.textContent = i;
-                    calendarGrid.appendChild(dayDiv);
-                }
-            }
-
-            showMunOnDate(date) {
-                const munsOnDate = this.approvedDates.filter(d => {
+                // Check if this day has an APPROVED MUN event
+                const hasMun = this.approvedDates.some(d => {
                     const munDate = new Date(d.date);
-                    return munDate.toDateString() === date.toDateString();
+                    return munDate.toDateString() === currentDate.toDateString();
                 });
 
-                if (munsOnDate.length > 0) {
-                    const munInfo = munsOnDate.map(m => 
-                        `${m.name} at ${m.location}`
-                    ).join('\n');
-                    showMessage(`MUNs on ${date.toDateString()}:\n\n${munInfo}`);
+                // If there's a conference on this date, prioritize conference styling
+                if (hasMun) {
+                    dayDiv.classList.add('mun-date');
+                } else if (currentDate.toDateString() === today.toDateString()) {
+                    dayDiv.classList.add('today');
                 }
+
+                dayDiv.textContent = day;
+                dayDiv.style.cursor = hasMun ? 'pointer' : 'default';
+
+                if (hasMun) {
+                    dayDiv.addEventListener('click', () => {
+                        this.showMunOnDate(currentDate);
+                    });
+                }
+
+                calendarGrid.appendChild(dayDiv);
             }
 
-            renderMunList() {
-                const munDatesList = document.getElementById('munDatesList');
-                
-                if (this.approvedDates.length === 0) {
-                    munDatesList.innerHTML = '<p class="empty-message">No approved MUN dates yet.</p>';
-                    return;
-                }
+            // Next month days
+            const totalCells = calendarGrid.children.length - 7;
+            // Use 35 cells (5 rows x 7 columns) instead of 42 (6 rows)
+            const remainingCells = 35 - totalCells;
+            for (let i = 1; i <= remainingCells; i++) {
+                const dayDiv = document.createElement('div');
+                dayDiv.className = 'other-month';
+                dayDiv.textContent = i;
+                calendarGrid.appendChild(dayDiv);
+            }
+        }
 
-                // Sort dates
-                const sortedDates = [...this.approvedDates].sort((a, b) => 
-                    new Date(a.date) - new Date(b.date)
-                );
+        showMunOnDate(date) {
+            const munsOnDate = this.approvedDates.filter(d => {
+                const munDate = new Date(d.date);
+                return munDate.toDateString() === date.toDateString();
+            });
 
-                const today = new Date();
-                today.setHours(0, 0, 0, 0);
+            if (munsOnDate.length > 0) {
+                const munInfo = munsOnDate.map(m =>
+                    `${m.name} at ${m.location}`
+                ).join('\n');
+                showMessage(`MUNs on ${date.toDateString()}:\n\n${munInfo}`);
+            }
+        }
 
-                munDatesList.innerHTML = sortedDates.map(mun => {
-                    const munDate = new Date(mun.date);
-                    const isPast = munDate < today;
-                    const dateStr = munDate.toLocaleDateString('en-US', { 
-                        weekday: 'short', 
-                        year: 'numeric', 
-                        month: 'short', 
-                        day: 'numeric' 
-                    });
+        renderMunList() {
+            const munDatesList = document.getElementById('munDatesList');
 
-                    return `
+            if (this.approvedDates.length === 0) {
+                munDatesList.innerHTML = '<p class="empty-message">No approved MUN dates yet.</p>';
+                return;
+            }
+
+            // Sort dates
+            const sortedDates = [...this.approvedDates].sort((a, b) =>
+                new Date(a.date) - new Date(b.date)
+            );
+
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
+
+            munDatesList.innerHTML = sortedDates.map(mun => {
+                const munDate = new Date(mun.date);
+                const isPast = munDate < today;
+                const dateStr = munDate.toLocaleDateString('en-US', {
+                    weekday: 'short',
+                    year: 'numeric',
+                    month: 'short',
+                    day: 'numeric'
+                });
+
+                return `
                         <div class="mun-item ${isPast ? 'past' : ''}">
                             <div class="mun-info">
                                 <div class="mun-name">${mun.name}</div>
@@ -2681,45 +3096,45 @@
                             </div>
                         </div>
                     `;
-                }).join('');
-            }
-
-            getPendingForApproval() {
-                return this.pendingDates;
-            }
-
-            showApprovalPanel() {
-                const pending = this.pendingDates;
-                if (pending.length === 0) {
-                    showMessage('No pending MUN submissions to approve.');
-                    return;
-                }
-
-                let message = `Pending MUN Submissions (${pending.length}):\n\n`;
-                pending.forEach((mun, index) => {
-                    message += `${index + 1}. ${mun.name}\n   Date: ${mun.date}\n   Location: ${mun.location}\n\n`;
-                });
-                message += '\nUse in console:\ncalendar.approveMunDate(id)  - to approve\ncalendar.rejectMunDate(id)  - to reject';
-                showMessage(message);
-            }
+            }).join('');
         }
 
-        let calendar;
-
-        function initializeCalendar() {
-            calendar = new MUNCalendar();
+        getPendingForApproval() {
+            return this.pendingDates;
         }
 
-        function approvePendingMun(index) {
-            if (calendar && calendar.pendingDates[index]) {
-                const munId = calendar.pendingDates[index].id;
-                if (calendar.approveMunDate(munId)) {
-                    showMessage(`✓ Approved: ${calendar.approvedDates[calendar.approvedDates.length - 1].name}`);
-                }
+        showApprovalPanel() {
+            const pending = this.pendingDates;
+            if (pending.length === 0) {
+                showMessage('No pending MUN submissions to approve.');
+                return;
+            }
+
+            let message = `Pending MUN Submissions (${pending.length}):\n\n`;
+            pending.forEach((mun, index) => {
+                message += `${index + 1}. ${mun.name}\n   Date: ${mun.date}\n   Location: ${mun.location}\n\n`;
+            });
+            message += '\nUse in console:\ncalendar.approveMunDate(id)  - to approve\ncalendar.rejectMunDate(id)  - to reject';
+            showMessage(message);
+        }
+    }
+
+    let calendar;
+
+    function initializeCalendar() {
+        calendar = new MUNCalendar();
+    }
+
+    function approvePendingMun(index) {
+        if (calendar && calendar.pendingDates[index]) {
+            const munId = calendar.pendingDates[index].id;
+            if (calendar.approveMunDate(munId)) {
+                showMessage(`✓ Approved: ${calendar.approvedDates[calendar.approvedDates.length - 1].name}`);
             }
         }
+    }
     (function(){
-        function el(id){return document.getElementById(id);} 
+        function el(id){return document.getElementById(id);}
         function showAuth(type){
             const modal = el('authModal');
             modal.classList.remove('hidden'); modal.setAttribute('aria-hidden','false');
@@ -2877,25 +3292,25 @@
 
         function updateNavForUser(){
             const current = JSON.parse(localStorage.getItem('munlyCurrent') || 'null');
-                    const authContainer = document.getElementById('authContainer');
-                    const profileSection = document.getElementById('profileSection');
+            const authContainer = document.getElementById('authContainer');
+            const profileSection = document.getElementById('profileSection');
 
-                    if(!authContainer) return;
+            if(!authContainer) return;
 
-                    if(current){
-                        authContainer.style.display = 'none';
-                        profileSection.classList.remove('hidden');
+            if(current){
+                authContainer.style.display = 'none';
+                profileSection.classList.remove('hidden');
 
-                        const firstName = current.name.split(' ')[0];
-                        const initials = firstName.charAt(0).toUpperCase();
-                        el('profileAvatar').textContent = initials;
-                        el('profileName').textContent = `Hi, ${firstName}`;
-                    } else {
-                        authContainer.style.display = 'block';
-                        profileSection.classList.add('hidden');
-                        authContainer.innerHTML = `<a href="#" id="authBtn" class="cta-button">Sign In</a>`;
-                    }
-                }
+                const firstName = current.name.split(' ')[0];
+                const initials = firstName.charAt(0).toUpperCase();
+                el('profileAvatar').textContent = initials;
+                el('profileName').textContent = `Hi, ${firstName}`;
+            } else {
+                authContainer.style.display = 'block';
+                profileSection.classList.add('hidden');
+                authContainer.innerHTML = `<a href="#" id="authBtn" class="cta-button">Sign In</a>`;
+            }
+        }
 
         function restoreNavBar(){
             const navLinks = document.querySelector('.nav-links');
@@ -2912,7 +3327,7 @@
         function showProfilePage(){
             const current = JSON.parse(localStorage.getItem('munlyCurrent') || 'null');
             if(!current) return;
-            
+
             document.querySelectorAll('section:not(#profilePage)').forEach(s => s.style.display = 'none');
             document.querySelector('footer').style.display = 'none';
             document.querySelector('.nav-links').style.display = 'none';
@@ -2920,7 +3335,7 @@
 
             const profilePage = el('profilePage');
             profilePage.classList.add('active');
-            
+
             const firstName = current.name.split(' ')[0];
             const initials = firstName.charAt(0).toUpperCase();
             el('profilePageAvatar').textContent = initials;
@@ -2928,15 +3343,16 @@
             el('profilePageEmail').textContent = current.email;
             el('profileInfoName').textContent = current.name;
             el('profileInfoEmail').textContent = current.email;
-            
+
             const joinDate = new Date(current.id);
-            const formattedDate = joinDate.toLocaleDateString('en-US', { 
-                year: 'numeric', 
-                month: 'long', 
-                day: 'numeric' 
+            const formattedDate = joinDate.toLocaleDateString('en-US', {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
             });
             el('profileInfoMemberSince').textContent = formattedDate;
-            
+
+            loadMyConferences();
             window.scrollTo(0, 0);
         }
 
@@ -2953,6 +3369,537 @@
             window.scrollTo(0, 0);
         }
 
+        // ==================== CONFERENCE WIZARD ====================
+
+        let wizardMode = 'create'; // 'create' | 'edit'
+        let wizardEditingId = null;
+        let wizardOriginalData = null;
+        let wizardCurrentStep = 1;
+        const WIZARD_TOTAL_STEPS = 4;
+
+        function escapeHtml(str){
+            return String(str == null ? '' : str)
+                .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+                .replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+        }
+
+        function toMillis(v){
+            if(!v) return null;
+            if(v.toDate) return v.toDate().getTime();
+            if(v instanceof Date) return v.getTime();
+            return new Date(v).getTime();
+        }
+
+        function toDateInputValue(v){
+            if(!v) return '';
+            const d = v.toDate ? v.toDate() : new Date(v);
+            const yyyy = d.getFullYear();
+            const mm = String(d.getMonth()+1).padStart(2,'0');
+            const dd = String(d.getDate()).padStart(2,'0');
+            return `${yyyy}-${mm}-${dd}`;
+        }
+
+        function getCommitteeNames(){
+            return Array.from(document.querySelectorAll('#wzCommitteesList .wz-committee-name'))
+                .map(inp => inp.value.trim())
+                .filter(Boolean);
+        }
+
+        function updateCommitteeCount(){
+            const count = document.querySelectorAll('#wzCommitteesList .wz-repeat-row').length;
+            const label = el('wzCommitteeCount');
+            if(label) label.textContent = `${count} committee${count === 1 ? '' : 's'} added`;
+        }
+
+        function addCommitteeRow(data){
+            data = data || {};
+            const row = document.createElement('div');
+            row.className = 'wz-repeat-row';
+            row.innerHTML = `
+                <input type="text" class="wz-committee-name" placeholder="Committee name" value="${escapeHtml(data.name || '')}">
+                <input type="text" class="wz-committee-agenda" placeholder="Agenda topic" value="${escapeHtml(data.agenda || '')}">
+                <select class="wz-committee-level">
+                    <option value="beginner" ${data.level === 'beginner' ? 'selected' : ''}>Beginner</option>
+                    <option value="intermediate" ${data.level === 'intermediate' ? 'selected' : ''}>Intermediate</option>
+                    <option value="expert" ${data.level === 'expert' ? 'selected' : ''}>Expert</option>
+                </select>
+                <button type="button" class="wz-remove-row">&times;</button>
+            `;
+            row.querySelector('.wz-remove-row').addEventListener('click', () => { row.remove(); updateCommitteeCount(); });
+            el('wzCommitteesList').appendChild(row);
+            updateCommitteeCount();
+        }
+
+        function addTeamRow(data){
+            data = data || {};
+            const row = document.createElement('div');
+            row.className = 'wz-repeat-row wz-person-row';
+            row.innerHTML = `
+                <input type="text" class="wz-person-name" placeholder="Name" value="${escapeHtml(data.name || '')}">
+                <input type="text" class="wz-person-role" placeholder="Role" value="${escapeHtml(data.role || '')}">
+                <input type="text" class="wz-person-experience" placeholder="Experience" value="${escapeHtml(data.experience || '')}">
+                <input type="number" class="wz-person-age" placeholder="Age" value="${escapeHtml(data.age || '')}">
+                <input type="text" class="wz-person-school" placeholder="School" value="${escapeHtml(data.school || '')}">
+                <button type="button" class="wz-remove-row">&times;</button>
+            `;
+            row.querySelector('.wz-remove-row').addEventListener('click', () => row.remove());
+            el('wzTeamList').appendChild(row);
+        }
+
+        function addChairRow(data){
+            data = data || {};
+            const row = document.createElement('div');
+            row.className = 'wz-repeat-row wz-person-row';
+            const committeeNames = getCommitteeNames();
+            const optionsHtml = committeeNames.length
+                ? committeeNames.map(n => `<option value="${escapeHtml(n)}" ${data.assignment === n ? 'selected' : ''}>${escapeHtml(n)}</option>`).join('')
+                : '<option value="">Add committees first</option>';
+            row.innerHTML = `
+                <input type="text" class="wz-person-name" placeholder="Name" value="${escapeHtml(data.name || '')}">
+                <input type="text" class="wz-person-role" placeholder="Role (e.g. Chair)" value="${escapeHtml(data.role || 'Chair')}">
+                <input type="text" class="wz-person-experience" placeholder="Experience" value="${escapeHtml(data.experience || '')}">
+                <input type="number" class="wz-person-age" placeholder="Age" value="${escapeHtml(data.age || '')}">
+                <input type="text" class="wz-person-school" placeholder="School" value="${escapeHtml(data.school || '')}">
+                <select class="wz-person-assignment">${optionsHtml}</select>
+                <button type="button" class="wz-remove-row">&times;</button>
+            `;
+            row.querySelector('.wz-remove-row').addEventListener('click', () => row.remove());
+            el('wzChairsList').appendChild(row);
+        }
+
+        function addScheduleRow(data){
+            data = data || {};
+            const row = document.createElement('div');
+            row.className = 'wz-repeat-row';
+            row.innerHTML = `
+                <input type="text" class="wz-schedule-day" placeholder="Day (e.g. Day 1)" value="${escapeHtml(data.day || '')}">
+                <input type="text" class="wz-schedule-time" placeholder="Time (e.g. 10:00 - 12:00)" value="${escapeHtml(data.time || '')}">
+                <input type="text" class="wz-schedule-session" placeholder="Session" value="${escapeHtml(data.session || '')}">
+                <button type="button" class="wz-remove-row">&times;</button>
+            `;
+            row.querySelector('.wz-remove-row').addEventListener('click', () => row.remove());
+            el('wzScheduleList').appendChild(row);
+        }
+
+        function addSocialRow(data){
+            data = data || {};
+            const row = document.createElement('div');
+            row.className = 'wz-repeat-row';
+            row.innerHTML = `
+                <input type="text" class="wz-social-platform" placeholder="Platform (e.g. Instagram)" value="${escapeHtml(data.platform || '')}">
+                <input type="url" class="wz-social-url" placeholder="https://..." value="${escapeHtml(data.url || '')}">
+                <button type="button" class="wz-remove-row">&times;</button>
+            `;
+            row.querySelector('.wz-remove-row').addEventListener('click', () => row.remove());
+            el('wzSocialList').appendChild(row);
+        }
+
+        function collectCommittees(){
+            return Array.from(document.querySelectorAll('#wzCommitteesList .wz-repeat-row')).map(row => ({
+                name: row.querySelector('.wz-committee-name').value.trim(),
+                agenda: row.querySelector('.wz-committee-agenda').value.trim(),
+                level: row.querySelector('.wz-committee-level').value
+            })).filter(c => c.name);
+        }
+
+        function collectTeam(){
+            return Array.from(document.querySelectorAll('#wzTeamList .wz-person-row')).map(row => ({
+                name: row.querySelector('.wz-person-name').value.trim(),
+                role: row.querySelector('.wz-person-role').value.trim(),
+                experience: row.querySelector('.wz-person-experience').value.trim(),
+                age: row.querySelector('.wz-person-age').value.trim(),
+                school: row.querySelector('.wz-person-school').value.trim()
+            })).filter(p => p.name);
+        }
+
+        function collectChairs(){
+            return Array.from(document.querySelectorAll('#wzChairsList .wz-person-row')).map(row => ({
+                name: row.querySelector('.wz-person-name').value.trim(),
+                role: row.querySelector('.wz-person-role').value.trim(),
+                experience: row.querySelector('.wz-person-experience').value.trim(),
+                age: row.querySelector('.wz-person-age').value.trim(),
+                school: row.querySelector('.wz-person-school').value.trim(),
+                assignment: row.querySelector('.wz-person-assignment').value.trim()
+            })).filter(p => p.name);
+        }
+
+        function collectSchedule(){
+            return Array.from(document.querySelectorAll('#wzScheduleList .wz-repeat-row')).map(row => ({
+                day: row.querySelector('.wz-schedule-day').value.trim(),
+                time: row.querySelector('.wz-schedule-time').value.trim(),
+                session: row.querySelector('.wz-schedule-session').value.trim()
+            })).filter(s => s.day || s.time || s.session);
+        }
+
+        function collectSocialLinks(){
+            return Array.from(document.querySelectorAll('#wzSocialList .wz-repeat-row')).map(row => ({
+                platform: row.querySelector('.wz-social-platform').value.trim(),
+                url: row.querySelector('.wz-social-url').value.trim()
+            })).filter(s => s.platform && s.url);
+        }
+
+        function goToWizardStep(step){
+            wizardCurrentStep = step;
+            document.querySelectorAll('.wizard-panel').forEach(p => {
+                p.classList.toggle('hidden', Number(p.dataset.panel) !== step);
+            });
+            document.querySelectorAll('.wizard-step-indicator').forEach(ind => {
+                const s = Number(ind.dataset.step);
+                ind.classList.toggle('active', s === step);
+                ind.classList.toggle('completed', s < step);
+            });
+            el('wizardBackBtn').classList.toggle('hidden', step === 1);
+            el('wizardNextBtn').classList.toggle('hidden', step === WIZARD_TOTAL_STEPS);
+            el('wizardSubmitBtn').classList.toggle('hidden', step !== WIZARD_TOTAL_STEPS);
+            el('conferenceWizardModal').querySelector('.wizard-card').scrollTop = 0;
+        }
+
+        function validateWizardStep(step){
+            if(step === 1){
+                const name = el('wzName').value.trim();
+                const venue = el('wzVenue').value.trim();
+                const start = el('wzStartDate').value;
+                const end = el('wzEndDate').value;
+                if(!name || !venue || !start || !end){
+                    showMessage('Please fill in conference name, venue, and both dates.', 'error');
+                    return false;
+                }
+                if(new Date(end) < new Date(start)){
+                    showMessage('End date cannot be before start date.', 'error');
+                    return false;
+                }
+            }
+            if(step === 2){
+                if(collectCommittees().length === 0){
+                    showMessage('Please add at least one committee.', 'error');
+                    return false;
+                }
+            }
+            if(step === 3){
+                if(collectTeam().length === 0){
+                    showMessage('Please add at least one organizing team member.', 'error');
+                    return false;
+                }
+                if(!el('wzContactEmail').value.trim()){
+                    showMessage('Please provide a head-of-conference contact email.', 'error');
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        function resetWizardForm(){
+            el('wzName').value = '';
+            el('wzInstitution').value = '';
+            el('wzVenue').value = '';
+            el('wzStartDate').value = '';
+            el('wzEndDate').value = '';
+            el('wzLanguages').value = '';
+            el('wzDressCode').value = '';
+            el('wzFee').value = '';
+            el('wzContactEmail').value = '';
+            el('wzContactPhone').value = '';
+            el('wzCommitteesList').innerHTML = '';
+            el('wzTeamList').innerHTML = '';
+            el('wzChairsList').innerHTML = '';
+            el('wzScheduleList').innerHTML = '';
+            el('wzSocialList').innerHTML = '';
+            updateCommitteeCount();
+            wizardMode = 'create';
+            wizardEditingId = null;
+            wizardOriginalData = null;
+        }
+
+        function hideWizard(){
+            const modal = el('conferenceWizardModal');
+            modal.classList.add('hidden');
+            modal.setAttribute('aria-hidden', 'true');
+        }
+
+        function openWizard(mode, conferenceId){
+            resetWizardForm();
+            wizardMode = mode;
+            wizardEditingId = conferenceId || null;
+
+            const modal = el('conferenceWizardModal');
+            modal.classList.remove('hidden');
+            modal.setAttribute('aria-hidden', 'false');
+
+            el('wizardTitle').textContent = mode === 'edit' ? 'Edit Your Conference' : 'Submit Your Conference';
+            goToWizardStep(1);
+
+            if(mode === 'edit' && conferenceId){
+                loadConferenceIntoWizard(conferenceId);
+            }
+        }
+
+        async function loadConferenceIntoWizard(id){
+            try {
+                const snap = await window.getDoc(window.doc(window.firebaseDb, 'conferences', id));
+                if(!snap.exists()){ showMessage('Conference not found', 'error'); hideWizard(); return; }
+                const data = snap.data();
+                wizardOriginalData = data;
+
+                el('wzName').value = data.name || '';
+                el('wzInstitution').value = data.institution || '';
+                el('wzVenue').value = data.venue || '';
+                el('wzStartDate').value = toDateInputValue(data.startDate);
+                el('wzEndDate').value = toDateInputValue(data.endDate);
+                el('wzLanguages').value = data.languages || '';
+                el('wzDressCode').value = data.dressCode || '';
+                el('wzFee').value = data.fee || '';
+                el('wzContactEmail').value = data.contactEmail || '';
+                el('wzContactPhone').value = data.contactPhone || '';
+
+                el('wzCommitteesList').innerHTML = '';
+                (data.committees || []).forEach(c => addCommitteeRow(c));
+                updateCommitteeCount();
+
+                el('wzTeamList').innerHTML = '';
+                (data.organizingTeam || []).forEach(p => addTeamRow(p));
+
+                el('wzChairsList').innerHTML = '';
+                (data.chairs || []).forEach(c => addChairRow(c));
+
+                el('wzScheduleList').innerHTML = '';
+                (data.schedule || []).forEach(s => addScheduleRow(s));
+
+                el('wzSocialList').innerHTML = '';
+                (data.socialLinks || []).forEach(s => addSocialRow(s));
+            } catch (err) {
+                console.error('Load conference for edit error:', err);
+                showMessage('Failed to load conference for editing', 'error');
+                hideWizard();
+            }
+        }
+
+        function isSensitiveConferenceChange(original, updated){
+            const startChanged = toMillis(original.startDate) !== toMillis(updated.startDate);
+            const endChanged = toMillis(original.endDate) !== toMillis(updated.endDate);
+            const venueChanged = (original.venue || '') !== (updated.venue || '');
+            const teamGrew = (updated.organizingTeam?.length || 0) > (original.organizingTeam?.length || 0);
+            const chairsGrew = (updated.chairs?.length || 0) > (original.chairs?.length || 0);
+            return startChanged || endChanged || venueChanged || teamGrew || chairsGrew;
+        }
+
+        async function submitWizard(){
+            if(!validateWizardStep(1) || !validateWizardStep(2) || !validateWizardStep(3)) return;
+
+            const current = JSON.parse(localStorage.getItem('munlyCurrent') || 'null');
+            if(!current){ showMessage('Please sign in first.', 'error'); return; }
+
+            const committees = collectCommittees();
+            const organizingTeam = collectTeam();
+            const chairs = collectChairs();
+            const schedule = collectSchedule();
+            const socialLinks = collectSocialLinks();
+
+            const startDate = new Date(el('wzStartDate').value + 'T00:00:00');
+            const endDate = new Date(el('wzEndDate').value + 'T00:00:00');
+            const dayCount = Math.round((endDate - startDate) / 86400000) + 1;
+            const tags = [...new Set(committees.map(c => c.level).filter(Boolean))]
+                .map(l => l.charAt(0).toUpperCase() + l.slice(1));
+
+            const payload = {
+                name: el('wzName').value.trim(),
+                institution: el('wzInstitution').value.trim(),
+                venue: el('wzVenue').value.trim(),
+                startDate,
+                endDate,
+                languages: el('wzLanguages').value.trim(),
+                dressCode: el('wzDressCode').value.trim(),
+                fee: el('wzFee').value.trim(),
+                committees,
+                committeesCount: committees.length,
+                days: dayCount > 0 ? dayCount : 1,
+                organizingTeam,
+                chairs,
+                teamSize: organizingTeam.length + chairs.length,
+                contactEmail: el('wzContactEmail').value.trim(),
+                contactPhone: el('wzContactPhone').value.trim(),
+                schedule,
+                socialLinks,
+                tags,
+                updatedAt: window.serverTimestamp()
+            };
+
+            const submitBtn = el('wizardSubmitBtn');
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Submitting…';
+
+            try {
+                if(wizardMode === 'edit' && wizardEditingId){
+                    const sensitive = isSensitiveConferenceChange(wizardOriginalData || {}, payload);
+                    payload.approved = sensitive ? false : !!(wizardOriginalData && wizardOriginalData.approved);
+                    await window.updateDoc(window.doc(window.firebaseDb, 'conferences', wizardEditingId), payload);
+                    hideWizard();
+                    showMessage(
+                        sensitive
+                            ? "Changes saved. Since you changed the date, venue, or added a new team member, this conference needs re-approval before it's live again."
+                            : 'Changes saved!',
+                        'success'
+                    );
+                } else {
+                    payload.ownerId = current.id;
+                    payload.approved = false;
+                    payload.createdAt = window.serverTimestamp();
+                    await window.addDoc(window.collection(window.firebaseDb, 'conferences'), payload);
+                    hideWizard();
+                    showMessage("Conference submitted! It will appear on the site once approved — track its status on your profile.", 'success');
+                }
+                loadMyConferences();
+                if(window.loadConferencesFromFirestore) window.loadConferencesFromFirestore();
+            } catch (err) {
+                console.error('Conference submit error:', err);
+                showMessage('Something went wrong submitting your conference. Please try again.', 'error');
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Submit Conference';
+            }
+        }
+
+        async function loadMyConferences(){
+            const container = el('myConferencesList');
+            if(!container) return;
+            const current = JSON.parse(localStorage.getItem('munlyCurrent') || 'null');
+            if(!current){
+                container.innerHTML = '<p class="empty-message">Sign in to see conferences you\'ve submitted.</p>';
+                return;
+            }
+
+            container.innerHTML = '<p class="empty-message">Loading…</p>';
+            try {
+                const q = window.query(
+                    window.collection(window.firebaseDb, 'conferences'),
+                    window.where('ownerId', '==', current.id)
+                );
+                const snap = await window.getDocs(q);
+                window.__myConferencesCache = window.__myConferencesCache || {};
+
+                if(snap.empty){
+                    container.innerHTML = '<p class="empty-message">You haven\'t submitted a conference yet.</p>';
+                    return;
+                }
+
+                let html = '';
+                snap.forEach(docSnap => {
+                    const data = docSnap.data();
+                    window.__myConferencesCache[docSnap.id] = data;
+                    const statusBadge = data.approved
+                        ? '<span class="conf-status-badge approved">Live</span>'
+                        : '<span class="conf-status-badge pending">Pending Review</span>';
+                    html += `
+                        <div class="my-conference-item">
+                            <div class="my-conference-info">
+                                <div class="my-conference-name">${escapeHtml(data.name || 'Untitled Conference')}</div>
+                                <div class="my-conference-meta">${escapeHtml(data.venue || '')} ${statusBadge}</div>
+                            </div>
+                            <div class="my-conference-actions">
+                                <button type="button" class="my-conf-view-btn wz-small-btn" data-id="${docSnap.id}">View</button>
+                                <button type="button" class="my-conf-edit-btn wz-small-btn wz-small-btn-primary" data-id="${docSnap.id}">Edit</button>
+                            </div>
+                        </div>
+                    `;
+                });
+                container.innerHTML = html;
+            } catch (err) {
+                console.error('Load my conferences error:', err);
+                container.innerHTML = '<p class="empty-message">Couldn\'t load your conferences right now.</p>';
+            }
+        }
+
+        function showConferenceDetailFromCache(id, isOwn){
+            const cache = isOwn ? (window.__myConferencesCache || {}) : (window.__publicConferencesCache || {});
+            const data = cache[id];
+            if(!data){ showMessage('Could not load conference details.', 'error'); return; }
+            // Navigate to the generated detail page (stored in detailPageUrl)
+            if(data.detailPageUrl){
+                window.location.href = data.detailPageUrl;
+            } else {
+                showMessage('Conference detail page is being generated. Please try again in a moment.', 'info');
+            }
+        }
+
+        function renderConferenceDetailModal(data){
+            const modal = el('conferenceDetailModal');
+            const startD = data.startDate ? (data.startDate.toDate ? data.startDate.toDate() : new Date(data.startDate)) : null;
+            const endD = data.endDate ? (data.endDate.toDate ? data.endDate.toDate() : new Date(data.endDate)) : null;
+            const startStr = startD ? startD.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : 'TBA';
+            const endStr = endD ? endD.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }) : '';
+
+            const committeesHtml = (data.committees || []).map(c => `
+                <div class="detail-list-row"><strong>${escapeHtml(c.name)}</strong> — ${escapeHtml(c.agenda || '')} <span class="conf-status-badge approved" style="text-transform:capitalize;">${escapeHtml(c.level || '')}</span></div>
+            `).join('') || '<p class="empty-message">No committees listed yet.</p>';
+
+            const teamHtml = (data.organizingTeam || []).map(p => `
+                <div class="detail-list-row">${escapeHtml(p.name)} — ${escapeHtml(p.role || '')}${p.school ? ' · ' + escapeHtml(p.school) : ''}</div>
+            `).join('') || '<p class="empty-message">No team members listed yet.</p>';
+
+            const chairsHtml = (data.chairs || []).map(p => `
+                <div class="detail-list-row">${escapeHtml(p.name)} — ${escapeHtml(p.role || 'Chair')}${p.assignment ? ' (' + escapeHtml(p.assignment) + ')' : ''}</div>
+            `).join('') || '<p class="empty-message">No chairs listed yet.</p>';
+
+            const scheduleHtml = (data.schedule || []).map(s => `
+                <div class="schedule-item"><strong>${escapeHtml(s.day)}</strong> ${escapeHtml(s.time)} — ${escapeHtml(s.session)}</div>
+            `).join('') || '<p class="empty-message">No schedule posted yet.</p>';
+
+            const socialHtml = (data.socialLinks || []).map(s => `
+                <a href="${escapeHtml(s.url)}" target="_blank" class="btn-small btn-outline" style="margin-right:0.5rem;display:inline-block;">${escapeHtml(s.platform)}</a>
+            `).join('');
+
+            modal.innerHTML = `
+                <div class="auth-backdrop" style="position:fixed;inset:0;background:rgba(0,0,0,0.5);display:flex;align-items:center;justify-content:center;z-index:2100;padding:1.5rem;">
+                    <div class="wizard-card" style="max-width:700px;max-height:85vh;">
+                        <div class="wizard-header">
+                            <h3>${escapeHtml(data.name || 'Conference Details')}</h3>
+                            <button type="button" id="detailModalClose" class="wizard-close">&times;</button>
+                        </div>
+                        <div class="wizard-body" style="padding:1.5rem;overflow-y:auto;">
+                            <p style="color:var(--text-gray);margin-bottom:1rem;">${escapeHtml(data.venue || '')} · ${startStr}${endStr ? ' – ' + endStr : ''}</p>
+                            ${data.institution ? `<p style="margin-bottom:0.5rem;"><strong>Organizing Institution:</strong> ${escapeHtml(data.institution)}</p>` : ''}
+                            ${data.languages ? `<p style="margin-bottom:0.5rem;"><strong>Language(s):</strong> ${escapeHtml(data.languages)}</p>` : ''}
+                            ${data.dressCode ? `<p style="margin-bottom:0.5rem;"><strong>Dress Code:</strong> ${escapeHtml(data.dressCode)}</p>` : ''}
+                            ${data.fee ? `<p style="margin-bottom:1rem;"><strong>Fee:</strong> ${escapeHtml(data.fee)}</p>` : ''}
+
+                            <h4 style="margin:1rem 0 0.5rem;color:var(--primary-blue);">Committees</h4>
+                            ${committeesHtml}
+
+                            <h4 style="margin:1rem 0 0.5rem;color:var(--primary-blue);">Organizing Team</h4>
+                            ${teamHtml}
+
+                            <h4 style="margin:1rem 0 0.5rem;color:var(--primary-blue);">Chairs</h4>
+                            ${chairsHtml}
+
+                            <h4 style="margin:1rem 0 0.5rem;color:var(--primary-blue);">Schedule</h4>
+                            ${scheduleHtml}
+
+                            ${socialHtml ? `<h4 style="margin:1rem 0 0.5rem;color:var(--primary-blue);">Social Media</h4><div>${socialHtml}</div>` : ''}
+
+                            <p style="margin-top:1.5rem;color:var(--text-gray);font-size:0.9rem;">Contact: <a href="mailto:${escapeHtml(data.contactEmail || '')}">${escapeHtml(data.contactEmail || '')}</a>${data.contactPhone ? ' · ' + escapeHtml(data.contactPhone) : ''}</p>
+                        </div>
+                    </div>
+                </div>
+            `;
+            modal.classList.remove('hidden');
+        }
+
+        function hideConferenceDetailModal(){
+            const modal = el('conferenceDetailModal');
+            modal.classList.add('hidden');
+            modal.innerHTML = '';
+        }
+
+        el('wizardNextBtn').addEventListener('click', () => {
+            if(!validateWizardStep(wizardCurrentStep)) return;
+            goToWizardStep(Math.min(wizardCurrentStep + 1, WIZARD_TOTAL_STEPS));
+        });
+        el('wizardBackBtn').addEventListener('click', () => {
+            goToWizardStep(Math.max(wizardCurrentStep - 1, 1));
+        });
+        el('wizardSubmitBtn').addEventListener('click', submitWizard);
+
+        // ==================== END CONFERENCE WIZARD ====================
+
         document.addEventListener('click', function(e){
             const target = e.target;
             if(!target) return;
@@ -2962,11 +3909,11 @@
             if(target.id === 'signOutBtn'){
                 e.preventDefault(); clearSession(); updateNavForUser(); showMessage('Signed out');
             }
-            
+
             if(target.id === 'authClose'){ e.preventDefault(); hideAuth(); }
             if(target.id === 'authToggleLink'){ e.preventDefault(); const t = target.dataset.type || 'signin'; showAuth(t); }
-            if(target.id === 'profileAvatar' || target.id === 'profileName'){ 
-                e.preventDefault(); showProfilePage(); 
+            if(target.id === 'profileAvatar' || target.id === 'profileName'){
+                e.preventDefault(); showProfilePage();
             }
             if(target.id === 'profileBackBtn'){
                 e.preventDefault(); goBackToSite();
@@ -2974,59 +3921,34 @@
             if(target.id === 'profilePageSignOutBtn'){
                 e.preventDefault(); goBackToSite(); clearSession(); updateNavForUser(); showMessage('Signed out');
             }
-        });
 
-        function showVerificationPrompt(email){
-            const msg = `Account created! A verification link has been sent to ${email}.\n\nClick the link in the email to verify your account.\n\nDidn't receive it?`;
-            showMessage(msg);
-
-            setTimeout(() => {
-                const resend = confirm(`Resend verification email to ${email}?`);
-                if(resend) {
-                    resendVerificationEmail(email);
+            if(target.id === 'openConferenceWizardBtn'){
+                e.preventDefault();
+                const current = JSON.parse(localStorage.getItem('munlyCurrent') || 'null');
+                if(!current){
+                    showMessage('Please sign in to submit a conference.', 'error');
+                    showAuth('signin');
+                    return;
                 }
-            }, 1000);
-        }
-
-        async function resendVerificationEmail(email){
-            try {
-                const res = await fetch(getApiUrl('RESEND_VERIFICATION'), {
-                    method: 'POST',
-                    headers: getApiHeaders(),
-                    body: JSON.stringify({ email })
-                });
-                const data = await res.json();
-                if(!res.ok){ showMessage(data.error || 'Failed to resend'); return; }
-                showMessage('Verification email sent!');
-            } catch (err) {
-                console.error('Resend error:', err);
-                showMessage('Network error');
+                openWizard('create');
             }
-        }
-
-        async function handleVerificationLink(){
-            const params = new URLSearchParams(window.location.search);
-            const token = params.get('token');
-
-            if(!token) return;
-
-            try {
-                const res = await fetch(getApiUrl('VERIFY_EMAIL'), {
-                    method: 'POST',
-                    headers: getApiHeaders(),
-                    body: JSON.stringify({ token })
-                });
-                const data = await res.json();
-                if(!res.ok){ showMessage(data.error || 'Verification failed'); return; }
-
-                setSession(data.token, data.user);
-                showMessage('Email verified! You can now sign in.');
-                window.history.replaceState({}, document.title, window.location.pathname);
-            } catch (err) {
-                console.error('Verification error:', err);
-                showMessage('Network error during verification');
+            if(target.id === 'wizardClose'){ e.preventDefault(); hideWizard(); }
+            if(target.id === 'wzAddCommittee'){ e.preventDefault(); addCommitteeRow(); }
+            if(target.id === 'wzAddTeamMember'){ e.preventDefault(); addTeamRow(); }
+            if(target.id === 'wzAddChair'){ e.preventDefault(); addChairRow(); }
+            if(target.id === 'wzAddScheduleItem'){ e.preventDefault(); addScheduleRow(); }
+            if(target.id === 'wzAddSocialLink'){ e.preventDefault(); addSocialRow(); }
+            if(target.classList && target.classList.contains('my-conf-edit-btn')){
+                e.preventDefault(); openWizard('edit', target.dataset.id);
             }
-        }
+            if(target.classList && target.classList.contains('my-conf-view-btn')){
+                e.preventDefault(); showConferenceDetailFromCache(target.dataset.id, true);
+            }
+            if(target.classList && target.classList.contains('public-view-details-btn')){
+                e.preventDefault(); showConferenceDetailFromCache(target.dataset.id, false);
+            }
+            if(target.id === 'detailModalClose'){ e.preventDefault(); hideConferenceDetailModal(); }
+        });
 
         function showMessage(text, type = 'info'){
             const modal = el('messageModal');
@@ -3057,7 +3979,6 @@
         function initAuth(){
             updateNavForUser();
             verifySession();
-            handleVerificationLink();
         }
 
         if(document.readyState === 'loading'){
@@ -3067,44 +3988,154 @@
         }
     })();
 
-    </script>
-    <div id="messageModal" class="hidden" aria-hidden="true">
-        <div class="auth-backdrop" style="position:fixed;inset:0;background:rgba(0,0,0,0.5);display:flex;align-items:center;justify-content:center;z-index:2000;">
-            <div class="auth-card" style="background:white;padding:2rem;border-radius:0.75rem;max-width:500px;width:90%;box-shadow:var(--shadow-xl);text-align:center;">
-                <div id="messageContent" style="margin-bottom:1.5rem;">
-                    <p id="messageText"></p>
-                </div>
-                <button id="messageOkBtn" class="cta-button" style="width:100%;padding:0.75rem;">OK</button>
+</script>
+<div id="messageModal" class="hidden" aria-hidden="true">
+    <div class="auth-backdrop" style="position:fixed;inset:0;background:rgba(0,0,0,0.5);display:flex;align-items:center;justify-content:center;z-index:2000;">
+        <div class="auth-card" style="background:white;padding:2rem;border-radius:0.75rem;max-width:500px;width:90%;box-shadow:var(--shadow-xl);text-align:center;">
+            <div id="messageContent" style="margin-bottom:1.5rem;">
+                <p id="messageText"></p>
             </div>
+            <button id="messageOkBtn" class="cta-button" style="width:100%;padding:0.75rem;">OK</button>
         </div>
     </div>
+</div>
 
-    // ---firebase setup---
+// ---firebase setup---
 
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-app.js";
-        import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged, sendEmailVerification } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-auth.js";
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-app.js";
+    import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged, sendEmailVerification } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-auth.js";
+    import { getFirestore, collection, query, where, getDocs, addDoc, doc, updateDoc, getDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-firestore.js";
 
-        const firebaseConfig = {
-            apiKey: "AIzaSyCCFi6yrcQ_C-cMAcagY2YuP6AcLss4dUc",
-            authDomain: "munly-2b1b4.firebaseapp.com",
-            projectId: "munly-2b1b4",
-            storageBucket: "munly-2b1b4.firebasestorage.app",
-            messagingSenderId: "884261920045",
-            appId: "1:884261920045:web:e76068f1b7d164a404c7a4",
-            measurementId: "G-W2KTM1MZ89"
-        };
+    const firebaseConfig = {
+        apiKey: "AIzaSyCCFi6yrcQ_C-cMAcagY2YuP6AcLss4dUc",
+        authDomain: "munly-2b1b4.firebaseapp.com",
+        projectId: "munly-2b1b4",
+        storageBucket: "munly-2b1b4.firebasestorage.app",
+        messagingSenderId: "884261920045",
+        appId: "1:884261920045:web:e76068f1b7d164a404c7a4",
+        measurementId: "G-W2KTM1MZ89"
+    };
 
-        const app = initializeApp(firebaseConfig);
-        const auth = getAuth(app);
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
 
+    window.firebaseAuth = auth;
+    window.createUserWithEmailAndPassword = createUserWithEmailAndPassword;
+    window.signInWithEmailAndPassword = signInWithEmailAndPassword;
+    window.signOut = signOut;
+    window.onAuthStateChanged = onAuthStateChanged;
+    window.sendEmailVerification = sendEmailVerification;
+    window.firebaseDb = db;
+    window.collection = collection;
+    window.query = query;
+    window.where = where;
+    window.getDocs = getDocs;
+    window.addDoc = addDoc;
+    window.doc = doc;
+    window.updateDoc = updateDoc;
+    window.getDoc = getDoc;
+    window.serverTimestamp = serverTimestamp;
+    window.loadConferencesFromFirestore = loadConferencesFromFirestore;
 
-        window.firebaseAuth = auth;
-        window.createUserWithEmailAndPassword = createUserWithEmailAndPassword;
-        window.signInWithEmailAndPassword = signInWithEmailAndPassword;
-        window.signOut = signOut;
-        window.onAuthStateChanged = onAuthStateChanged;
-        window.sendEmailVerification = sendEmailVerification;
-    </script>
+    function moduleEscapeHtml(str) {
+        return String(str == null ? '' : str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+    }
+
+    async function loadConferencesFromFirestore() {
+        const conferencesContainer = document.querySelector('.conferences-grid');
+        if (!conferencesContainer) return;
+
+        try {
+            const q = query(collection(db, 'conferences'), where('approved', '==', true));
+            const querySnapshot = await getDocs(q);
+
+            window.__publicConferencesCache = window.__publicConferencesCache || {};
+
+            if (querySnapshot.empty) {
+                return; // leave any statically-authored cards in place
+            }
+
+            querySnapshot.forEach((docSnap) => {
+                const conf = docSnap.data();
+                window.__publicConferencesCache[docSnap.id] = conf;
+                const card = createConferenceCard(conf, docSnap.id);
+                conferencesContainer.appendChild(card);
+            });
+        } catch (error) {
+            console.error('Error loading conferences:', error);
+        }
+    }
+
+    function createConferenceCard(conf, id) {
+        const card = document.createElement('div');
+        card.className = 'conference-card';
+
+        const startDate = conf.startDate ? (conf.startDate.toDate ? conf.startDate.toDate() : new Date(conf.startDate)) : new Date();
+        const endDate = conf.endDate ? (conf.endDate.toDate ? conf.endDate.toDate() : new Date(conf.endDate)) : new Date();
+
+        const now = new Date();
+        const statusLabel = endDate < now ? 'Past Event' : (startDate <= now ? 'Ongoing' : 'Upcoming');
+        const category = (endDate < now ? 'past' : 'upcoming') + ' featured';
+        card.setAttribute('data-category', category);
+
+        const dateStr = startDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric'});
+        const endDateStr = endDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric'});
+
+        const initials = (conf.name || '???').trim().substring(0, 3).toUpperCase();
+        const committeesCount = conf.committeesCount ?? (conf.committees ? conf.committees.length : 0);
+        const teamSize = conf.teamSize ?? 0;
+        const daysCount = conf.days ?? 0;
+
+        const tagsHtml = (conf.tags && conf.tags.length)
+            ? `<div class="conference-tags">${conf.tags.map(t => `<span class="conference-tag">${moduleEscapeHtml(t)}</span>`).join('')}</div>`
+            : '';
+
+        card.innerHTML = `
+      <div class="conference-image">
+        <div class="conference-status">${statusLabel}</div>
+        <div class="conference-date">${dateStr.toUpperCase()} - ${endDateStr.toUpperCase()}</div>
+        <div style="width: 100%; height: 100%; background: linear-gradient(135deg, #3B82F6, #1E40AF); display: flex; align-items: center; justify-content: center; color: white; font-size: 2rem; font-weight: bold;">
+          ${initials}
+        </div>
+        <div class="image-overlay" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(59, 130, 246, 0.2); z-index: 1;"></div>
+      </div>
+      <div class="conference-content">
+        <h3 class="conference-title">${moduleEscapeHtml(conf.name || 'Unnamed Conference')}</h3>
+        <p class="conference-subtitle">${moduleEscapeHtml(conf.institution || 'TBA')}</p>
+        <div class="conference-location">
+          <i class="fas fa-map-marker-alt"></i>
+          <span>${moduleEscapeHtml(conf.venue || 'TBA')}</span>
+        </div>
+        <div class="conference-stats">
+          <div class="conference-stat">
+            <div class="conference-stat-number">${committeesCount}</div>
+            <div class="conference-stat-label">Committees</div>
+          </div>
+          <div class="conference-stat">
+            <div class="conference-stat-number">${teamSize}</div>
+            <div class="conference-stat-label">Team</div>
+          </div>
+          <div class="conference-stat">
+            <div class="conference-stat-number">${daysCount}</div>
+            <div class="conference-stat-label">Days</div>
+          </div>
+        </div>
+        ${tagsHtml}
+        <div class="conference-actions">
+          <button type="button" class="btn-small btn-outline public-view-details-btn" data-id="${id}">View Details</button>
+          <a href="mailto:${moduleEscapeHtml(conf.contactEmail || '')}" class="btn-small cta-button">Contact Organizer</a>
+        </div>
+      </div>
+    `;
+
+        return card;
+    }
+
+    window.addEventListener('load', () => {
+        window.loadConferencesFromFirestore();
+    });
+</script>
 </body>
 </html>
