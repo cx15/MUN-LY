@@ -27,9 +27,20 @@ exports.generateConferenceDetailPage = onDocumentWritten('conferences/{docId}', 
             },
         });
 
-        await file.makePublic();
+        const { v4: uuidv4 } = require('uuid');
+        const token = uuidv4();
 
-        const publicUrl = `https://storage.googleapis.com/${bucket.name}/${fileName}`;
+        await file.save(html, {
+            metadata: {
+                contentType: 'text/html',
+                cacheControl: 'no-cache',
+                metadata: {
+                    firebaseStorageDownloadTokens: token
+                }
+            },
+        });
+
+        const publicUrl = `https://firebasestorage.googleapis.com/v0/b/${bucket.name}/o/${encodeURIComponent(fileName)}?alt=media&token=${token}`;
         await db.collection('conferences').doc(docId).update({
             detailPageUrl: publicUrl,
             pageGeneratedAt: admin.firestore.FieldValue.serverTimestamp(),
@@ -117,6 +128,22 @@ function generateHTML(data) {
         <div class="detail-list-row">${escape(p.name)} — ${escape(p.role || 'Chair')}</div>
       `).join('')
         : '<p>No chairs listed yet.</p>';
+
+    const scheduleHtml = (data.schedule || []).length > 0
+        ? data.schedule.map(d => `
+        <div style="margin-bottom: 2rem;">
+          <h4 style="background: linear-gradient(135deg, #1e40af, #3b82f6); color: white; padding: 0.75rem 1.25rem; border-radius: 0.5rem; margin-bottom: 0.75rem;">
+            ${escape(d.day || '')}
+          </h4>
+          ${(d.sessions || []).map(s => `
+            <div style="display:flex; gap:1rem; padding:0.6rem 1rem; border-bottom:1px solid #e2e8f0;">
+              <span style="color:#6b7280; min-width:90px; font-size:0.9rem;">${escape(s.time || '')}</span>
+              <span>${escape(s.session || '')}</span>
+            </div>
+          `).join('')}
+        </div>
+      `).join('')
+        : '<p style="text-align:center;">No schedule posted yet.</p>';
 
     // ---- Status badge (Upcoming / Ongoing / Past Event) ----
     let status = 'Upcoming';
@@ -224,7 +251,7 @@ function generateHTML(data) {
 <body>
   <nav>
     <div class="nav-container">
-      <a href="index.html" class="logo">MUNLY</a>
+      <a href="https://munly-2b1b4.web.app" class="logo">MUNLY</a>
       <button class="back-btn" onclick="window.history.back()"><i class="fas fa-arrow-left"></i> Back</button>
     </div>
   </nav>
@@ -232,7 +259,11 @@ function generateHTML(data) {
   <!-- Hero -->
   <section class="hero">
     <div class="hero-content">
-      <div class="conference-logo"><i class="fas fa-globe"></i></div>
+      <div class="conference-logo">
+          ${data.logoImage
+            ? `<img src="${escape(data.logoImage)}" alt="${escape(data.name)} logo" style="width:100%; height:100%; object-fit:cover; border-radius:50%;">`
+            : `<i class="fas fa-globe"></i>`}
+      </div>
       <div class="status-badge">${status}</div>
       <h1 class="conference-title">${escape(data.name)}</h1>
       <p class="conference-subtitle">${escape(data.institution || '')}</p>
@@ -290,6 +321,18 @@ function generateHTML(data) {
       </div>
     </div>
   </section>
+  
+  <!-- Schedule -->
+<section id="schedule" style="background: var(--background-light);">
+  <div class="container">
+    <div class="section-header">
+      <h2 class="section-title">Schedule</h2>
+    </div>
+    <div class="detail-section">
+      ${scheduleHtml}
+    </div>
+  </div>
+</section>
 
   <!-- Team & Chairs -->
   <section id="team">

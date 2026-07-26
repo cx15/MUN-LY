@@ -6,6 +6,7 @@
   <title>Manage Conference | MUNLY</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet">
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+  <link rel="icon" href="Munlylogo3.png" type="image/png">
   <style>
     :root {
       --primary: #1e40af;
@@ -962,37 +963,77 @@
   function renderSchedule(list) {
     const container = document.getElementById('scheduleList');
     container.innerHTML = '';
-    list.forEach(s => container.appendChild(makeScheduleRow(s)));
+    // Handle both old flat structure and new grouped structure
+    if (list.length > 0 && list[0].sessions) {
+      list.forEach(d => container.appendChild(makeDayGroup(d)));
+    } else if (list.length > 0) {
+      // Convert old flat structure to grouped
+      const grouped = {};
+      list.forEach(s => {
+        const key = s.day || 'Day 1';
+        if (!grouped[key]) grouped[key] = [];
+        grouped[key].push({ time: s.time, session: s.session });
+      });
+      Object.entries(grouped).forEach(([day, sessions]) => {
+        container.appendChild(makeDayGroup({ day, sessions }));
+      });
+    }
   }
 
-  function makeScheduleRow(s = {}) {
+  function makeDayGroup(d = {}) {
     const div = document.createElement('div');
     div.className = 'repeat-item';
+    div.style.padding = '0';
+    div.style.overflow = 'hidden';
+
+    const sessionsHtml = (d.sessions || []).map(s => makeSessionRowHtml(s)).join('');
+
     div.innerHTML = `
-      <div class="repeat-item-header">
-        <span class="repeat-item-title">Schedule Item</span>
-        <button class="remove-btn" onclick="this.closest('.repeat-item').remove()"><i class="fas fa-trash"></i></button>
-      </div>
-      <div class="form-row">
-        <div class="form-group"><label>Day</label><input type="text" class="sc-day" placeholder="e.g. Day 1" value="${esc(s.day)}"></div>
-        <div class="form-group"><label>Time</label><input type="text" class="sc-time" placeholder="e.g. 9:00 AM" value="${esc(s.time)}"></div>
-      </div>
-      <div class="form-group"><label>Session / Event</label><input type="text" class="sc-session" value="${esc(s.session)}"></div>
+        <div style="background: var(--primary); color: white; padding: 0.75rem 1rem; display: flex; align-items: center; justify-content: space-between;">
+            <input type="text" class="day-name" value="${esc(d.day)}" placeholder="e.g. Day 1" style="background:transparent; border:none; color:white; font-weight:600; font-size:0.95rem; font-family:'Inter',sans-serif; outline:none; flex:1;">
+            <button class="remove-btn" style="color:white;" onclick="this.closest('.repeat-item').remove()"><i class="fas fa-trash"></i></button>
+        </div>
+        <div class="sessions-list" style="padding: 1rem; display:flex; flex-direction:column; gap:0.5rem;">
+            ${sessionsHtml}
+        </div>
+        <div style="padding: 0 1rem 1rem;">
+            <button class="add-item-btn" style="margin:0;" onclick="addSession(this)">
+                <i class="fas fa-plus"></i> Add Session
+            </button>
+        </div>
     `;
     return div;
   }
 
+  function makeSessionRowHtml(s = {}) {
+    return `
+        <div class="session-row" style="display:flex; gap:0.5rem; align-items:center;">
+            <input type="text" class="sc-time" placeholder="9:00 AM" value="${esc(s.time)}" style="width:110px; padding:0.4rem 0.6rem; border:1px solid var(--border); border-radius:0.4rem; font-size:0.85rem; font-family:'Inter',sans-serif;">
+            <input type="text" class="sc-session" placeholder="Session name" value="${esc(s.session)}" style="flex:1; padding:0.4rem 0.6rem; border:1px solid var(--border); border-radius:0.4rem; font-size:0.85rem; font-family:'Inter',sans-serif;">
+            <button class="remove-btn" onclick="this.closest('.session-row').remove()"><i class="fas fa-times"></i></button>
+        </div>
+    `;
+  }
+
+  window.addSession = (btn) => {
+    const sessionsList = btn.closest('.repeat-item').querySelector('.sessions-list');
+    sessionsList.insertAdjacentHTML('beforeend', makeSessionRowHtml());
+  };
+
   window.addScheduleItem = () => {
-    document.getElementById('scheduleList').appendChild(makeScheduleRow());
+    document.getElementById('scheduleList').appendChild(makeDayGroup({ day: `Day ${document.querySelectorAll('#scheduleList .repeat-item').length + 1}`, sessions: [] }));
   };
 
   window.saveSchedule = async () => {
-    const rows = document.querySelectorAll('#scheduleList .repeat-item');
-    const schedule = [...rows].map(r => ({
-      day: r.querySelector('.sc-day').value.trim(),
-      time: r.querySelector('.sc-time').value.trim(),
-      session: r.querySelector('.sc-session').value.trim()
-    })).filter(s => s.session);
+    const dayGroups = document.querySelectorAll('#scheduleList .repeat-item');
+    const schedule = [...dayGroups].map(group => {
+      const day = group.querySelector('.day-name').value.trim();
+      const sessions = [...group.querySelectorAll('.session-row')].map(row => ({
+        time: row.querySelector('.sc-time').value.trim(),
+        session: row.querySelector('.sc-session').value.trim()
+      })).filter(s => s.session);
+      return { day, sessions };
+    }).filter(d => d.day);
 
     await saveToFirestore({ schedule });
     showToast('Schedule saved!', 'success');
