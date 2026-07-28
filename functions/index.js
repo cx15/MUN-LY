@@ -87,16 +87,34 @@ function generateHTML(data) {
     };
     const dateRangeStr = formatDateRange(startD, endD);
 
-    // ---- Countdown target (JS Date string the client-side script will parse) ----
-    const countdownTarget = startD ? startD.toISOString() : '';
+    let countdownTarget = startD ? startD.toISOString() : '';
 
-    // ---- Hero image: host-uploaded image if present, otherwise fallback to gradient only ----
-    // `data.heroImage` should be a public URL saved when the host uploads their banner image.
+    if (startD && data.schedule && data.schedule.length > 0) {
+        const firstDay = data.schedule[0];
+        if (firstDay.sessions && firstDay.sessions.length > 0) {
+            const firstTime = firstDay.sessions[0].time; // e.g. "9:00 AM"
+            if (firstTime) {
+                const target = new Date(startD);
+                const timeParts = firstTime.match(/(\d+):(\d+)\s*(AM|PM)?/i);
+                if (timeParts) {
+                    let hours = parseInt(timeParts[1]);
+                    const minutes = parseInt(timeParts[2]);
+                    const period = timeParts[3];
+                    if (period) {
+                        if (period.toUpperCase() === 'PM' && hours !== 12) hours += 12;
+                        if (period.toUpperCase() === 'AM' && hours === 12) hours = 0;
+                    }
+                    target.setHours(hours, minutes, 0, 0);
+                    countdownTarget = target.toISOString();
+                }
+            }
+        }
+    }
+
     const heroStyle = data.heroImage
         ? `background-image: url('${escape(data.heroImage)}'); background-size: cover; background-position: center;`
         : '';
 
-    // ---- Stats (fall back to 0 / TBA if not provided) ----
     const committeesCount = data.committeesCount ?? (data.committees ? data.committees.length : 0);
     const teamSize = data.teamSize ?? (data.organizingTeam ? data.organizingTeam.length : 0);
     const expectedParticipants = data.expectedParticipants || 'TBA';
@@ -156,7 +174,10 @@ function generateHTML(data) {
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>${escape(data.name)} | MUNLY</title>
+<title>${escape(data.name)} | MUNLY</title>
+<link rel="icon" href="https://munly-2b1b4.web.app/Munlylogo3.png" type="image/png">
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
 <style>

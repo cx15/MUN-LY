@@ -2072,7 +2072,31 @@
                     <div class="profile-info-row-label">Member Since</div>
                     <div class="profile-info-row-value" id="profileInfoMemberSince">-</div>
                 </div>
-                <div class="profile-page-actions">
+
+                <!-- Change Name -->
+                <div style="margin-top:1.5rem; border-top:1px solid var(--border-light); padding-top:1.5rem;">
+                    <h3 style="font-size:1rem; margin-bottom:1rem; color:var(--text-dark);">Change Display Name</h3>
+                    <div style="display:flex; gap:0.75rem; align-items:center;">
+                        <input type="text" id="newDisplayName" placeholder="Enter new name"
+                               style="flex:1; padding:0.6rem 0.9rem; border:1px solid var(--border-light); border-radius:0.5rem; font-size:0.9rem; font-family:'Playfair Display',serif;">
+                        <button onclick="updateDisplayName()"
+                                style="background:var(--primary-blue); color:white; padding:0.6rem 1.2rem; border:none; border-radius:0.5rem; font-weight:600; cursor:pointer;">
+                            Save
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Change Password -->
+                <div style="margin-top:1.5rem; border-top:1px solid var(--border-light); padding-top:1.5rem;">
+                    <h3 style="font-size:1rem; margin-bottom:0.5rem; color:var(--text-dark);">Change Password</h3>
+                    <p style="font-size:0.85rem; color:var(--text-gray); margin-bottom:1rem;">We'll send a password reset link to your email address.</p>
+                    <button onclick="updateUserPassword()"
+                            style="background:var(--primary-blue); color:white; padding:0.6rem 1.2rem; border:none; border-radius:0.5rem; font-weight:600; cursor:pointer;">
+                        Send Password Reset Email
+                    </button>
+                </div>
+
+                <div class="profile-page-actions" style="margin-top:1.5rem;">
                     <button class="profile-back-btn" id="profileBackBtn">Back to Site</button>
                     <button class="profile-signout-btn" id="profilePageSignOutBtn">Sign Out</button>
                 </div>
@@ -2125,11 +2149,6 @@
                     <button id="nextMonth" class="nav-btn"><i class="fas fa-chevron-right"></i></button>
                 </div>
                 <div class="calendar-grid" id="calendarGrid"></div>
-            </div>
-
-            <div class="mun-dates-list">
-                <h4>Upcoming MUNs</h4>
-                <div id="munDatesList" class="mun-list"></div>
             </div>
         </div>
 
@@ -2615,6 +2634,7 @@
         anchor.addEventListener('click', function (e) {
             e.preventDefault();
             const href = this.getAttribute('href');
+            if (!href || href === '#') return;
             const profilePage = document.getElementById('profilePage');
             if (profilePage && profilePage.classList.contains('active')) {
                 goBackToSite();
@@ -2897,10 +2917,8 @@
         }
 
         init() {
-            this.setupEventListeners();
             this.loadDatesFromCache();
             this.renderCalendar();
-            this.renderMunList();
         }
 
         loadDatesFromCache() {
@@ -2965,7 +2983,7 @@
                 this.saveApprovedDates();
                 this.savePendingDates();
                 this.renderCalendar();
-                this.renderMunList();
+
 
                 return true;
             }
@@ -3079,45 +3097,6 @@
             showMessage(`Conferences on ${date.toDateString()}:\n\n${munInfo}\n\nClick View Details on the card to open.`);
         }
 
-        renderMunList() {
-            const munDatesList = document.getElementById('munDatesList');
-
-            if (this.approvedDates.length === 0) {
-                munDatesList.innerHTML = '<p class="empty-message">No approved MUN dates yet.</p>';
-                return;
-            }
-
-            // Sort dates
-            const sortedDates = [...this.approvedDates].sort((a, b) =>
-                new Date(a.date) - new Date(b.date)
-            );
-
-            const today = new Date();
-            today.setHours(0, 0, 0, 0);
-
-            munDatesList.innerHTML = sortedDates.map(mun => {
-                const munDate = new Date(mun.date);
-                const isPast = munDate < today;
-                const dateStr = munDate.toLocaleDateString('en-US', {
-                    weekday: 'short',
-                    year: 'numeric',
-                    month: 'short',
-                    day: 'numeric'
-                });
-
-                return `
-                        <div class="mun-item ${isPast ? 'past' : ''}">
-                            <div class="mun-info">
-                                <div class="mun-name">${mun.name}</div>
-                                <div class="mun-details">
-                                    <span><i class="fas fa-calendar"></i> ${dateStr}</span>
-                                    <span><i class="fas fa-map-marker-alt"></i> ${mun.location || 'Not specified'}</span>
-                                </div>
-                            </div>
-                        </div>
-                    `;
-            }).join('');
-        }
 
         getPendingForApproval() {
             return this.pendingDates;
@@ -3376,7 +3355,41 @@
             window.scrollTo(0, 0);
         }
 
-        function goBackToSite(){
+        window.updateDisplayName = async function() {
+            const newName = document.getElementById('newDisplayName').value.trim();
+            if (!newName) { showMessage('Please enter a name.', 'error'); return; }
+
+            try {
+                const user = window.firebaseAuth.currentUser;
+                await window.updateProfile(user, { displayName: newName });
+
+                const current = JSON.parse(localStorage.getItem('munlyCurrent') || '{}');
+                current.name = newName;
+                localStorage.setItem('munlyCurrent', JSON.stringify(current));
+
+                document.getElementById('profilePageName').textContent = newName;
+                document.getElementById('profileInfoName').textContent = newName;
+                document.getElementById('profilePageAvatar').textContent = newName.substring(0, 2).toUpperCase();
+                document.getElementById('newDisplayName').value = '';
+
+                showMessage('Name updated successfully!', 'success');
+            } catch (err) {
+                showMessage('Error updating name: ' + err.message, 'error');
+            }
+        };
+
+        window.updateUserPassword = async function() {
+            try {
+                const user = window.firebaseAuth.currentUser;
+                await window.sendPasswordResetEmail(window.firebaseAuth, user.email);
+                showMessage(`Password reset email sent to ${user.email}. Check your inbox!`, 'success');
+
+            } catch (err) {
+                showMessage('Error sending reset email: ' + err.message, 'error');
+            }
+        };
+
+        window.goBackToSite = function goBackToSite(){
             document.querySelectorAll('section').forEach(s => s.style.display = '');
             document.querySelector('footer').style.display = '';
 
@@ -4009,8 +4022,8 @@
     })();
 
 </script>
-<div id="messageModal" class="hidden" aria-hidden="true">
-    <div class="auth-backdrop" style="position:fixed;inset:0;background:rgba(0,0,0,0.5);display:flex;align-items:center;justify-content:center;z-index:2000;">
+<div id="messageModal" class="hidden" aria-hidden="true" style="position:fixed;inset:0;z-index:9999;">
+    <div class="auth-backdrop" style="position:fixed;inset:0;background:rgba(0,0,0,0.5);display:flex;align-items:center;justify-content:center;z-index:9999;">
         <div class="auth-card" style="background:white;padding:2rem;border-radius:0.75rem;max-width:500px;width:90%;box-shadow:var(--shadow-xl);text-align:center;">
             <div id="messageContent" style="margin-bottom:1.5rem;">
                 <p id="messageText"></p>
@@ -4024,7 +4037,7 @@
 
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-app.js";
-    import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged, sendEmailVerification } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-auth.js";
+    import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged, sendEmailVerification, updateProfile, updatePassword, EmailAuthProvider, reauthenticateWithCredential, sendPasswordResetEmail } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-auth.js";
     import { getFirestore, collection, query, where, getDocs, addDoc, doc, updateDoc, getDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-firestore.js";
 
     const firebaseConfig = {
@@ -4044,6 +4057,11 @@
     window.firebaseAuth = auth;
     window.createUserWithEmailAndPassword = createUserWithEmailAndPassword;
     window.signInWithEmailAndPassword = signInWithEmailAndPassword;
+    window.updateProfile = updateProfile;
+    window.updatePassword = updatePassword;
+    window.EmailAuthProvider = EmailAuthProvider;
+    window.reauthenticateWithCredential = reauthenticateWithCredential;
+    window.sendPasswordResetEmail = sendPasswordResetEmail;
     window.signOut = signOut;
     window.onAuthStateChanged = onAuthStateChanged;
     window.sendEmailVerification = sendEmailVerification;
@@ -4086,7 +4104,6 @@
             if (window.munCalendar) {
                 window.munCalendar.loadDatesFromCache();
                 window.munCalendar.renderCalendar();
-                window.munCalendar.renderMunList();
             }
         } catch (error) {
             console.error('Error loading conferences:', error);
