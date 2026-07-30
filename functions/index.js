@@ -54,6 +54,42 @@ exports.generateConferenceDetailPage = onDocumentWritten('conferences/{docId}', 
     }
 });
 
+exports.notifyNewConference = onDocumentWritten('conferences/{docId}', async (event) => {
+    const docId = event.params.docId;
+    const newData = event.data.after.data();
+    const oldData = event.data.before.data();
+
+    // Only trigger on NEW conference creation (not updates)
+    if (oldData || !newData) return null;
+
+    try {
+        await db.collection('mail').add({
+            to: 'info@mun.ly',
+            message: {
+                subject: `New Conference Submission: ${newData.name || 'Unnamed'}`,
+                html: `
+                    <h2>New Conference Submitted on MUNLY</h2>
+                    <p><strong>Conference Name:</strong> ${newData.name || 'N/A'}</p>
+                    <p><strong>Institution:</strong> ${newData.institution || 'N/A'}</p>
+                    <p><strong>Venue:</strong> ${newData.venue || 'N/A'}</p>
+                    <p><strong>Contact Email:</strong> ${newData.contactEmail || 'N/A'}</p>
+                    <p><strong>Submitted at:</strong> ${new Date().toLocaleString()}</p>
+                    <br>
+                    <a href="https://console.firebase.google.com/project/munly-2b1b4/firestore/data/conferences/${docId}" 
+                       style="background:#1e40af;color:white;padding:10px 20px;border-radius:6px;text-decoration:none;">
+                        Review in Firebase Console
+                    </a>
+                `
+            }
+        });
+        console.log(`Notification email sent for conference ${docId}`);
+        return null;
+    } catch (error) {
+        console.error('Error sending notification:', error);
+        throw error;
+    }
+});
+
 function generateHTML(data) {
     const escape = (text) => {
         if (!text) return '';

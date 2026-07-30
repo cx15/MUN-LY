@@ -1,0 +1,823 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Panel | MUNLY</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+  <link rel="icon" href="Munlylogo3.png" type="image/png">
+  <style>
+    :root {
+      --primary: #1e40af;
+      --primary-light: #dbeafe;
+      --secondary: #3b82f6;
+      --dark: #1e3a8a;
+      --text: #1f2937;
+      --text-gray: #6b7280;
+      --border: #e2e8f0;
+      --bg: #f8fafc;
+      --white: #ffffff;
+      --success: #16a34a;
+      --success-light: #dcfce7;
+      --error: #dc2626;
+      --error-light: #fee2e2;
+      --warning: #d97706;
+      --warning-light: #fef3c7;
+      --shadow: 0 1px 3px rgba(0,0,0,0.08);
+      --shadow-md: 0 4px 12px rgba(0,0,0,0.1);
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
+
+    /* ── Login Screen ── */
+    .login-screen {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(135deg, #1e3a8a, #3b82f6);
+    }
+
+    .login-card {
+      background: white;
+      padding: 2.5rem;
+      border-radius: 1rem;
+      box-shadow: var(--shadow-md);
+      width: 100%;
+      max-width: 400px;
+    }
+
+    .login-card h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.8rem;
+      color: var(--primary);
+      margin-bottom: 0.5rem;
+    }
+
+    .login-card p {
+      color: var(--text-gray);
+      font-size: 0.9rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .form-group { margin-bottom: 1rem; }
+    .form-group label { display: block; font-size: 0.85rem; font-weight: 600; margin-bottom: 0.4rem; }
+    .form-group input {
+      width: 100%;
+      padding: 0.7rem 1rem;
+      border: 1px solid var(--border);
+      border-radius: 0.5rem;
+      font-size: 0.9rem;
+      font-family: 'Inter', sans-serif;
+    }
+    .form-group input:focus { outline: none; border-color: var(--secondary); }
+
+    .login-btn {
+      width: 100%;
+      background: var(--primary);
+      color: white;
+      padding: 0.75rem;
+      border: none;
+      border-radius: 0.5rem;
+      font-size: 0.95rem;
+      font-weight: 600;
+      cursor: pointer;
+      margin-top: 0.5rem;
+    }
+
+    .login-btn:hover { background: var(--dark); }
+    .login-error { color: var(--error); font-size: 0.85rem; margin-top: 0.75rem; display: none; }
+
+    /* ── App Layout ── */
+    .app { display: none; min-height: 100vh; }
+
+    /* ── Topbar ── */
+    .topbar {
+      background: white;
+      border-bottom: 1px solid var(--border);
+      padding: 1rem 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .topbar-logo {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--primary);
+    }
+
+    .topbar-right { display: flex; align-items: center; gap: 1rem; }
+
+    .admin-badge {
+      background: var(--primary-light);
+      color: var(--primary);
+      padding: 0.3rem 0.75rem;
+      border-radius: 2rem;
+      font-size: 0.8rem;
+      font-weight: 600;
+    }
+
+    .signout-btn {
+      background: none;
+      border: 1px solid var(--border);
+      color: var(--text-gray);
+      padding: 0.4rem 0.9rem;
+      border-radius: 0.5rem;
+      font-size: 0.85rem;
+      cursor: pointer;
+    }
+
+    .signout-btn:hover { background: var(--bg); }
+
+    /* ── Tabs ── */
+    .tabs {
+      background: white;
+      border-bottom: 1px solid var(--border);
+      padding: 0 2rem;
+      display: flex;
+      gap: 0;
+    }
+
+    .tab {
+      padding: 1rem 1.5rem;
+      cursor: pointer;
+      font-size: 0.9rem;
+      font-weight: 500;
+      color: var(--text-gray);
+      border-bottom: 3px solid transparent;
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .tab:hover { color: var(--primary); }
+    .tab.active { color: var(--primary); border-bottom-color: var(--primary); }
+
+    .badge {
+      background: var(--error);
+      color: white;
+      border-radius: 2rem;
+      padding: 0.1rem 0.5rem;
+      font-size: 0.75rem;
+      font-weight: 700;
+    }
+
+    /* ── Content ── */
+    .content { padding: 2rem; max-width: 1200px; margin: 0 auto; }
+    .tab-content { display: none; }
+    .tab-content.active { display: block; }
+
+    /* ── Stats Row ── */
+    .stats-row {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+
+    .stat-card {
+      background: white;
+      border-radius: 0.75rem;
+      padding: 1.5rem;
+      box-shadow: var(--shadow);
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .stat-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 0.75rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.25rem;
+    }
+
+    .stat-info h3 { font-size: 1.75rem; font-weight: 700; color: var(--text); }
+    .stat-info p { font-size: 0.85rem; color: var(--text-gray); }
+
+    /* ── Conference Cards ── */
+    .conf-list { display: flex; flex-direction: column; gap: 1rem; }
+
+    .conf-card {
+      background: white;
+      border-radius: 0.75rem;
+      padding: 1.5rem;
+      box-shadow: var(--shadow);
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 1rem;
+    }
+
+    .conf-card-info { flex: 1; }
+    .conf-card-info h3 { font-size: 1rem; font-weight: 600; margin-bottom: 0.5rem; }
+
+    .conf-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      font-size: 0.85rem;
+      color: var(--text-gray);
+      margin-bottom: 0.75rem;
+    }
+
+    .conf-meta span { display: flex; align-items: center; gap: 0.3rem; }
+
+    .conf-card-actions { display: flex; gap: 0.5rem; flex-shrink: 0; }
+
+    .btn {
+      padding: 0.5rem 1rem;
+      border-radius: 0.5rem;
+      font-size: 0.85rem;
+      font-weight: 600;
+      border: none;
+      cursor: pointer;
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .btn-approve { background: var(--success-light); color: var(--success); }
+    .btn-approve:hover { background: var(--success); color: white; }
+    .btn-reject { background: var(--error-light); color: var(--error); }
+    .btn-reject:hover { background: var(--error); color: white; }
+    .btn-view { background: var(--primary-light); color: var(--primary); }
+    .btn-view:hover { background: var(--primary); color: white; }
+    .btn-revoke { background: var(--warning-light); color: var(--warning); }
+    .btn-revoke:hover { background: var(--warning); color: white; }
+
+    .status-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
+      padding: 0.25rem 0.75rem;
+      border-radius: 2rem;
+      font-size: 0.8rem;
+      font-weight: 600;
+    }
+
+    .status-pill.pending { background: var(--warning-light); color: var(--warning); }
+    .status-pill.approved { background: var(--success-light); color: var(--success); }
+    .status-pill.rejected { background: var(--error-light); color: var(--error); }
+
+    .empty-state {
+      text-align: center;
+      padding: 3rem;
+      color: var(--text-gray);
+      background: white;
+      border-radius: 0.75rem;
+      box-shadow: var(--shadow);
+    }
+
+    .empty-state i { font-size: 2.5rem; margin-bottom: 1rem; color: var(--border); }
+
+    /* ── Toast ── */
+    .toast {
+      position: fixed;
+      bottom: 2rem;
+      right: 2rem;
+      padding: 0.75rem 1.25rem;
+      border-radius: 0.5rem;
+      font-size: 0.9rem;
+      font-weight: 500;
+      box-shadow: var(--shadow-md);
+      z-index: 999;
+      display: none;
+      align-items: center;
+      gap: 0.5rem;
+      color: white;
+    }
+
+    .toast.visible { display: flex; }
+    .toast.success { background: var(--success); }
+    .toast.error { background: var(--error); }
+    .toast.info { background: var(--primary); }
+
+    /* ── Reject Modal ── */
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.5);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 500;
+    }
+
+    .modal-backdrop.visible { display: flex; }
+
+    .modal {
+      background: white;
+      border-radius: 1rem;
+      padding: 2rem;
+      max-width: 500px;
+      width: 90%;
+    }
+
+    .modal h2 { font-size: 1.2rem; margin-bottom: 1rem; }
+    .modal textarea {
+      width: 100%;
+      padding: 0.75rem;
+      border: 1px solid var(--border);
+      border-radius: 0.5rem;
+      font-family: 'Inter', sans-serif;
+      font-size: 0.9rem;
+      resize: vertical;
+      min-height: 100px;
+      margin-bottom: 1rem;
+    }
+
+    .modal-actions { display: flex; gap: 0.75rem; justify-content: flex-end; }
+    .btn-cancel { background: var(--bg); color: var(--text-gray); border: 1px solid var(--border); }
+    .btn-cancel:hover { background: var(--border); }
+
+    @media (max-width: 768px) {
+      .conf-card { flex-direction: column; }
+      .conf-card-actions { width: 100%; }
+      .stats-row { grid-template-columns: 1fr 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- Login Screen -->
+<div class="login-screen" id="loginScreen">
+  <div class="login-card">
+    <h1>MUNLY Admin</h1>
+    <p>Sign in to manage conference submissions</p>
+    <div class="form-group">
+      <label>Email</label>
+      <input type="email" id="adminEmail" placeholder="admin@mun.ly">
+    </div>
+    <div class="form-group">
+      <label>Password</label>
+      <input type="password" id="adminPassword" placeholder="••••••••" onkeydown="if(event.key==='Enter') adminLogin()">
+    </div>
+    <button class="login-btn" onclick="adminLogin()">Sign In</button>
+    <p class="login-error" id="loginError"></p>
+  </div>
+</div>
+
+<!-- App -->
+<div class="app" id="appContainer">
+  <!-- Topbar -->
+  <div class="topbar">
+    <div class="topbar-logo">MUNLY</div>
+    <div class="topbar-right">
+      <span class="admin-badge"><i class="fas fa-shield-alt"></i> Admin</span>
+      <span id="adminEmailDisplay" style="font-size:0.85rem; color:var(--text-gray);"></span>
+      <button class="signout-btn" onclick="adminSignOut()"><i class="fas fa-sign-out-alt"></i> Sign Out</button>
+    </div>
+  </div>
+
+  <!-- Tabs -->
+  <div class="tabs">
+    <div class="tab active" data-tab="pending" onclick="switchTab('pending')">
+      <i class="fas fa-clock"></i> Pending
+      <span class="badge" id="pendingBadge">0</span>
+    </div>
+    <div class="tab" data-tab="all" onclick="switchTab('all')">
+      <i class="fas fa-list"></i> All Conferences
+    </div>
+  </div>
+
+  <!-- Content -->
+  <div class="content">
+
+    <!-- Stats -->
+    <div class="stats-row" id="statsRow">
+      <div class="stat-card">
+        <div class="stat-icon" style="background:#fef3c7; color:#d97706;"><i class="fas fa-clock"></i></div>
+        <div class="stat-info"><h3 id="statPending">0</h3><p>Pending Review</p></div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon" style="background:#dcfce7; color:#16a34a;"><i class="fas fa-check-circle"></i></div>
+        <div class="stat-info"><h3 id="statApproved">0</h3><p>Approved</p></div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon" style="background:#dbeafe; color:#1e40af;"><i class="fas fa-calendar"></i></div>
+        <div class="stat-info"><h3 id="statTotal">0</h3><p>Total Submitted</p></div>
+      </div>
+    </div>
+
+    <!-- Pending Tab -->
+    <div class="tab-content active" id="tab-pending">
+      <div class="conf-list" id="pendingList">
+        <div class="empty-state"><i class="fas fa-inbox"></i><p>Loading...</p></div>
+      </div>
+    </div>
+
+    <!-- All Tab -->
+    <div class="tab-content" id="tab-all">
+      <div class="conf-list" id="allList">
+        <div class="empty-state"><i class="fas fa-inbox"></i><p>Loading...</p></div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- Reject Modal -->
+<div class="modal-backdrop" id="rejectModal">
+  <div class="modal">
+    <h2>Reject Conference</h2>
+    <p style="font-size:0.85rem; color:var(--text-gray); margin-bottom:1rem;">
+      Optionally provide a reason — this will be sent to the organizer.
+    </p>
+    <textarea id="rejectReason" placeholder="Reason for rejection (optional)..."></textarea>
+    <div class="modal-actions">
+      <button class="btn btn-cancel" onclick="closeRejectModal()">Cancel</button>
+      <button class="btn btn-reject" onclick="confirmReject()"><i class="fas fa-times"></i> Reject</button>
+    </div>
+  </div>
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast"></div>
+
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-app.js";
+  import { getFirestore, collection, getDocs, doc, updateDoc, serverTimestamp, addDoc, orderBy, query } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-firestore.js";
+  import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-auth.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyCCFi6yrcQ_C-cMAcagY2YuP6AcLss4dUc",
+    authDomain: "munly-2b1b4.firebaseapp.com",
+    projectId: "munly-2b1b4",
+    storageBucket: "munly-2b1b4.firebasestorage.app",
+    messagingSenderId: "884261920045",
+    appId: "1:884261920045:web:e76068f1b7d164a404c7a4"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
+  const auth = getAuth(app);
+
+  // ── Admin emails that are allowed ──
+  const ADMIN_EMAILS = ['info@mun.ly', 'ahmedsherlala@gmail.com'];
+
+  let allConferences = [];
+  let rejectingId = null;
+  let rejectingEmail = null;
+
+  // ── Auth State ──
+  onAuthStateChanged(auth, (user) => {
+    if (user && ADMIN_EMAILS.includes(user.email)) {
+      document.getElementById('loginScreen').style.display = 'none';
+      document.getElementById('appContainer').style.display = 'block';
+      document.getElementById('adminEmailDisplay').textContent = user.email;
+      loadConferences();
+    } else if (user) {
+      signOut(auth);
+      showLoginError('You do not have admin access.');
+    } else {
+      document.getElementById('loginScreen').style.display = 'flex';
+      document.getElementById('appContainer').style.display = 'none';
+    }
+  });
+
+  // ── Login ──
+  window.adminLogin = async () => {
+    const email = document.getElementById('adminEmail').value.trim();
+    const password = document.getElementById('adminPassword').value;
+    const errorEl = document.getElementById('loginError');
+    errorEl.style.display = 'none';
+
+    if (!email || !password) {
+      showLoginError('Please enter email and password.');
+      return;
+    }
+
+    try {
+      await signInWithEmailAndPassword(auth, email, password);
+    } catch (err) {
+      showLoginError('Invalid email or password.');
+    }
+  };
+
+  window.adminSignOut = async () => {
+    await signOut(auth);
+  };
+
+  function showLoginError(msg) {
+    const el = document.getElementById('loginError');
+    el.textContent = msg;
+    el.style.display = 'block';
+  }
+
+  // ── Load Conferences ──
+  async function loadConferences() {
+    try {
+      const q = query(collection(db, 'conferences'));
+      const snap = await getDocs(q);
+      allConferences = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+
+      updateStats();
+      renderPending();
+      renderAll();
+    } catch (err) {
+      console.error(err);
+      showToast('Error loading conferences.', 'error');
+    }
+  }
+
+  function updateStats() {
+    const pending = allConferences.filter(c => !c.approved && !c.rejected).length;
+    const approved = allConferences.filter(c => c.approved).length;
+    const total = allConferences.length;
+
+    document.getElementById('statPending').textContent = pending;
+    document.getElementById('statApproved').textContent = approved;
+    document.getElementById('statTotal').textContent = total;
+    document.getElementById('pendingBadge').textContent = pending;
+    if (pending === 0) document.getElementById('pendingBadge').style.display = 'none';
+  }
+
+  function formatDate(d) {
+    if (!d) return 'N/A';
+    const date = d.toDate ? d.toDate() : new Date(d);
+    return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+  }
+
+  function makeConfCard(conf, showApproveReject = true) {
+    const status = conf.approved ? 'approved' : (conf.rejected ? 'rejected' : 'pending');
+    const statusLabel = conf.approved ? 'Approved' : (conf.rejected ? 'Rejected' : 'Pending');
+    const statusIcon = conf.approved ? 'fa-check-circle' : (conf.rejected ? 'fa-times-circle' : 'fa-clock');
+    const cardId = `card-${conf.id}`;
+
+    const committeesHtml = (conf.committees || []).length > 0
+            ? conf.committees.map(c => `<div style="padding:0.5rem 0; border-bottom:1px solid var(--border);"><strong>${c.name}</strong> — ${c.agenda || ''} ${c.level ? `<span style="background:var(--primary-light);color:var(--primary);padding:0.1rem 0.5rem;border-radius:1rem;font-size:0.75rem;">${c.level}</span>` : ''}</div>`).join('')
+            : '<p style="color:var(--text-gray);">None listed</p>';
+
+    const teamHtml = (conf.organizingTeam || []).length > 0
+            ? conf.organizingTeam.map(p => `<div style="padding:0.5rem 0; border-bottom:1px solid var(--border);">${p.name} — ${p.role || ''}${p.school ? ' · ' + p.school : ''}</div>`).join('')
+            : '<p style="color:var(--text-gray);">None listed</p>';
+
+    const chairsHtml = (conf.chairs || []).length > 0
+            ? conf.chairs.map(p => `<div style="padding:0.5rem 0; border-bottom:1px solid var(--border);">${p.name} — ${p.role || 'Chair'}</div>`).join('')
+            : '<p style="color:var(--text-gray);">None listed</p>';
+
+    const scheduleHtml = (conf.schedule || []).length > 0
+            ? conf.schedule.map(d => `
+            <div style="margin-bottom:1rem;">
+                <strong style="color:var(--primary);">${d.day}</strong>
+                ${(d.sessions || []).map(s => `<div style="padding:0.3rem 0 0.3rem 1rem; font-size:0.85rem;"><span style="color:var(--text-gray); min-width:80px; display:inline-block;">${s.time}</span> ${s.session}</div>`).join('')}
+            </div>`).join('')
+            : '<p style="color:var(--text-gray);">No schedule</p>';
+
+    const div = document.createElement('div');
+    div.className = 'conf-card';
+    div.style.flexDirection = 'column';
+    div.style.padding = '0';
+    div.style.overflow = 'hidden';
+
+    div.innerHTML = `
+      <!-- Header (always visible) -->
+      <div style="padding:1.5rem; display:flex; align-items:flex-start; justify-content:space-between; gap:1rem; cursor:pointer;" onclick="toggleCard('${cardId}')">
+        <div style="flex:1;">
+          <div style="display:flex; align-items:center; gap:0.75rem; margin-bottom:0.5rem;">
+            <h3 style="margin:0; font-size:1rem; font-weight:600;">${conf.name || 'Unnamed Conference'}</h3>
+            <span class="status-pill ${status}"><i class="fas ${statusIcon}"></i> ${statusLabel}</span>
+          </div>
+          <div class="conf-meta">
+            <span><i class="fas fa-university"></i> ${conf.institution || 'N/A'}</span>
+            <span><i class="fas fa-map-marker-alt"></i> ${conf.venue || 'N/A'}</span>
+            <span><i class="fas fa-calendar"></i> ${formatDate(conf.startDate)} – ${formatDate(conf.endDate)}</span>
+            <span><i class="fas fa-envelope"></i> ${conf.contactEmail || 'N/A'}</span>
+          </div>
+        </div>
+        <div style="display:flex; align-items:center; gap:0.75rem; flex-shrink:0;">
+          <div class="conf-card-actions">
+            ${conf.detailPageUrl ? `<button class="btn btn-view" onclick="event.stopPropagation(); window.open('${conf.detailPageUrl}', '_blank')"><i class="fas fa-external-link-alt"></i> View</button>` : ''}
+            ${showApproveReject && !conf.approved ? `<button class="btn btn-approve" onclick="event.stopPropagation(); approveConference('${conf.id}', '${conf.contactEmail || ''}', '${(conf.name || '').replace(/'/g, "\\'")}')"><i class="fas fa-check"></i> Approve</button>` : ''}
+            ${showApproveReject && !conf.approved && !conf.rejected ? `<button class="btn btn-reject" onclick="event.stopPropagation(); openRejectModal('${conf.id}', '${conf.contactEmail || ''}', '${(conf.name || '').replace(/'/g, "\\'")}')"><i class="fas fa-times"></i> Reject</button>` : ''}
+            ${showApproveReject && conf.approved ? `<button class="btn btn-revoke" onclick="event.stopPropagation(); revokeConference('${conf.id}', '${(conf.name || '').replace(/'/g, "\\'")}')"><i class="fas fa-undo"></i> Revoke</button>` : ''}
+          </div>
+          <i class="fas fa-chevron-down" id="chevron-${cardId}" style="color:var(--text-gray); transition: transform 0.2s;"></i>
+        </div>
+      </div>
+
+      <!-- Dropdown Details -->
+      <div id="${cardId}" style="display:none; border-top:1px solid var(--border); padding:1.5rem; background:var(--bg);">
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:2rem;">
+
+          <!-- Left Column -->
+          <div>
+            <h4 style="margin-bottom:1rem; color:var(--primary); font-size:0.9rem; text-transform:uppercase; letter-spacing:0.5px;">Conference Details</h4>
+            <table style="width:100%; font-size:0.85rem; border-collapse:collapse;">
+              <tr><td style="padding:0.4rem 0; color:var(--text-gray); width:40%;">Languages</td><td>${conf.languages || 'N/A'}</td></tr>
+              <tr><td style="padding:0.4rem 0; color:var(--text-gray);">Dress Code</td><td>${conf.dressCode || 'N/A'}</td></tr>
+              <tr><td style="padding:0.4rem 0; color:var(--text-gray);">Fee</td><td>${conf.fee || 'N/A'}</td></tr>
+              <tr><td style="padding:0.4rem 0; color:var(--text-gray);">Expected</td><td>${conf.expectedParticipants || 'N/A'}</td></tr>
+              <tr><td style="padding:0.4rem 0; color:var(--text-gray);">Phone</td><td>${conf.contactPhone || 'N/A'}</td></tr>
+              <tr><td style="padding:0.4rem 0; color:var(--text-gray);">Maps URL</td><td>${conf.mapsUrl ? `<a href="${conf.mapsUrl}" target="_blank">View Map</a>` : 'N/A'}</td></tr>
+              <tr><td style="padding:0.4rem 0; color:var(--text-gray);">Apply URL</td><td>${conf.applicationUrl ? `<a href="${conf.applicationUrl}" target="_blank">Link</a>` : 'N/A'}</td></tr>
+            </table>
+
+            ${conf.description ? `
+            <h4 style="margin:1.5rem 0 0.5rem; color:var(--primary); font-size:0.9rem; text-transform:uppercase; letter-spacing:0.5px;">Description</h4>
+            <p style="font-size:0.85rem; color:var(--text-gray);">${conf.description}</p>
+            ` : ''}
+
+            <h4 style="margin:1.5rem 0 0.5rem; color:var(--primary); font-size:0.9rem; text-transform:uppercase; letter-spacing:0.5px;">Schedule</h4>
+            ${scheduleHtml}
+          </div>
+
+          <!-- Right Column -->
+          <div>
+            <h4 style="margin-bottom:1rem; color:var(--primary); font-size:0.9rem; text-transform:uppercase; letter-spacing:0.5px;">Committees (${(conf.committees || []).length})</h4>
+            ${committeesHtml}
+
+            <h4 style="margin:1.5rem 0 0.5rem; color:var(--primary); font-size:0.9rem; text-transform:uppercase; letter-spacing:0.5px;">Organizing Team (${(conf.organizingTeam || []).length})</h4>
+            ${teamHtml}
+
+            <h4 style="margin:1.5rem 0 0.5rem; color:var(--primary); font-size:0.9rem; text-transform:uppercase; letter-spacing:0.5px;">Chairs (${(conf.chairs || []).length})</h4>
+            ${chairsHtml}
+
+            ${conf.rejectionReason ? `
+            <h4 style="margin:1.5rem 0 0.5rem; color:var(--error); font-size:0.9rem; text-transform:uppercase; letter-spacing:0.5px;">Rejection Reason</h4>
+            <p style="font-size:0.85rem; color:var(--error);">${conf.rejectionReason}</p>
+            ` : ''}
+          </div>
+
+        </div>
+      </div>
+    `;
+    return div;
+  }
+
+  window.toggleCard = (id) => {
+    const card = document.getElementById(id);
+    const chevron = document.getElementById(`chevron-${id}`);
+    const isOpen = card.style.display !== 'none';
+    card.style.display = isOpen ? 'none' : 'block';
+    chevron.style.transform = isOpen ? '' : 'rotate(180deg)';
+  };
+
+  function renderPending() {
+    const container = document.getElementById('pendingList');
+    const pending = allConferences.filter(c => !c.approved && !c.rejected);
+    container.innerHTML = '';
+    if (pending.length === 0) {
+      container.innerHTML = `<div class="empty-state"><i class="fas fa-check-circle" style="color:var(--success);"></i><p>No pending conferences — all caught up!</p></div>`;
+      return;
+    }
+    pending.forEach(c => container.appendChild(makeConfCard(c, true)));
+  }
+
+  function renderAll() {
+    const container = document.getElementById('allList');
+    container.innerHTML = '';
+    if (allConferences.length === 0) {
+      container.innerHTML = `<div class="empty-state"><i class="fas fa-inbox"></i><p>No conferences submitted yet.</p></div>`;
+      return;
+    }
+    // Sort: pending first, then approved, then rejected
+    const sorted = [...allConferences].sort((a, b) => {
+      const order = (c) => c.approved ? 1 : (c.rejected ? 2 : 0);
+      return order(a) - order(b);
+    });
+    sorted.forEach(c => container.appendChild(makeConfCard(c, true)));
+  }
+
+  // ── Approve ──
+  window.approveConference = async (id, email, name) => {
+    try {
+      await updateDoc(doc(db, 'conferences', id), {
+        approved: true,
+        rejected: false,
+        rejectionReason: null,
+        approvedAt: serverTimestamp()
+      });
+
+      // Send approval email to organizer
+      if (email) {
+        await addDoc(collection(db, 'mail'), {
+          to: email,
+          message: {
+            subject: `🎉 Your conference "${name}" has been approved on MUNLY!`,
+            html: `
+              <h2>Congratulations! Your conference has been approved.</h2>
+              <p>Your conference <strong>${name}</strong> is now live on MUNLY and visible to all delegates.</p>
+              <p>You can now manage your conference page by logging into your MUNLY account.</p>
+              <br>
+              <a href="https://munly-2b1b4.web.app" style="background:#1e40af;color:white;padding:10px 20px;border-radius:6px;text-decoration:none;">
+                Visit MUNLY
+              </a>
+              <br><br>
+              <p style="color:#6b7280; font-size:0.9rem;">The MUNLY Team</p>
+            `
+          }
+        });
+      }
+
+      showToast(`✓ "${name}" approved and organizer notified!`, 'success');
+      await loadConferences();
+    } catch (err) {
+      console.error(err);
+      showToast('Error approving conference.', 'error');
+    }
+  };
+
+  // ── Reject Modal ──
+  window.openRejectModal = (id, email, name) => {
+    rejectingId = id;
+    rejectingEmail = email;
+    window.rejectingName = name;
+    document.getElementById('rejectReason').value = '';
+    document.getElementById('rejectModal').classList.add('visible');
+  };
+
+  window.closeRejectModal = () => {
+    document.getElementById('rejectModal').classList.remove('visible');
+    rejectingId = null;
+    rejectingEmail = null;
+  };
+
+  window.confirmReject = async () => {
+    if (!rejectingId) return;
+    const reason = document.getElementById('rejectReason').value.trim();
+    const name = window.rejectingName;
+
+    try {
+      await updateDoc(doc(db, 'conferences', rejectingId), {
+        approved: false,
+        rejected: true,
+        rejectionReason: reason || null,
+        rejectedAt: serverTimestamp()
+      });
+
+      // Send rejection email to organizer
+      if (rejectingEmail) {
+        await addDoc(collection(db, 'mail'), {
+          to: rejectingEmail,
+          message: {
+            subject: `Update on your conference "${name}" submission`,
+            html: `
+              <h2>Conference Submission Update</h2>
+              <p>Thank you for submitting <strong>${name}</strong> to MUNLY.</p>
+              <p>Unfortunately, your submission has not been approved at this time.</p>
+              ${reason ? `<p><strong>Reason:</strong> ${reason}</p>` : ''}
+              <p>You're welcome to make changes and resubmit. If you have questions, contact us at info@mun.ly.</p>
+              <br>
+              <p style="color:#6b7280; font-size:0.9rem;">The MUNLY Team</p>
+            `
+          }
+        });
+      }
+
+      closeRejectModal();
+      showToast(`"${name}" rejected and organizer notified.`, 'info');
+      await loadConferences();
+    } catch (err) {
+      console.error(err);
+      showToast('Error rejecting conference.', 'error');
+    }
+  };
+
+  // ── Revoke Approval ──
+  window.revokeConference = async (id, name) => {
+    if (!confirm(`Revoke approval for "${name}"? It will be hidden from the public site.`)) return;
+    try {
+      await updateDoc(doc(db, 'conferences', id), {
+        approved: false,
+        rejectedAt: null,
+        approvedAt: null
+      });
+      showToast(`"${name}" approval revoked.`, 'info');
+      await loadConferences();
+    } catch (err) {
+      showToast('Error revoking approval.', 'error');
+    }
+  };
+
+  // ── Tab Switching ──
+  window.switchTab = (tab) => {
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+    document.querySelector(`.tab[data-tab="${tab}"]`).classList.add('active');
+    document.getElementById(`tab-${tab}`).classList.add('active');
+  };
+
+  // ── Toast ──
+  function showToast(msg, type = 'info') {
+    const toast = document.getElementById('toast');
+    toast.textContent = msg;
+    toast.className = `toast visible ${type}`;
+    setTimeout(() => toast.classList.remove('visible'), 3500);
+  }
+</script>
+</body>
+</html>

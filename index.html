@@ -2537,6 +2537,11 @@
             <div style="margin-top:0.5rem;font-size:0.9rem;color:var(--text-gray);">
                 <span id="authToggleText">Don't have an account? </span><a href="#" id="authToggleLink">Sign up</a>
             </div>
+            <div style="margin-top:0.75rem; text-align:center;">
+                <a href="admin.html" style="font-size:0.8rem; color:var(--text-gray); text-decoration:none; display:inline-flex; align-items:center; gap:0.3rem;">
+                    <i class="fas fa-shield-alt"></i> Admin Login
+                </a>
+            </div>
         </div>
     </div>
 </div>
@@ -3502,16 +3507,48 @@
 
         function addScheduleRow(data){
             data = data || {};
-            const row = document.createElement('div');
-            row.className = 'wz-repeat-row';
-            row.innerHTML = `
-                <input type="text" class="wz-schedule-day" placeholder="Day (e.g. Day 1)" value="${escapeHtml(data.day || '')}">
-                <input type="text" class="wz-schedule-time" placeholder="Time (e.g. 10:00 - 12:00)" value="${escapeHtml(data.time || '')}">
-                <input type="text" class="wz-schedule-session" placeholder="Session" value="${escapeHtml(data.session || '')}">
-                <button type="button" class="wz-remove-row">&times;</button>
-            `;
-            row.querySelector('.wz-remove-row').addEventListener('click', () => row.remove());
-            el('wzScheduleList').appendChild(row);
+            const group = document.createElement('div');
+            group.className = 'wz-repeat-row';
+            group.style.cssText = 'padding:0; overflow:hidden; margin-bottom:0.75rem;';
+
+            const sessionsHtml = (data.sessions || []).map(s => makeWzSessionRowHtml(s)).join('');
+
+            group.innerHTML = `
+        <div style="background:var(--primary-blue); color:white; padding:0.6rem 1rem; display:flex; align-items:center; justify-content:space-between;">
+            <input type="text" class="wz-schedule-day" placeholder="e.g. Day 1" value="${escapeHtml(data.day || '')}"
+                style="background:transparent; border:none; color:white; font-weight:600; font-size:0.9rem; outline:none; flex:1; font-family:inherit;">
+            <button type="button" class="wz-remove-row" style="background:none; border:none; color:white; cursor:pointer; font-size:1.1rem;">&times;</button>
+        </div>
+        <div class="wz-sessions-list" style="padding:0.75rem; display:flex; flex-direction:column; gap:0.5rem; background:#f8fafc;">
+            ${sessionsHtml}
+        </div>
+        <div style="padding:0 0.75rem 0.75rem; background:#f8fafc;">
+            <button type="button" class="wz-add-session-btn" style="width:100%; padding:0.4rem; border:2px dashed #e2e8f0; background:none; border-radius:0.4rem; color:#6b7280; cursor:pointer; font-size:0.8rem;">
+                + Add Session
+            </button>
+        </div>
+    `;
+
+            group.querySelector('.wz-remove-row').addEventListener('click', () => group.remove());
+            group.querySelector('.wz-add-session-btn').addEventListener('click', () => {
+                const sessionsList = group.querySelector('.wz-sessions-list');
+                sessionsList.insertAdjacentHTML('beforeend', makeWzSessionRowHtml());
+            });
+
+            el('wzScheduleList').appendChild(group);
+        }
+
+        function makeWzSessionRowHtml(s = {}) {
+            return `
+        <div class="wz-session-row" style="display:flex; gap:0.5rem; align-items:center;">
+            <input type="text" class="wz-session-time" placeholder="9:00 AM" value="${escapeHtml(s.time || '')}"
+                style="width:100px; padding:0.4rem 0.6rem; border:1px solid #e2e8f0; border-radius:0.4rem; font-size:0.85rem; font-family:inherit;">
+            <input type="text" class="wz-session-name" placeholder="Session name" value="${escapeHtml(s.session || '')}"
+                style="flex:1; padding:0.4rem 0.6rem; border:1px solid #e2e8f0; border-radius:0.4rem; font-size:0.85rem; font-family:inherit;">
+            <button type="button" onclick="this.closest('.wz-session-row').remove()"
+                style="background:none; border:none; color:#dc2626; cursor:pointer; font-size:1rem;">&times;</button>
+        </div>
+    `;
         }
 
         function addSocialRow(data){
@@ -3557,11 +3594,14 @@
         }
 
         function collectSchedule(){
-            return Array.from(document.querySelectorAll('#wzScheduleList .wz-repeat-row')).map(row => ({
-                day: row.querySelector('.wz-schedule-day').value.trim(),
-                time: row.querySelector('.wz-schedule-time').value.trim(),
-                session: row.querySelector('.wz-schedule-session').value.trim()
-            })).filter(s => s.day || s.time || s.session);
+            return Array.from(document.querySelectorAll('#wzScheduleList .wz-repeat-row')).map(group => {
+                const day = group.querySelector('.wz-schedule-day').value.trim();
+                const sessions = Array.from(group.querySelectorAll('.wz-session-row')).map(row => ({
+                    time: row.querySelector('.wz-session-time').value.trim(),
+                    session: row.querySelector('.wz-session-name').value.trim()
+                })).filter(s => s.session);
+                return { day, sessions };
+            }).filter(d => d.day);
         }
 
         function collectSocialLinks(){
