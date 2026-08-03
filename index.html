@@ -2618,10 +2618,19 @@
                     <div id="wzSocialList" class="wz-repeat-list"></div>
                     <button type="button" id="wzAddSocialLink" class="wz-add-btn"><i class="fas fa-plus"></i> Add Social Link</button>
 
-                    <div class="wizard-note">
-                        <i class="fas fa-paperclip"></i>
-                        Have a venue confirmation document or code of conduct? Email it to
-                        <a href="mailto:info@mun.ly">info@mun.ly</a> with your conference name.
+                    <h4 class="wizard-subheading" style="margin-top:2rem;">Required Documents</h4>
+                    <div class="form-group">
+                        <label>Venue Confirmation Document <span style="color:red;">*</span></label>
+                        <input type="file" id="wzVenueDoc" accept=".pdf,.doc,.docx,.jpg,.jpeg,.png" required>
+                        <small style="color:var(--text-gray);">PDF, Word, or image file</small>
+                    </div>
+                    <div class="form-group">
+                        <label>Code of Conduct <span style="color:red;">*</span></label>
+                        <input type="file" id="wzCodeOfConduct" accept=".pdf,.doc,.docx" required>
+                        <small style="color:var(--text-gray);">PDF or Word file</small>
+                    </div>
+                    <div class="wizard-note" style="margin-top:1rem;">
+                        <i class="fas fa-info-circle"></i>
                         Your logo, banner, and photo gallery can be added once your conference is approved.
                     </div>
                 </div>
@@ -2640,6 +2649,7 @@
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-app.js";
     import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged, sendEmailVerification, updateProfile, updatePassword, EmailAuthProvider, reauthenticateWithCredential, sendPasswordResetEmail } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-auth.js";
+    import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-storage.js";
     import { getFirestore, collection, query, where, getDocs, addDoc, doc, updateDoc, getDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-firestore.js";
 
     const firebaseConfig = {
@@ -2655,6 +2665,11 @@
     const app = initializeApp(firebaseConfig);
     const auth = getAuth(app);
     const db = getFirestore(app);
+    const storage = getStorage(app);
+    window.firebaseStorage = storage;
+    window.storageRef = ref;
+    window.uploadBytes = uploadBytes;
+    window.getDownloadURL = getDownloadURL;
 
     window.firebaseAuth = auth;
     window.createUserWithEmailAndPassword = createUserWithEmailAndPassword;
@@ -3935,11 +3950,26 @@
                 updatedAt: window.serverTimestamp()
             };
 
+            const venueDocFile = document.getElementById('wzVenueDoc')?.files[0];
+            const cocFile = document.getElementById('wzCodeOfConduct')?.files[0];
+
+            if (!venueDocFile) { showMessage('Please upload a venue confirmation document.', 'error'); return; }
+            if (!cocFile) { showMessage('Please upload your code of conduct.', 'error'); return; }
+
             const submitBtn = el('wizardSubmitBtn');
             submitBtn.disabled = true;
-            submitBtn.textContent = 'Submitting…';
+            submitBtn.textContent = 'Uploading documents…';
 
             try {
+                const venueDocRef = window.storageRef(window.firebaseStorage, `conference-docs/${Date.now()}_venue_${venueDocFile.name}`);
+                await window.uploadBytes(venueDocRef, venueDocFile);
+                payload.venueDocUrl = await window.getDownloadURL(venueDocRef);
+
+                const cocRef = window.storageRef(window.firebaseStorage, `conference-docs/${Date.now()}_coc_${cocFile.name}`);
+                await window.uploadBytes(cocRef, cocFile);
+                payload.cocUrl = await window.getDownloadURL(cocRef);
+
+                submitBtn.textContent = 'Submitting…';
                 if(wizardMode === 'edit' && wizardEditingId){
                     const sensitive = isSensitiveConferenceChange(wizardOriginalData || {}, payload);
                     payload.approved = sensitive ? false : !!(wizardOriginalData && wizardOriginalData.approved);
