@@ -2521,6 +2521,9 @@
 
         <div class="footer-bottom">
             <p>&copy; 2025 MUNLY. All rights reserved. | Empowering Libya's Future Diplomats</p>
+            <p style="margin-top:0.5rem; font-size:0.85rem;">
+                <a href="code-of-conduct.html" style="color:rgba(255,255,255,0.7); text-decoration:none;">Code of Conduct & Ethics</a>
+            </p>
         </div>
     </div>
 </footer>
@@ -2634,6 +2637,164 @@
     </div>
 </div>
 
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-app.js";
+    import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged, sendEmailVerification, updateProfile, updatePassword, EmailAuthProvider, reauthenticateWithCredential, sendPasswordResetEmail } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-auth.js";
+    import { getFirestore, collection, query, where, getDocs, addDoc, doc, updateDoc, getDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-firestore.js";
+
+    const firebaseConfig = {
+        apiKey: "AIzaSyCCFi6yrcQ_C-cMAcagY2YuP6AcLss4dUc",
+        authDomain: "munly-2b1b4.firebaseapp.com",
+        projectId: "munly-2b1b4",
+        storageBucket: "munly-2b1b4.firebasestorage.app",
+        messagingSenderId: "884261920045",
+        appId: "1:884261920045:web:e76068f1b7d164a404c7a4",
+        measurementId: "G-W2KTM1MZ89"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+
+    window.firebaseAuth = auth;
+    window.createUserWithEmailAndPassword = createUserWithEmailAndPassword;
+    window.signInWithEmailAndPassword = signInWithEmailAndPassword;
+    window.updateProfile = updateProfile;
+    window.updatePassword = updatePassword;
+    window.EmailAuthProvider = EmailAuthProvider;
+    window.reauthenticateWithCredential = reauthenticateWithCredential;
+    window.sendPasswordResetEmail = sendPasswordResetEmail;
+    window.signOut = signOut;
+    window.onAuthStateChanged = onAuthStateChanged;
+    window.sendEmailVerification = sendEmailVerification;
+    window.firebaseDb = db;
+    window.collection = collection;
+    window.query = query;
+    window.where = where;
+    window.getDocs = getDocs;
+    window.addDoc = addDoc;
+    window.doc = doc;
+    window.updateDoc = updateDoc;
+    window.getDoc = getDoc;
+    window.serverTimestamp = serverTimestamp;
+    window.loadConferencesFromFirestore = loadConferencesFromFirestore;
+
+    function moduleEscapeHtml(str) {
+        return String(str == null ? '' : str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+    }
+
+    async function loadConferencesFromFirestore() {
+        const conferencesContainer = document.querySelector('.conferences-grid');
+        if (!conferencesContainer) return;
+
+        try {
+            const q = query(collection(db, 'conferences'), where('approved', '==', true));
+            const querySnapshot = await getDocs(q);
+
+            window.__publicConferencesCache = window.__publicConferencesCache || {};
+
+            if (querySnapshot.empty) {
+                return; // leave any statically-authored cards in place
+            }
+
+            querySnapshot.forEach((docSnap) => {
+                const conf = docSnap.data();
+                window.__publicConferencesCache[docSnap.id] = conf;
+                const card = createConferenceCard(conf, docSnap.id);
+                conferencesContainer.appendChild(card);
+            });
+            if (window.munCalendar) {
+                window.munCalendar.loadDatesFromCache();
+                window.munCalendar.renderCalendar();
+            }
+        } catch (error) {
+            console.error('Error loading conferences:', error);
+        }
+    }
+
+    function createConferenceCard(conf, id) {
+        const card = document.createElement('div');
+        card.className = 'conference-card';
+
+        const startDate = conf.startDate ? (conf.startDate.toDate ? conf.startDate.toDate() : new Date(conf.startDate)) : new Date();
+        const endDate = conf.endDate ? (conf.endDate.toDate ? conf.endDate.toDate() : new Date(conf.endDate)) : new Date();
+
+        const now = new Date();
+        const statusLabel = endDate < now ? 'Past Event' : (startDate <= now ? 'Ongoing' : 'Upcoming');
+        const category = (endDate < now ? 'past' : 'upcoming') + ' featured';
+        card.setAttribute('data-category', category);
+
+        const formatDateRange = (start, end) => {
+            const month = start.toLocaleDateString('en-US', { month: 'short' }).toUpperCase();
+            const year = end.getFullYear();
+            const startDay = start.getDate();
+            const endDay = end.getDate();
+            const endMonth = end.toLocaleDateString('en-US', { month: 'short' }).toUpperCase();
+
+            if (start.toDateString() === end.toDateString()) {
+                return `${month} ${startDay}, ${year}`;
+            }
+            if (month === endMonth) {
+                return `${month} ${startDay}-${endDay}, ${year}`;
+            }
+            return `${month} ${startDay} - ${endMonth} ${endDay}, ${year}`;
+        };
+
+        const dateRangeStr = formatDateRange(startDate, endDate);
+
+        const initials = (conf.name || '???').trim().substring(0, 3).toUpperCase();
+        const committeesCount = conf.committeesCount ?? (conf.committees ? conf.committees.length : 0);
+        const teamSize = conf.teamSize ?? 0;
+        const daysCount = conf.days ?? 0;
+
+        const tagsHtml = (conf.tags && conf.tags.length)
+            ? `<div class="conference-tags">${conf.tags.map(t => `<span class="conference-tag">${moduleEscapeHtml(t)}</span>`).join('')}</div>`
+            : '';
+
+        card.innerHTML = `
+      <div class="conference-image">
+        <div class="conference-status">${statusLabel}</div>
+        <div class="conference-date">${dateRangeStr}</div>
+        <div style="width: 100%; height: 100%; ${conf.heroImage ? `background: url('${moduleEscapeHtml(conf.heroImage)}') center/cover no-repeat;` : 'background: linear-gradient(135deg, #3B82F6, #1E40AF);'} display: flex; align-items: center; justify-content: center; color: white; font-size: 2rem; font-weight: bold;">
+            ${conf.heroImage ? '' : initials}
+        </div>
+        <div class="image-overlay" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(59, 130, 246, 0.2); z-index: 1;"></div>
+      </div>
+      <div class="conference-content">
+        <h3 class="conference-title">${moduleEscapeHtml(conf.name || 'Unnamed Conference')}</h3>
+        <p class="conference-subtitle">${moduleEscapeHtml(conf.institution || 'TBA')}</p>
+        <div class="conference-location">
+          <i class="fas fa-map-marker-alt"></i>
+          <span>${moduleEscapeHtml(conf.venue || 'TBA')}</span>
+        </div>
+        <div class="conference-stats">
+          <div class="conference-stat">
+            <div class="conference-stat-number">${committeesCount}</div>
+            <div class="conference-stat-label">Committees</div>
+          </div>
+          <div class="conference-stat">
+            <div class="conference-stat-number">${teamSize}</div>
+            <div class="conference-stat-label">Team</div>
+          </div>
+          <div class="conference-stat">
+            <div class="conference-stat-number">${daysCount}</div>
+            <div class="conference-stat-label">Days</div>
+          </div>
+        </div>
+        ${tagsHtml}
+        <div class="conference-actions">
+            <button type="button" class="btn-small btn-outline public-view-details-btn" data-id="${id}" style="width:100%;">View Details</button>
+        </div>
+      </div>
+    `;
+
+        return card;
+    }
+
+    window.addEventListener('load', () => {
+        window.loadConferencesFromFirestore();
+    });
+</script>
 <script>
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {
         anchor.addEventListener('click', function (e) {
@@ -3149,6 +3310,10 @@
                     <div class="form-group"><label>Name</label><input id="authName" required></div>
                     <div class="form-group"><label>Email</label><input type="email" id="authEmail" required></div>
                     <div class="form-group"><label>Password</label><input type="password" id="authPassword" required></div>
+                    <div class="form-group" style="display:flex;align-items:flex-start;gap:0.5rem;">
+                        <input type="checkbox" id="codeOfConductCheck" style="width:auto;margin-top:3px;">
+                        <label for="codeOfConductCheck" style="margin:0;font-weight:400;color:var(--text-gray);">I agree to the <a href="code-of-conduct.html" target="_blank" style="color:var(--primary-blue);">Code of Conduct & Ethics</a></label>
+                    </div>
                     <button type="submit" class="cta-button" style="width:100%;">Sign Up</button>
                 `;
                 toggleText.textContent = 'Already have an account? ';
@@ -3202,76 +3367,50 @@
             const email = ((el('authEmail')||{}).value || '').trim().toLowerCase();
             const password = (el('authPassword')||{}).value || '';
 
+            const codeCheck = document.getElementById('codeOfConductCheck');
+            if(!codeCheck || !codeCheck.checked){
+                showMessage('Please agree to the Code of Conduct & Ethics to create an account.', 'error');
+                return;
+            }
+
             if(!name || !email || !password){ showMessage('Please complete all fields', 'error'); return; }
             if(password.length < 8){ showMessage('Password must be at least 8 characters', 'error'); return; }
 
             setFormLoading(form, true);
+            let user = null;
+
             try {
                 const userCredential = await window.createUserWithEmailAndPassword(window.firebaseAuth, email, password);
-                const user = userCredential.user;
+                user = userCredential.user;
 
-                try {
-                    await window.sendEmailVerification(user);
-                    console.log('✅ Verification email sent to:', email);
-                } catch (emailError) {
-                    console.error('❌ Email send failed:', emailError);
-                    console.error('Error code:', emailError.code);
-                    console.error('Error message:', emailError.message);
-                    showMessage('Account created, but verification email failed to send. Contact support.', 'error');
-                    return;
+                if (window.updateProfile) {
+                    await window.updateProfile(user, { displayName: name });
                 }
+
+                // EMAIL VERIFICATION TEMPORARILY DISABLED — re-enable when Firebase SMTP is fixed
+                // if (typeof user.sendEmailVerification === 'function') {
+                //     await user.sendEmailVerification();
+                // } else if (typeof window.sendEmailVerification === 'function') {
+                //     await window.sendEmailVerification(user);
+                // } else {
+                //     throw new Error('sendEmailVerification function is not available.');
+                // }
 
                 localStorage.setItem('munlyUserName', name);
                 localStorage.setItem('munlyCurrent', JSON.stringify({ id: user.uid, name, email }));
 
                 hideAuth();
-                showMessage(`Account created! Check your email (${email}) to verify your account.`, 'success');
+                showMessage(`Welcome to MUNLY, ${name}! Your account has been created.`, 'success');
+
             } catch (err) {
                 console.error('Signup error:', err);
+
                 let errorMsg = 'Could not create account';
-                if(err.code === 'auth/email-already-in-use') errorMsg = 'Email already in use';
-                if(err.code === 'auth/weak-password') errorMsg = 'Password is too weak';
-                showMessage(errorMsg, 'error');
-            } finally {
-                setFormLoading(form, false);
-            }
-        }
+                if (err.code === 'auth/email-already-in-use') errorMsg = 'Email already in use';
+                if (err.code === 'auth/weak-password') errorMsg = 'Password is too weak';
+                if (err.code === 'auth/too-many-requests') errorMsg = 'Too many requests. Please try again later.';
 
-        async function handleSignIn(){
-            const form = el('authForm');
-            const email = ((el('authEmail')||{}).value || '').trim().toLowerCase();
-            const password = (el('authPassword')||{}).value || '';
-            const remember = (el('authRemember')||{}).checked || false;
-
-            if(!email || !password){ showMessage('Please complete all fields', 'error'); return; }
-
-            setFormLoading(form, true);
-            try {
-                const userCredential = await window.signInWithEmailAndPassword(window.firebaseAuth, email, password);
-                const user = userCredential.user;
-
-                if(!user.emailVerified) {
-                    showMessage('Please verify your email first. Check your inbox for the verification link.', 'error');
-                    await window.signOut(window.firebaseAuth);
-                    return;
-                }
-
-                if(remember){
-                    localStorage.setItem('munlyRememberEmail', email);
-                } else {
-                    localStorage.removeItem('munlyRememberEmail');
-                }
-
-                localStorage.setItem('munlyCurrent', JSON.stringify({ id: user.uid, name: user.displayName || email.split('@')[0], email: user.email }));
-                hideAuth();
-                showMessage('Signed in', 'success');
-                updateNavForUser();
-            } catch (err) {
-                console.error('Signin error:', err);
-                let errorMsg = 'Invalid email or password';
-                if(err.code === 'auth/user-not-found') errorMsg = 'User not found';
-                if(err.code === 'auth/wrong-password') errorMsg = 'Wrong password';
-                showMessage(errorMsg, 'error');
+                showMessage(err.message || errorMsg, 'error');
             } finally {
                 setFormLoading(form, false);
             }
@@ -4073,165 +4212,5 @@
     </div>
 </div>
 
-// ---firebase setup---
-
-<script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-app.js";
-    import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged, sendEmailVerification, updateProfile, updatePassword, EmailAuthProvider, reauthenticateWithCredential, sendPasswordResetEmail } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-auth.js";
-    import { getFirestore, collection, query, where, getDocs, addDoc, doc, updateDoc, getDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-firestore.js";
-
-    const firebaseConfig = {
-        apiKey: "AIzaSyCCFi6yrcQ_C-cMAcagY2YuP6AcLss4dUc",
-        authDomain: "munly-2b1b4.firebaseapp.com",
-        projectId: "munly-2b1b4",
-        storageBucket: "munly-2b1b4.firebasestorage.app",
-        messagingSenderId: "884261920045",
-        appId: "1:884261920045:web:e76068f1b7d164a404c7a4",
-        measurementId: "G-W2KTM1MZ89"
-    };
-
-    const app = initializeApp(firebaseConfig);
-    const auth = getAuth(app);
-    const db = getFirestore(app);
-
-    window.firebaseAuth = auth;
-    window.createUserWithEmailAndPassword = createUserWithEmailAndPassword;
-    window.signInWithEmailAndPassword = signInWithEmailAndPassword;
-    window.updateProfile = updateProfile;
-    window.updatePassword = updatePassword;
-    window.EmailAuthProvider = EmailAuthProvider;
-    window.reauthenticateWithCredential = reauthenticateWithCredential;
-    window.sendPasswordResetEmail = sendPasswordResetEmail;
-    window.signOut = signOut;
-    window.onAuthStateChanged = onAuthStateChanged;
-    window.sendEmailVerification = sendEmailVerification;
-    window.firebaseDb = db;
-    window.collection = collection;
-    window.query = query;
-    window.where = where;
-    window.getDocs = getDocs;
-    window.addDoc = addDoc;
-    window.doc = doc;
-    window.updateDoc = updateDoc;
-    window.getDoc = getDoc;
-    window.serverTimestamp = serverTimestamp;
-    window.loadConferencesFromFirestore = loadConferencesFromFirestore;
-
-    function moduleEscapeHtml(str) {
-        return String(str == null ? '' : str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
-    }
-
-    async function loadConferencesFromFirestore() {
-        const conferencesContainer = document.querySelector('.conferences-grid');
-        if (!conferencesContainer) return;
-
-        try {
-            const q = query(collection(db, 'conferences'), where('approved', '==', true));
-            const querySnapshot = await getDocs(q);
-
-            window.__publicConferencesCache = window.__publicConferencesCache || {};
-
-            if (querySnapshot.empty) {
-                return; // leave any statically-authored cards in place
-            }
-
-            querySnapshot.forEach((docSnap) => {
-                const conf = docSnap.data();
-                window.__publicConferencesCache[docSnap.id] = conf;
-                const card = createConferenceCard(conf, docSnap.id);
-                conferencesContainer.appendChild(card);
-            });
-            if (window.munCalendar) {
-                window.munCalendar.loadDatesFromCache();
-                window.munCalendar.renderCalendar();
-            }
-        } catch (error) {
-            console.error('Error loading conferences:', error);
-        }
-    }
-
-    function createConferenceCard(conf, id) {
-        const card = document.createElement('div');
-        card.className = 'conference-card';
-
-        const startDate = conf.startDate ? (conf.startDate.toDate ? conf.startDate.toDate() : new Date(conf.startDate)) : new Date();
-        const endDate = conf.endDate ? (conf.endDate.toDate ? conf.endDate.toDate() : new Date(conf.endDate)) : new Date();
-
-        const now = new Date();
-        const statusLabel = endDate < now ? 'Past Event' : (startDate <= now ? 'Ongoing' : 'Upcoming');
-        const category = (endDate < now ? 'past' : 'upcoming') + ' featured';
-        card.setAttribute('data-category', category);
-
-        const formatDateRange = (start, end) => {
-            const month = start.toLocaleDateString('en-US', { month: 'short' }).toUpperCase();
-            const year = end.getFullYear();
-            const startDay = start.getDate();
-            const endDay = end.getDate();
-            const endMonth = end.toLocaleDateString('en-US', { month: 'short' }).toUpperCase();
-
-            if (start.toDateString() === end.toDateString()) {
-                return `${month} ${startDay}, ${year}`;
-            }
-            if (month === endMonth) {
-                return `${month} ${startDay}-${endDay}, ${year}`;
-            }
-            return `${month} ${startDay} - ${endMonth} ${endDay}, ${year}`;
-        };
-
-        const dateRangeStr = formatDateRange(startDate, endDate);
-
-        const initials = (conf.name || '???').trim().substring(0, 3).toUpperCase();
-        const committeesCount = conf.committeesCount ?? (conf.committees ? conf.committees.length : 0);
-        const teamSize = conf.teamSize ?? 0;
-        const daysCount = conf.days ?? 0;
-
-        const tagsHtml = (conf.tags && conf.tags.length)
-            ? `<div class="conference-tags">${conf.tags.map(t => `<span class="conference-tag">${moduleEscapeHtml(t)}</span>`).join('')}</div>`
-            : '';
-
-        card.innerHTML = `
-      <div class="conference-image">
-        <div class="conference-status">${statusLabel}</div>
-        <div class="conference-date">${dateRangeStr}</div>
-        <div style="width: 100%; height: 100%; ${conf.heroImage ? `background: url('${moduleEscapeHtml(conf.heroImage)}') center/cover no-repeat;` : 'background: linear-gradient(135deg, #3B82F6, #1E40AF);'} display: flex; align-items: center; justify-content: center; color: white; font-size: 2rem; font-weight: bold;">
-            ${conf.heroImage ? '' : initials}
-        </div>
-        <div class="image-overlay" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(59, 130, 246, 0.2); z-index: 1;"></div>
-      </div>
-      <div class="conference-content">
-        <h3 class="conference-title">${moduleEscapeHtml(conf.name || 'Unnamed Conference')}</h3>
-        <p class="conference-subtitle">${moduleEscapeHtml(conf.institution || 'TBA')}</p>
-        <div class="conference-location">
-          <i class="fas fa-map-marker-alt"></i>
-          <span>${moduleEscapeHtml(conf.venue || 'TBA')}</span>
-        </div>
-        <div class="conference-stats">
-          <div class="conference-stat">
-            <div class="conference-stat-number">${committeesCount}</div>
-            <div class="conference-stat-label">Committees</div>
-          </div>
-          <div class="conference-stat">
-            <div class="conference-stat-number">${teamSize}</div>
-            <div class="conference-stat-label">Team</div>
-          </div>
-          <div class="conference-stat">
-            <div class="conference-stat-number">${daysCount}</div>
-            <div class="conference-stat-label">Days</div>
-          </div>
-        </div>
-        ${tagsHtml}
-        <div class="conference-actions">
-            <button type="button" class="btn-small btn-outline public-view-details-btn" data-id="${id}" style="width:100%;">View Details</button>
-        </div>
-      </div>
-    `;
-
-        return card;
-    }
-
-    window.addEventListener('load', () => {
-        window.loadConferencesFromFirestore();
-    });
-</script>
 </body>
 </html>

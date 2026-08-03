@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Code of Conduct & Ethics | MUNLY</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+  <link rel="icon" href="Munlylogo3.png" type="image/png">
+  <style>
+    :root {
+      --primary: #1e40af;
+      --primary-light: #dbeafe;
+      --secondary: #3b82f6;
+      --dark: #1e3a8a;
+      --text: #1f2937;
+      --text-gray: #6b7280;
+      --border: #e2e8f0;
+      --bg: #f8fafc;
+      --white: #ffffff;
+      --shadow: 0 1px 3px rgba(0,0,0,0.08);
+      --shadow-md: 0 4px 12px rgba(0,0,0,0.1);
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Playfair Display', serif;
+      color: var(--text);
+      background: var(--bg);
+      line-height: 1.8;
+    }
+
+    /* Nav */
+    nav {
+      position: fixed;
+      top: 0;
+      width: 100%;
+      background: white;
+      border-bottom: 1px solid var(--border);
+      z-index: 100;
+    }
+
+    .nav-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 1.5rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      height: 70px;
+    }
+
+    .logo {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: var(--primary);
+      text-decoration: none;
+    }
+
+    .back-btn {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      color: var(--text-gray);
+      text-decoration: none;
+      font-family: 'Inter', sans-serif;
+      font-size: 0.9rem;
+      font-weight: 500;
+      padding: 0.5rem 1rem;
+      border-radius: 0.5rem;
+      transition: all 0.2s;
+      border: 1px solid var(--border);
+    }
+
+    .back-btn:hover { background: var(--bg); color: var(--primary); }
+
+    /* Hero */
+    .hero {
+      background: linear-gradient(135deg, #1e3a8a, #3b82f6);
+      color: white;
+      padding: 140px 1.5rem 80px;
+      text-align: center;
+    }
+
+    .hero h1 {
+      font-size: 3rem;
+      font-weight: 700;
+      margin-bottom: 1rem;
+    }
+
+    .hero p {
+      font-size: 1.2rem;
+      opacity: 0.9;
+      max-width: 600px;
+      margin: 0 auto;
+      color: white;
+    }
+
+    /* Content */
+    .content {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 4rem 1.5rem;
+    }
+
+    .intro {
+      background: white;
+      border-radius: 1rem;
+      padding: 2rem;
+      box-shadow: var(--shadow);
+      margin-bottom: 2rem;
+      border-left: 4px solid var(--primary);
+    }
+
+    .intro p {
+      font-size: 1rem;
+      color: var(--text-gray);
+      margin: 0;
+      font-family: 'Inter', sans-serif;
+    }
+
+    .section {
+      background: white;
+      border-radius: 1rem;
+      padding: 2rem;
+      box-shadow: var(--shadow);
+      margin-bottom: 1.5rem;
+    }
+
+    .section-header {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 1.25rem;
+    }
+
+    .section-number {
+      width: 40px;
+      height: 40px;
+      background: var(--primary-light);
+      color: var(--primary);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 1rem;
+      flex-shrink: 0;
+      font-family: 'Inter', sans-serif;
+    }
+
+    .section-header h2 {
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: var(--primary);
+    }
+
+    .section p {
+      font-size: 0.95rem;
+      color: var(--text-gray);
+      font-family: 'Inter', sans-serif;
+      margin-bottom: 0.75rem;
+    }
+
+    .section p:last-child { margin-bottom: 0; }
+
+    .sub-list {
+      list-style: none;
+      margin-top: 0.75rem;
+    }
+
+    .sub-list li {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.75rem;
+      padding: 0.5rem 0;
+      border-bottom: 1px solid var(--border);
+      font-family: 'Inter', sans-serif;
+      font-size: 0.9rem;
+      color: var(--text-gray);
+    }
+
+    .sub-list li:last-child { border-bottom: none; }
+
+    .sub-list li::before {
+      content: '';
+      width: 6px;
+      height: 6px;
+      background: var(--primary);
+      border-radius: 50%;
+      margin-top: 0.45rem;
+      flex-shrink: 0;
+    }
+
+    /* Footer */
+    footer {
+      background: var(--primary);
+      color: white;
+      text-align: center;
+      padding: 2rem;
+      font-family: 'Inter', sans-serif;
+      font-size: 0.9rem;
+    }
+
+    footer a { color: rgba(255,255,255,0.8); text-decoration: none; }
+    footer a:hover { color: white; }
+
+    @media (max-width: 768px) {
+      .hero h1 { font-size: 2rem; }
+      .content { padding: 2rem 1rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <nav>
+    <div class="nav-container">
+      <a href="index.html" class="logo">MUNLY</a>
+      <a href="index.html" class="back-btn"><i class="fas fa-arrow-left"></i> Back to MUNLY</a>
+    </div>
+  </nav>
+
+  <div class="hero">
+    <h1>Code of Conduct & Ethics</h1>
+    <p>The expected behaviour of all those who choose to attend our conferences.</p>
+  </div>
+
+  <div class="content">
+
+    <div class="intro">
+      <p>MUNLY's Code of Conduct & Ethics outlines the expected behaviour of all those who choose to attend our conferences. By registering for any MUNLY conference, you agree to abide by these standards.</p>
+    </div>
+
+    <div class="section">
+      <div class="section-header">
+        <div class="section-number">I</div>
+        <h2>Integrity</h2>
+      </div>
+      <p>All participants must operate with a code of honour and integrity towards all academic work done at our conferences. Plagiarism, including the use of AI, is strictly prohibited. Delegates who fail to attend all sessions of their respective committees will have their certificates withdrawn.</p>
+    </div>
+
+    <div class="section">
+      <div class="section-header">
+        <div class="section-number">II</div>
+        <h2>Fairness</h2>
+      </div>
+      <p>Discrimination on any basis will not be tolerated. Derogatory, offensive, or inappropriate comments and behaviour made on a non-consensual basis are grounds for exclusion.</p>
+    </div>
+
+    <div class="section">
+      <div class="section-header">
+        <div class="section-number">III</div>
+        <h2>Respectful Conduct</h2>
+      </div>
+      <p>MUNLY operates with respect and adherence to Islamic principles and expects the same of all participants.</p>
+      <ul class="sub-list">
+        <li>Mixed groups are to remain in public areas at all times, and physical contact with the opposite sex besides a professional handshake is prohibited.</li>
+        <li>We recommend participants to enjoy the activities our team has planned for the breaks, as no self-planned activities will be allowed.</li>
+      </ul>
+    </div>
+
+    <div class="section">
+      <div class="section-header">
+        <div class="section-number">IV</div>
+        <h2>Dress Code</h2>
+      </div>
+      <p>In adherence with MUNLY's values, all participants are expected to show up in modest and professional attire. The following is strictly prohibited for both male and female participants:</p>
+      <ul class="sub-list">
+        <li>Exposed necklines</li>
+        <li>Skirts above ankle length</li>
+        <li>Excessive make-up and jewellery</li>
+        <li>Skin-tight clothing</li>
+        <li>Hair down. Participants with hair at or beyond shoulder length should have their hair tied back and out of their face.</li>
+      </ul>
+    </div>
+
+    <div class="section">
+      <div class="section-header">
+        <div class="section-number">V</div>
+        <h2>Morals & Values</h2>
+      </div>
+      <p>Possession or usage of cigarettes, vapes, and other prohibited substances will not be tolerated.</p>
+    </div>
+
+  </div>
+
+  <footer>
+    <p>&copy; 2026 MUNLY. All rights reserved. &nbsp;|&nbsp; <a href="index.html">Home</a> &nbsp;|&nbsp; <a href="code-of-conduct.html">Code of Conduct</a></p>
+  </footer>
+
+</body>
+</html>
