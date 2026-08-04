@@ -3404,12 +3404,12 @@
                 }
 
                 if (typeof user.sendEmailVerification === 'function') {
-                     await user.sendEmailVerification();
-                 } else if (typeof window.sendEmailVerification === 'function') {
-                     await window.sendEmailVerification(user);
-                 } else {
-                     throw new Error('sendEmailVerification function is not available.');
-                 }
+                    await user.sendEmailVerification();
+                } else if (typeof window.sendEmailVerification === 'function') {
+                    await window.sendEmailVerification(user);
+                } else {
+                    throw new Error('sendEmailVerification function is not available.');
+                }
 
                 localStorage.setItem('munlyUserName', name);
                 localStorage.setItem('munlyCurrent', JSON.stringify({ id: user.uid, name, email }));
