@@ -536,8 +536,11 @@
               <input type="url" id="ovMapsUrl" placeholder="https://maps.app.goo.gl/...">
             </div>
             <div class="form-group">
-              <label>Application / Registration URL (optional)</label>
-              <input type="url" id="ovApplicationUrl" placeholder="https://forms.gle/...">
+              <label>Application / Registration Links</label>
+              <div id="appLinksList"></div>
+              <button type="button" onclick="addAppLink()" style="margin-top:0.5rem;padding:0.4rem 1rem;border:1px dashed #ccc;background:none;cursor:pointer;border-radius:4px;color:#555;">
+                <i class="fas fa-plus"></i> Add Link
+              </button>
             </div>
             <button class="save-btn" id="saveOverviewBtn" onclick="saveOverview()">
               <i class="fas fa-save"></i> Save Changes
@@ -790,7 +793,7 @@
       btn.style.display = 'flex';
     }
 
-    // Overview
+
     setValue('ovName', data.name);
     setValue('ovInstitution', data.institution);
     setValue('ovVenue', data.venue);
@@ -800,7 +803,13 @@
     setValue('ovExpected', data.expectedParticipants);
     setValue('ovDescription', data.description);
     setValue('ovMapsUrl', data.mapsUrl);
-    setValue('ovApplicationUrl', data.applicationUrl);
+
+
+    const appLinksList = document.getElementById('appLinksList');
+    appLinksList.innerHTML = '';
+    const links = data.applicationLinks || (data.applicationUrl ? [{ label: 'Apply Now', url: data.applicationUrl }] : []);
+    links.forEach(link => addAppLink(link.label, link.url));
+    if (links.length === 0) addAppLink();
 
     if (data.startDate) {
       const d = data.startDate.toDate ? data.startDate.toDate() : new Date(data.startDate);
@@ -843,6 +852,18 @@
   function setValue(id, val) {
     const el = document.getElementById(id);
     if (el && val !== undefined && val !== null) el.value = val;
+  }
+
+  window.addAppLink = function(label = '', url = '') {
+    const row = document.createElement('div');
+    row.className = 'app-link-row';
+    row.style = 'display:flex;gap:0.5rem;margin-bottom:0.5rem;align-items:center;';
+    row.innerHTML = `
+        <input class="app-link-label" type="text" placeholder="Label (e.g. Delegate Application)" value="${label}" style="flex:1;padding:0.4rem;border:1px solid #ddd;border-radius:4px;">
+        <input class="app-link-url" type="url" placeholder="https://..." value="${url}" style="flex:2;padding:0.4rem;border:1px solid #ddd;border-radius:4px;">
+        <button type="button" onclick="this.parentElement.remove()" style="background:none;border:none;color:#e53e3e;cursor:pointer;font-size:1.1rem;">&times;</button>
+    `;
+    document.getElementById('appLinksList').appendChild(row);
   }
 
   // ── Committees ──
@@ -1110,7 +1131,10 @@
       expectedParticipants: document.getElementById('ovExpected').value || null,
       description: document.getElementById('ovDescription').value.trim(),
       mapsUrl: document.getElementById('ovMapsUrl').value.trim(),
-      applicationUrl: document.getElementById('ovApplicationUrl').value.trim(),
+      applicationLinks: Array.from(document.querySelectorAll('#appLinksList .app-link-row')).map(row => ({
+        label: row.querySelector('.app-link-label').value.trim(),
+        url: row.querySelector('.app-link-url').value.trim()
+      })).filter(l => l.url),
     };
 
     if (startVal) payload.startDate = new Date(startVal);

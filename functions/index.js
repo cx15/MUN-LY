@@ -416,7 +416,36 @@ function generateHTML(data) {
         <p class="section-subtitle">Interested in ${escape(data.name)}? Reach out to the organizing team.</p>
       </div>
       <div class="detail-section" style="text-align:center;">
-        ${data.applicationUrl ? `<a href="${escape(data.applicationUrl)}" target="_blank" class="cta-button" style="margin-bottom:1.5rem; display:inline-block;">Apply Now</a><br>` : ''}
+    ${(() => {
+        const links = data.applicationLinks || (data.applicationUrl ? [{ label: 'Apply Now', url: data.applicationUrl }] : []);
+        if (!links.length) return '';
+        const linksJson = JSON.stringify(links).replace(/'/g, "\\'");
+        return `
+        <div style="position:relative;display:inline-block;margin-bottom:1.5rem;">
+            <button onclick="toggleApplyDropdown()" class="cta-button" style="display:flex;align-items:center;gap:0.5rem;">
+                Apply Now <span id="applyArrow" style="font-size:0.75rem;">▼</span>
+            </button>
+            <div id="applyDropdown" style="display:none;position:absolute;top:110%;left:0;min-width:220px;background:white;border-radius:0.5rem;box-shadow:0 8px 30px rgba(0,0,0,0.15);overflow:hidden;z-index:999;">
+                ${links.map(l => `<a href="${l.url}" target="_blank" style="display:block;padding:0.75rem 1.25rem;color:#1a73e8;text-decoration:none;font-weight:500;border-bottom:1px solid #f0f0f0;" onmouseover="this.style.background='#f5f8ff'" onmouseout="this.style.background=''">${l.label || 'Apply Now'}</a>`).join('')}
+            </div>
+        </div>
+        <script>
+        function toggleApplyDropdown() {
+            const d = document.getElementById('applyDropdown');
+            const arrow = document.getElementById('applyArrow');
+            const open = d.style.display === 'block';
+            d.style.display = open ? 'none' : 'block';
+            arrow.textContent = open ? '▼' : '▲';
+        }
+        document.addEventListener('click', function(e) {
+            if (!e.target.closest('#applyDropdown') && !e.target.closest('button[onclick="toggleApplyDropdown()"]')) {
+                document.getElementById('applyDropdown').style.display = 'none';
+                document.getElementById('applyArrow').textContent = '▼';
+            }
+        });
+        <\/script>
+    `;
+    })()}
         <p><strong>Contact:</strong> <a href="mailto:${escape(data.contactEmail || '')}">${escape(data.contactEmail || '')}</a></p>
         ${data.contactPhone ? `<p><strong>Phone:</strong> ${escape(data.contactPhone)}</p>` : ''}
       </div>

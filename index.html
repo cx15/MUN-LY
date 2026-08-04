@@ -4,7 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MUNLY - Libya's Premier MUN Platform</title>
-    <link rel="icon" href="Munlylogo3.png" type="image/png">
+    <link rel="icon" type="image/x-icon" href="favicon.ico">
+    <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <style>
@@ -2278,7 +2281,7 @@
                     </div>
                     <div class="conference-actions">
                         <a href="smumun25.html" class="btn-small btn-outline">Learn More</a>
-                        <a href="smumun25.html" class="btn-small cta-button">Apply Now</a>
+                        <a href="smumun25.html" class="btn-small cta-button">Details</a>
                     </div>
                 </div>
             </div>
@@ -3008,7 +3011,6 @@
         } else {
             navLinks.classList.add('mobile-active');
 
-            // Add click handler to close menu when links are clicked
             navLinks.querySelectorAll('a').forEach(link => {
                 link.addEventListener('click', function() {
                     navLinks.classList.remove('mobile-active');
@@ -3083,7 +3085,6 @@
             document.body.style.opacity = '1';
         }, 100);
 
-        // Initialize Calendar
         initializeCalendar();
     });
 
@@ -3402,20 +3403,19 @@
                     await window.updateProfile(user, { displayName: name });
                 }
 
-                // EMAIL VERIFICATION TEMPORARILY DISABLED — re-enable when Firebase SMTP is fixed
-                // if (typeof user.sendEmailVerification === 'function') {
-                //     await user.sendEmailVerification();
-                // } else if (typeof window.sendEmailVerification === 'function') {
-                //     await window.sendEmailVerification(user);
-                // } else {
-                //     throw new Error('sendEmailVerification function is not available.');
-                // }
+                if (typeof user.sendEmailVerification === 'function') {
+                     await user.sendEmailVerification();
+                 } else if (typeof window.sendEmailVerification === 'function') {
+                     await window.sendEmailVerification(user);
+                 } else {
+                     throw new Error('sendEmailVerification function is not available.');
+                 }
 
                 localStorage.setItem('munlyUserName', name);
                 localStorage.setItem('munlyCurrent', JSON.stringify({ id: user.uid, name, email }));
 
                 hideAuth();
-                showMessage(`Welcome to MUNLY, ${name}! Your account has been created.`, 'success');
+                showMessage(`Thanks for joining MUNLY, ${name}! Please check your email (${email}) and click the verification link before signing in.`, 'success');
 
             } catch (err) {
                 console.error('Signup error:', err);
@@ -3426,6 +3426,57 @@
                 if (err.code === 'auth/too-many-requests') errorMsg = 'Too many requests. Please try again later.';
 
                 showMessage(err.message || errorMsg, 'error');
+            } finally {
+                setFormLoading(form, false);
+            }
+        }
+
+        async function handleSignIn(){
+            const form = el('authForm');
+            const email = ((el('authEmail')||{}).value || '').trim().toLowerCase();
+            const password = (el('authPassword')||{}).value || '';
+            const remember = (el('authRemember')||{}).checked || false;
+
+            if(!email || !password){ showMessage('Please enter your email and password.', 'error'); return; }
+
+            setFormLoading(form, true);
+            try {
+                const userCredential = await window.signInWithEmailAndPassword(window.firebaseAuth, email, password);
+                const user = userCredential.user;
+
+                if(remember) localStorage.setItem('munlyRememberEmail', email);
+                else localStorage.removeItem('munlyRememberEmail');
+
+                localStorage.setItem('munlyUserName', user.displayName || email.split('@')[0]);
+                localStorage.setItem('munlyCurrent', JSON.stringify({
+                    id: user.uid,
+                    name: user.displayName || email.split('@')[0],
+                    email: user.email,
+                    verified: user.emailVerified
+                }));
+
+                if (!user.emailVerified) {
+                    try {
+                        await window.sendEmailVerification(user);
+                    } catch(e) {
+                        console.warn('Could not resend verification email:', e);
+                    }
+                    await window.signOut(window.firebaseAuth);
+                    localStorage.removeItem('munlyCurrent');
+                    showMessage('Your email is not verified. We\'ve sent a new verification link to ' + email + ' — please check your inbox.', 'error');
+                    return;
+                }
+
+                hideAuth();
+                showMessage(`Welcome back, ${user.displayName || email.split('@')[0]}!`, 'success');
+                updateNavForUser();
+            } catch(err) {
+                console.error('Signin error:', err);
+                let errorMsg = 'Could not sign in.';
+                if(err.code === 'auth/invalid-credential' || err.code === 'auth/wrong-password' || err.code === 'auth/user-not-found') errorMsg = 'Incorrect email or password.';
+                if(err.code === 'auth/too-many-requests') errorMsg = 'Too many attempts. Please try again later.';
+                if(err.code === 'auth/user-disabled') errorMsg = 'This account has been disabled.';
+                showMessage(errorMsg, 'error');
             } finally {
                 setFormLoading(form, false);
             }
@@ -3563,7 +3614,7 @@
 
         // ==================== CONFERENCE WIZARD ====================
 
-        let wizardMode = 'create'; // 'create' | 'edit'
+        let wizardMode = 'create';
         let wizardEditingId = null;
         let wizardOriginalData = null;
         let wizardCurrentStep = 1;
@@ -4054,7 +4105,6 @@
             const cache = isOwn ? (window.__myConferencesCache || {}) : (window.__publicConferencesCache || {});
             const data = cache[id];
             if(!data){ showMessage('Could not load conference details.', 'error'); return; }
-            // Navigate to the generated detail page (stored in detailPageUrl)
             if(data.detailPageUrl){
                 window.location.href = data.detailPageUrl;
             } else {
