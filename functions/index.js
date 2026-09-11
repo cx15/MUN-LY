@@ -7,6 +7,29 @@ admin.initializeApp();
 const db = admin.firestore();
 const bucket = admin.storage().bucket();
 
+function slugify(name) {
+    return (name || 'conference')
+        .toLowerCase()
+        .trim()
+        .replace(/[^a-z0-9]+/g, '-')
+        .replace(/^-+|-+$/g, '') || 'conference';
+}
+
+async function getUniqueSlug(baseSlug, docId) {
+    let slug = baseSlug;
+    let suffix = 1;
+    while (true) {
+        const existing = await db.collection('conferences')
+            .where('slug', '==', slug)
+            .limit(1)
+            .get();
+        const taken = !existing.empty && existing.docs[0].id !== docId;
+        if (!taken) return slug;
+        suffix += 1;
+        slug = `${baseSlug}-${suffix}`;
+    }
+}
+
 exports.generateConferenceDetailPage = onDocumentWritten('conferences/{docId}', async (event) => {
     const docId = event.params.docId;
     const newData = event.data.after.data();
@@ -17,6 +40,11 @@ exports.generateConferenceDetailPage = onDocumentWritten('conferences/{docId}', 
     }
 
     try {
+        let slug = newData.slug;
+        if (!slug) {
+            slug = await getUniqueSlug(slugify(newData.name), docId);
+        }
+
         const html = generateHTML(newData);
         const fileName = `conferences/${docId}.html`;
         const file = bucket.file(fileName);
@@ -24,34 +52,60 @@ exports.generateConferenceDetailPage = onDocumentWritten('conferences/{docId}', 
         await file.save(html, {
             metadata: {
                 contentType: 'text/html',
-                cacheControl: 'public, max-age=300',
-            },
-        });
-
-        const { v4: uuidv4 } = require('uuid');
-        const token = uuidv4();
-
-        await file.save(html, {
-            metadata: {
-                contentType: 'text/html',
                 cacheControl: 'no-cache',
-                metadata: {
-                    firebaseStorageDownloadTokens: token
-                }
             },
         });
 
-        const publicUrl = `https://firebasestorage.googleapis.com/v0/b/${bucket.name}/o/${encodeURIComponent(fileName)}?alt=media&token=${token}`;
+        const publicUrl = `https://mun.ly/${slug}`;
         await db.collection('conferences').doc(docId).update({
+            slug,
             detailPageUrl: publicUrl,
             pageGeneratedAt: admin.firestore.FieldValue.serverTimestamp(),
         });
 
-        console.log(`Generated page for ${docId}`);
+        console.log(`Generated page for ${docId} at ${publicUrl}`);
         return { success: true, url: publicUrl };
     } catch (error) {
         console.error(`Error for ${docId}:`, error);
         throw error;
+    }
+});
+
+exports.serveConferencePage = onRequest(async (req, res) => {
+    const slug = req.path.replace(/^\/+/, '').split('/')[0];
+
+    if (!slug) {
+        res.status(404).send('Not found');
+        return;
+    }
+
+    try {
+        const snapshot = await db.collection('conferences')
+            .where('slug', '==', slug)
+            .limit(1)
+            .get();
+
+        if (snapshot.empty) {
+            res.status(404).send('Conference not found');
+            return;
+        }
+
+        const docId = snapshot.docs[0].id;
+        const file = bucket.file(`conferences/${docId}.html`);
+        const [exists] = await file.exists();
+
+        if (!exists) {
+            res.status(404).send('Conference page not found');
+            return;
+        }
+
+        const [contents] = await file.download();
+        res.set('Content-Type', 'text/html');
+        res.set('Cache-Control', 'public, max-age=300');
+        res.send(contents);
+    } catch (error) {
+        console.error(`Error serving slug ${slug}:`, error);
+        res.status(500).send('Something went wrong');
     }
 });
 
@@ -60,7 +114,6 @@ exports.notifyNewConference = onDocumentWritten('conferences/{docId}', async (ev
     const newData = event.data.after.data();
     const oldData = event.data.before.data();
 
-    // Only trigger on NEW conference creation (not updates)
     if (oldData || !newData) return null;
 
     try {
@@ -129,7 +182,7 @@ function generateHTML(data) {
     if (startD && data.schedule && data.schedule.length > 0) {
         const firstDay = data.schedule[0];
         if (firstDay.sessions && firstDay.sessions.length > 0) {
-            const firstTime = firstDay.sessions[0].time; // e.g. "9:00 AM"
+            const firstTime = firstDay.sessions[0].time;
             if (firstTime) {
                 const target = new Date(startD);
                 const timeParts = firstTime.match(/(\d+):(\d+)\s*(AM|PM)?/i);
