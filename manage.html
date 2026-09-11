@@ -1164,14 +1164,12 @@
 
     try {
       const storageRef = window.ref(storage, `conferences/${confId}/${type}_${Date.now()}_${file.name}`);
-      await window.uploadBytes(storageRef, file);
+      await window.uploadBytes(storageRef, file, { cacheControl: 'public, max-age=604800' });
       const url = await window.getDownloadURL(storageRef);
 
-      // Save URL to Firestore
       const field = type === 'banner' ? 'heroImage' : 'logoImage';
       await saveToFirestore({ [field]: url });
 
-      // Update preview
       if (type === 'banner') {
         document.getElementById('bannerPreviewImg').src = url;
         document.getElementById('bannerPreviewImg').style.display = 'block';
