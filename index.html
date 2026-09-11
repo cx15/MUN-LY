@@ -4011,13 +4011,15 @@
             submitBtn.disabled = true;
             submitBtn.textContent = 'Uploading documents…';
 
+            const uploadMetadata = { cacheControl: 'public, max-age=604800' };
+            
             try {
                 const venueDocRef = window.storageRef(window.firebaseStorage, `conference-docs/${Date.now()}_venue_${venueDocFile.name}`);
-                await window.uploadBytes(venueDocRef, venueDocFile);
+                await window.uploadBytes(venueDocRef, venueDocFile, uploadMetadata);
                 payload.venueDocUrl = await window.getDownloadURL(venueDocRef);
 
                 const cocRef = window.storageRef(window.firebaseStorage, `conference-docs/${Date.now()}_coc_${cocFile.name}`);
-                await window.uploadBytes(cocRef, cocFile);
+                await window.uploadBytes(cocRef, cocFile, uploadMetadata);
                 payload.cocUrl = await window.getDownloadURL(cocRef);
 
                 submitBtn.textContent = 'Submitting…';
