@@ -267,7 +267,7 @@ function generateHTML(data) {
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>${escape(data.name)} | MUNLY</title>
 <title>${escape(data.name)} | MUNLY</title>
-<link rel="icon" href="https://munly-2b1b4.web.app/Munlylogo3.png" type="image/png">
+<link rel="icon" href="https://mun.ly/Munlylogo3.png" type="image/png">
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
 <style>
@@ -362,7 +362,7 @@ function generateHTML(data) {
 <body>
   <nav>
     <div class="nav-container">
-      <a href="https://munly-2b1b4.web.app" class="logo">MUNLY</a>
+      <a href="https://mun.ly" class="logo">MUNLY</a>
       <button class="back-btn" onclick="window.history.back()"><i class="fas fa-arrow-left"></i> Back</button>
     </div>
   </nav>
